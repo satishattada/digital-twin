@@ -1,0 +1,8 @@
+{
+  "name": "Shelfie_V3_Share",
+  "description": "A smart dashboard for grocery retail space planning and optimization, providing insights for store and operations managers.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "prompt": ""
+}

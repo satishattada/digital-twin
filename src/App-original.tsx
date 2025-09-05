@@ -1,0 +1,139 @@
+
+import React from 'react';
+import LayoutDemo from './components/LayoutDemo';
+
+const App: React.FC = () => {
+  return <LayoutDemo />;
+};
+
+export default App;
+  
+  const [recommendations, setRecommendations] = useState<Recommendation[]>(initialRecommendations);
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [opsInsights, setOpsInsights] = useState<OpsInsight[]>(MOCK_OPS_DATA[selectedCategory].insights);
+  const [opsAlerts, setOpsAlerts] = useState<OpsAlert[]>(MOCK_OPS_DATA[selectedCategory].alerts);
+
+  const [isDigestOpen, setDigestOpen] = useState(false);
+  const [isShelfieOpen, setShelfieOpen] = useState(false);
+
+  // Reset data when category changes for the Ops Manager
+  useEffect(() => {
+    if (activePersona === 'Operations Manager') {
+        setOpsInsights(MOCK_OPS_DATA[selectedCategory].insights);
+        setOpsAlerts(MOCK_OPS_DATA[selectedCategory].alerts);
+    }
+  }, [selectedCategory, activePersona]);
+
+
+  const handleCreateTask = useCallback((rec: Recommendation) => {
+    const newTask: Task = {
+      id: `task-${Date.now()}`,
+      description: `Restock: ${rec.productName}`,
+      details: `Restock SKU: ${rec.sku}. Suggested: ${rec.suggestedReorderQty}.`,
+      status: 'To Do',
+      type: 'Restocking',
+      priority: 'High',
+      source: 'Store Manager',
+      category: rec.category,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    setTasks(prevTasks => [newTask, ...prevTasks]);
+    setRecommendations(prevRecs => prevRecs.filter(r => r.id !== rec.id));
+  }, []);
+
+  const handleCreateTaskFromInsight = useCallback((insight: OpsInsight) => {
+    const newTask: Task = {
+        id: `task-${Date.now()}`,
+        description: insight.action,
+        details: insight.title,
+        status: 'To Do',
+        type: 'Investigation',
+        priority: 'Medium',
+        source: 'Autonomous',
+        category: selectedCategory,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    setTasks(prev => [newTask, ...prev]);
+    setOpsInsights(prev => prev.filter(i => i.id !== insight.id));
+  }, [selectedCategory]);
+
+    const handleInitiateRestock = useCallback((itemsToRestock: DetectedItem[]) => {
+        const newTasks: Task[] = itemsToRestock.map(item => ({
+        id: `task-shelfie-${Date.now()}-${item.id}`,
+        description: item.type === 'low' ? `Restock low item: ${item.label}` : `Restock empty slot: ${item.label}`,
+        details: item.tooltip,
+        status: 'To Do',
+        type: 'Restocking',
+        priority: 'High',
+        source: 'Autonomous',
+        category: selectedCategory, // Assumes scan is for the currently selected category
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }));
+
+        setTasks(prevTasks => [...newTasks, ...prevTasks]);
+        
+    }, [selectedCategory]);
+
+  const handleIgnoreInsight = useCallback((id: number) => {
+      setOpsInsights(prev => prev.filter(i => i.id !== id));
+  }, []);
+
+  const handleDismissAlert = useCallback((id: number) => {
+      setOpsAlerts(prev => prev.filter(a => a.id !== id));
+  }, []);
+
+  const handleIgnoreRecommendation = useCallback((id: number) => {
+     setRecommendations(prevRecs => prevRecs.filter(r => r.id !== id));
+  }, []);
+  
+  const digestData = useMemo(() => {
+    return activePersona === 'Store Manager' ? MOCK_DAILY_DIGEST_DATA : MOCK_OPS_DAILY_DIGEST_DATA;
+  }, [activePersona]);
+
+  return (
+    <>
+      <main className="bg-slate-200 min-h-screen w-full flex flex-col items-center justify-center p-4 font-sans">
+        <div className="w-full max-w-[1600px] aspect-[16/9] bg-[#F3F4F6] shadow-2xl flex flex-col overflow-hidden">
+          <Header
+            activePersona={activePersona}
+            setActivePersona={setActivePersona}
+            selectedStore={selectedStore}
+            setSelectedStore={setSelectedStore}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            selectedTimePeriod={selectedTimePeriod}
+            setSelectedTimePeriod={setSelectedTimePeriod}
+            onDigestToggle={() => setDigestOpen(true)}
+            onShelfieToggle={() => setShelfieOpen(true)}
+          />
+          <div className="flex-grow overflow-y-auto p-4 md:p-6 bg-white">
+            {activePersona === 'Store Manager' ? (
+              <StoreManagerDashboard
+                selectedCategory={selectedCategory}
+                recommendations={recommendations}
+                onCreateTask={handleCreateTask}
+                onIgnoreRecommendation={handleIgnoreRecommendation}
+              />
+            ) : (
+              <OperationsManagerDashboard 
+                tasks={tasks}
+                setTasks={setTasks}
+                selectedCategory={selectedCategory}
+                selectedTimePeriod={selectedTimePeriod}
+                insights={opsInsights}
+                alerts={opsAlerts}
+                onCreateTaskFromInsight={handleCreateTaskFromInsight}
+                onIgnoreInsight={handleIgnoreInsight}
+                onDismissAlert={handleDismissAlert}
+              />
+            )}
+          </div>
+        </div>
+      </main>
+      <DailyDigestSidebar isOpen={isDigestOpen} onClose={() => setDigestOpen(false)} data={digestData} />
+      <ShelfieModal isOpen={isShelfieOpen} onClose={() => setShelfieOpen(false)} onInitiateRestock={handleInitiateRestock} />
+    </>
+  );
+};
+
+export default App;
