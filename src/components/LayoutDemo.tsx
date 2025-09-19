@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Store3DLayout from './Store3DLayout';
+import { HeatmapZoneData } from '@/types';
 
 const LayoutDemo: React.FC = () => {
   const [activeLayout, setActiveLayout] = useState<'2d' | '3d'>('2d');
@@ -41,7 +42,13 @@ const LayoutDemo: React.FC = () => {
             asasa
           </div>
         ) : (
-          <Store3DLayout />
+          <Store3DLayout onMouseEnter={function (zone: HeatmapZoneData, event: React.MouseEvent): void {
+              throw new Error('Function not implemented.');
+            } } onMouseLeave={function (): void {
+              throw new Error('Function not implemented.');
+            } } onMouseMove={function (event: React.MouseEvent): void {
+              throw new Error('Function not implemented.');
+            } } />
         )}
       </div>
     </div>

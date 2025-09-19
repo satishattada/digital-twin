@@ -37,13 +37,13 @@ export const OperationsManagerDashboard: React.FC<OperationsManagerDashboardProp
         <div className="rounded-lg bg-gray-50 border p-3 shadow-sm flex flex-col">
           <OpsShelfInventoryStatus selectedCategory={selectedCategory} />
         </div>
-        <div className="rounded-lg bg-gray-50 border p-3 shadow-sm flex flex-col flex-grow min-h-0">
+        <div className="rounded-lg bg-gray-50 border p-3 shadow-sm flex flex-col">
           <OpsInventoryMovementTracker selectedCategory={selectedCategory} selectedTimePeriod={selectedTimePeriod} />
         </div>
       </div>
 
       {/* --- Column 2: Task Queue --- */}
-      <div className="rounded-lg bg-gray-50 border p-3 shadow-sm flex flex-col h-full min-h-0">
+      <div className="rounded-lg bg-gray-50 border p-3 shadow-sm flex flex-col h-full">
         <OpsTaskQueue tasks={tasks} setTasks={setTasks} />
       </div>
       

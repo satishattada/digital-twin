@@ -34,7 +34,11 @@
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "src/**/*.jpg",
+    "src/**/*.jpeg",
+    "src/**/*.png",
+    "src/**/*.gif"
   ],
   "exclude": [
     "node_modules",

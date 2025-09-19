@@ -15,8 +15,6 @@ type HeaderProps = {
   onShelfieToggle: () => void;
 };
 
-const stores = ['Store A', 'Store B', 'Store C'];
-const categories: Category[] = ['Dairy', 'Snacks', 'Beverages', 'Fresh Produce', 'Household'];
 const timePeriodsMap: Record<Persona, string[]> = {
     'Store Manager': ['Last 7 Days', 'Last 30 Days', 'Last Quarter'],
     'Operations Manager': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days'],
@@ -51,7 +49,10 @@ export const Header: React.FC<HeaderProps> = ({
   
   return (
     <header className="bg-green-990 text-white p-3 shadow-md flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 shrink-0">
-      <h1 className="text-xl font-bold tracking-tight">Shelfie – Smart Dashboard</h1>
+      <div className="flex items-center space-x-4">
+        <img src="/images/logo.png" alt="BP Logo" className="h-8" />
+        <h1 className="text-xl font-bold tracking-tight">Shelfie – Smart Dashboard</h1>
+      </div>
    
 
       <div className="flex items-center space-x-2">

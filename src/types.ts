@@ -1,7 +1,10 @@
-export type Persona = 'Store Manager' | 'Operations Manager';
+import { ReactNode } from "react";
+
+export type Persona = 'Store Manager' | 'Operations Manager' | 'Regional Manager';
 export type Category = 'Dairy' | 'Snacks' | 'Beverages' | 'Fresh Produce' | 'Household';
 
 export type Product = {
+  quantity: any;
   id: string;
   name: string;
   brand: string;
@@ -151,6 +154,7 @@ export type InventorySuggestion = {
 
 export type Urgency = 'Urgent' | 'Pending' | 'Critical' | 'Moderate'; // Expanded for alerts
 export type OpsAlert = {
+  severity: ReactNode;
   id: number;
   sku?: string;
   productName?: string;
@@ -171,7 +175,7 @@ export type OpsKpi = {
   definition?: string;
 };
 
-export type PoStatus = 'Created' | 'In Transit' | 'Delivered';
+export type PoStatus = 'Created' | 'Delivered' | 'Pending' | 'In Transit' | 'Delayed';
 export type PurchaseOrder = {
   id: string;
   supplierName: string;

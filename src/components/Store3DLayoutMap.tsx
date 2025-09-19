@@ -178,6 +178,9 @@ export const Store3DLayoutMap: React.FC = () => {
         <Store3DLayout
           storeData={zoneData.flat()}
           is3DHeatmapOn={is3DHeatmapOn}
+          onMouseEnter={() => {}}
+          onMouseLeave={() => {}}
+          onMouseMove={() => {}}
         />
         {/* </div> */}
       </div>

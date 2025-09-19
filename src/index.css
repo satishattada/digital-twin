@@ -42,3 +42,30 @@
 .bg-green-990 {
   background-color: #0c5d58; /* Dark green shade */
 }
+
+.engagement-legend {
+  margin-left: 0 !important;
+}
+
+.toggle-checkbox {
+      padding: 20px 10px;
+}
+.toggle-title {
+  font-size: 10px;
+    line-height: 12px;
+}
+
+.indicator-dot {
+  top: 3px;
+  right: 3px;
+}
+
+.indicator-icon {
+ position: absolute;
+    top: -17px;
+    right: -17px;
+}
+
+.insight-count {
+  margin-top: 12px;
+}

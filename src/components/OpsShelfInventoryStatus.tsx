@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Category, ShelfZone, InventorySuggestion } from "../types"
 import { MOCK_OPS_DATA } from "../constants"
 
@@ -8,79 +7,294 @@ type OpsShelfInventoryStatusProps = {
 };
 
 const statusStyles = {
-    Overstocked: { bg: 'bg-red-200', border: 'border-red-400', text: 'text-red-900' },
-    Understocked: { bg: 'bg-amber-200', border: 'border-amber-400', text: 'text-amber-900' },
-    Optimized: { bg: 'bg-green-200', border: 'border-green-400', text: 'text-green-900' },
-    'Chronic Imbalance': { bg: 'bg-purple-200', border: 'border-purple-400', text: 'text-purple-900' },
+    Overstocked: { 
+        bg: 'bg-gradient-to-br from-red-50 to-red-100', 
+        border: 'border-red-300', 
+        text: 'text-red-800',
+        icon: '📈',
+        accent: 'bg-red-500'
+    },
+    Understocked: { 
+        bg: 'bg-gradient-to-br from-amber-50 to-amber-100', 
+        border: 'border-amber-300', 
+        text: 'text-amber-800',
+        icon: '📉',
+        accent: 'bg-amber-500'
+    },
+    Optimized: { 
+        bg: 'bg-gradient-to-br from-green-50 to-green-100', 
+        border: 'border-green-300', 
+        text: 'text-green-800',
+        icon: '✅',
+        accent: 'bg-green-500'
+    },
+    'Chronic Imbalance': { 
+        bg: 'bg-gradient-to-br from-purple-50 to-purple-100', 
+        border: 'border-purple-300', 
+        text: 'text-purple-800',
+        icon: '⚠️',
+        accent: 'bg-purple-500'
+    },
 };
 
 const Zone: React.FC<{ zone: ShelfZone }> = ({ zone }) => {
+    const [isHovered, setIsHovered] = useState(false);
     const styles = statusStyles[zone.status];
+    
+    // Mock additional data for realism
+    const stockLevel = zone.status === 'Overstocked' ? 95 : 
+                      zone.status === 'Understocked' ? 15 :
+                      zone.status === 'Chronic Imbalance' ? 60 : 85;
+    
+    const capacity = 100;
+    const trend = zone.status === 'Overstocked' ? '+12%' :
+                  zone.status === 'Understocked' ? '-8%' :
+                  zone.status === 'Chronic Imbalance' ? '±15%' : '+2%';
+
     return (
-        <div className={`rounded-md py-2 px-2 text-center shadow-sm ${styles.bg} ${styles.text}`}>
-            <p className={`text-sm font-semibold`}>{zone.name}</p>
-            <p className={`text-xs`}>{zone.status}</p>
+        <div 
+            className={`relative rounded-lg p-3 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer ${styles.bg} ${styles.border} border-2`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            {/* Status indicator dot */}
+            <div className={`absolute top-2 right-2 w-3 h-3 rounded-full ${styles.accent}`}></div>
+            
+            {/* Zone header */}
+            <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg">{styles.icon}</span>
+                <div className="flex-1">
+                    <p className={`text-sm font-bold ${styles.text}`}>{zone.name}</p>
+                    <p className={`text-xs ${styles.text} opacity-70`}>{zone.status}</p>
+                </div>
+            </div>
+
+            {/* Stock level bar */}
+            <div className="mb-2">
+                <div className="flex justify-between items-center mb-1">
+                    <span className={`text-xs font-medium ${styles.text}`}>Stock Level</span>
+                    <span className={`text-xs font-bold ${styles.text}`}>{stockLevel}%</span>
+                </div>
+                <div className="w-full bg-white/60 rounded-full h-2 border border-gray-200">
+                    <div 
+                        className={`h-full rounded-full transition-all duration-500 ${styles.accent}`}
+                        style={{ width: `${stockLevel}%` }}
+                    ></div>
+                </div>
+            </div>
+
+            {/* Trend indicator */}
+            <div className="flex justify-between items-center text-xs">
+                <span className={`${styles.text} opacity-70`}>vs last week</span>
+                <span className={`font-bold ${
+                    trend.startsWith('+') ? 'text-green-600' :
+                    trend.startsWith('-') ? 'text-red-600' : 'text-amber-600'
+                }`}>
+                    {trend}
+                </span>
+            </div>
+
+            {/* Hover overlay */}
+            {isHovered && (
+                <div className="absolute inset-0 bg-white/20 rounded-lg border-2 border-white/50 transition-all duration-300">
+                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs whitespace-nowrap z-10">
+                        Click for details
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
 const Legend: React.FC = () => (
-    <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-xs text-gray-600">
-        <div className="flex items-center space-x-1.5">
-            <div className={`w-3 h-3 rounded-sm bg-red-200 border border-red-400`}></div>
-            <span>Overstocked</span>
-        </div>
-        <div className="flex items-center space-x-1.5">
-            <div className={`w-3 h-3 rounded-sm bg-amber-200 border border-amber-400`}></div>
-            <span>Understocked</span>
-        </div>
-        <div className="flex items-center space-x-1.5">
-            <div className={`w-3 h-3 rounded-sm bg-green-200 border border-green-400`}></div>
-            <span>Optimized</span>
-        </div>
-        <div className="flex items-center space-x-1.5">
-            <div className={`w-3 h-3 rounded-sm bg-purple-200 border border-purple-400`}></div>
-            <span>Chronic Imbalance</span>
+    <div className="bg-gray-50 rounded-lg p-3 mt-4">
+        <h4 className="text-xs font-bold text-gray-700 mb-2">📊 Status Legend</h4>
+        <div className="grid grid-cols-2 gap-2 text-xs">
+            {Object.entries(statusStyles).map(([status, styles]) => (
+                <div key={status} className="flex items-center gap-2">
+                    <div className={`w-3 h-3 rounded-full ${styles.accent}`}></div>
+                    <span className="text-gray-600">{status}</span>
+                </div>
+            ))}
         </div>
     </div>
 );
 
+const Suggestion: React.FC<{suggestion: InventorySuggestion}> = ({suggestion}) => {
+    const [feedback, setFeedback] = useState<'none' | 'good' | 'bad'>('none');
+    
+    const handleFeedback = (type: 'good' | 'bad') => {
+        setFeedback(type);
+        // Here you would typically send feedback to your analytics
+    };
 
-const Suggestion: React.FC<{suggestion: InventorySuggestion}> = ({suggestion}) => (
-    <div className="flex justify-between items-center text-sm text-gray-700 py-2 border-b border-gray-200 last:border-b-0 gap-2">
-        <p className="flex-grow pr-2">{suggestion.text}</p>
-        <div className="flex space-x-2 shrink-0">
-            <button className="text-gray-400 hover:text-green-500 transition-colors" title="Good Suggestion">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M1 8.25a1.25 1.25 0 112.5 0v7.5a1.25 1.25 0 11-2.5 0v-7.5zM18.875 9.062c.28-.415.422-.904.422-1.437C19.297 6.25 18.25 5 16.906 5h-4.954a2.25 2.25 0 00-2.25 2.25v2.25c0 .53.212 1.023.582 1.383l3.418 3.418c.49.49.77.923.77 1.442v.375a.75.75 0 01-.75.75h-.375a.75.75 0 01-.75-.75v-.375c0-.519-.28-1.09-.77-1.442l-3.418-3.418A2.25 2.25 0 009.75 11.5H7.125a2.25 2.25 0 00-2.25 2.25v3a.75.75 0 001.5 0v-3a.75.75 0 01.75-.75h1.125a.75.75 0 00.75-.75V9A.75.75 0 009 8.25H7.125a.75.75 0 01-.75-.75V3.75a.75.75 0 00-1.5 0v3.75c0 .414.336.75.75.75h.75a.75.75 0 00.75.75v5.25a2.25 2.25 0 002.25 2.25h3.53a2.25 2.25 0 002.138-1.55l.75-3a2.25 2.25 0 00-1.312-2.738.75.75 0 01-.586-1.333 3.75 3.75 0 003.583-4.32z" />
-                </svg>
-            </button>
-            <button className="text-gray-400 hover:text-red-500 transition-colors" title="Bad Suggestion">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M1 11.75a1.25 1.25 0 102.5 0V4.25a1.25 1.25 0 10-2.5 0v7.5zM18.875 10.938c.28.415.422.904.422 1.437 0 1.345-1.047 2.625-2.397 2.625h-4.954a2.25 2.25 0 01-2.25-2.25v-2.25c0-.53-.212-1.023-.582-1.383L5.418 7.918c-.49-.49-.77-.923-.77-1.442v-.375a.75.75 0 01.75-.75h.375a.75.75 0 01.75.75v.375c0 .519.28 1.09.77 1.442l3.418 3.418A2.25 2.25 0 0110.25 12h2.625a2.25 2.25 0 012.25-2.25v-3a.75.75 0 00-1.5 0v3a.75.75 0 00.75.75H12a.75.75 0 01-.75.75V15a.75.75 0 01.75.75h2.875a.75.75 0 00.75-.75v-5.25a2.25 2.25 0 012.25-2.25h1.125a2.25 2.25 0 012.138 1.55l.75 3a2.25 2.25 0 01-1.312 2.738.75.75 0 00.586 1.333 3.75 3.75 0 003.583-4.32z" />
-                </svg>
-            </button>
+    const getPriorityBadge = (text: string) => {
+        if (text.toLowerCase().includes('urgent') || text.toLowerCase().includes('critical')) {
+            return { color: 'bg-red-500', text: 'HIGH', icon: '🚨' };
+        }
+        if (text.toLowerCase().includes('soon') || text.toLowerCase().includes('consider')) {
+            return { color: 'bg-amber-500', text: 'MED', icon: '⚠️' };
+        }
+        return { color: 'bg-blue-500', text: 'LOW', icon: '💡' };
+    };
+
+    const priority = getPriorityBadge(suggestion.text);
+
+    return (
+        <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 transition-all duration-200 mb-2">
+            <div className="flex-shrink-0">
+                <span className="text-lg">🤖</span>
+            </div>
+            
+            <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                    <span className={`px-2 py-1 text-xs font-bold text-white rounded-full ${priority.color} flex items-center gap-1`}>
+                        {priority.icon} {priority.text}
+                    </span>
+                    <span className="text-xs text-gray-500">Shelfie Recommendation</span>
+                </div>
+                <p className="text-sm text-gray-700 leading-relaxed">{suggestion.text}</p>
+                
+                {/* Action buttons */}
+                <div className="flex items-center gap-2 mt-2">
+                    <button className="px-3 py-1 text-xs font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                        ✅ Implement
+                    </button>
+                    <button className="px-3 py-1 text-xs font-medium bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">
+                        📅 Schedule
+                    </button>
+                </div>
+            </div>
+
+            <div className="flex flex-col gap-1">
+                <button 
+                    onClick={() => handleFeedback('good')}
+                    className={`p-1 rounded transition-colors ${
+                        feedback === 'good' 
+                            ? 'text-green-600 bg-green-50' 
+                            : 'text-gray-400 hover:text-green-500'
+                    }`}
+                    title="Good Suggestion"
+                >
+                    👍
+                </button>
+                <button 
+                    onClick={() => handleFeedback('bad')}
+                    className={`p-1 rounded transition-colors ${
+                        feedback === 'bad' 
+                            ? 'text-red-600 bg-red-50' 
+                            : 'text-gray-400 hover:text-red-500'
+                    }`}
+                    title="Poor Suggestion"
+                >
+                    👎
+                </button>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 export const OpsShelfInventoryStatus: React.FC<OpsShelfInventoryStatusProps> = ({ selectedCategory }) => {
-  const data = MOCK_OPS_DATA[selectedCategory].shelfInventory;
-  const suggestions = MOCK_OPS_DATA[selectedCategory].inventorySuggestions;
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+    const [filterStatus, setFilterStatus] = useState<string>('all');
+    
+    const data = MOCK_OPS_DATA[selectedCategory].shelfInventory;
+    const suggestions = MOCK_OPS_DATA[selectedCategory].inventorySuggestions;
 
-  return (
-    <div className="flex flex-col">
-      <h2 className="text-md font-bold text-[#005BAC] mb-2 shrink-0">Shelf Inventory Status</h2>
-      <div className="grid grid-cols-3 gap-2">
-        {data.map(zone => <Zone key={zone.id} zone={zone} />)}
-      </div>
-       <Legend />
-       <div className="mt-4 pt-3 border-t border-gray-200">
-            <h3 className="text-sm font-bold text-gray-800 shrink-0 mb-1">AI Suggestions:</h3>
-            <div className="overflow-y-auto max-h-32 pr-2 -mr-2">
-                {suggestions && suggestions.map(s => <Suggestion key={s.id} suggestion={s} />)}
+    // Calculate summary stats
+    const overstockedCount = data.filter(z => z.status === 'Overstocked').length;
+    const understockedCount = data.filter(z => z.status === 'Understocked').length;
+    const optimizedCount = data.filter(z => z.status === 'Optimized').length;
+    const imbalanceCount = data.filter(z => z.status === 'Chronic Imbalance').length;
+
+    const filteredData = filterStatus === 'all' 
+        ? data 
+        : data.filter(zone => zone.status.toLowerCase().includes(filterStatus.toLowerCase()));
+
+    return (
+        <div className="space-y-4">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <span className="text-2xl">📦</span>
+                    <div>
+                        <h2 className="text-lg font-bold text-[#005BAC]">Shelf Inventory Status</h2>
+                        <p className="text-sm text-gray-600">{selectedCategory} category overview</p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <select 
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                        className="text-xs border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                        <option value="all">All Zones</option>
+                        <option value="overstocked">Overstocked</option>
+                        <option value="understocked">Understocked</option>
+                        <option value="optimized">Optimized</option>
+                        <option value="imbalance">Imbalance</option>
+                    </select>
+                    <button
+                        onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+                        className="p-2 text-gray-600 hover:text-blue-600 transition-colors"
+                        title={`Switch to ${viewMode === 'grid' ? 'list' : 'grid'} view`}
+                    >
+                        {viewMode === 'grid' ? '📋' : '⊞'}
+                    </button>
+                </div>
             </div>
-       </div>
-    </div>
-  );
+
+            {/* Summary Cards */}
+            <div className="grid grid-cols-4 gap-3">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-2 text-center">
+                    <div className="text-xl font-bold text-red-700">{overstockedCount}</div>
+                    <div className="text-xs text-red-600">Over stocked</div>
+                </div>
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-2 text-center">
+                    <div className="text-xl font-bold text-amber-700">{understockedCount}</div>
+                    <div className="text-xs text-amber-600">Under stocked</div>
+                </div>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-2 text-center">
+                    <div className="text-xl font-bold text-green-700">{optimizedCount}</div>
+                    <div className="text-xs text-green-600">Optimized</div>
+                </div>
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-2 text-center">
+                    <div className="text-xl font-bold text-purple-700">{imbalanceCount}</div>
+                    <div className="text-xs text-purple-600">Imbalanced</div>
+                </div>
+            </div>
+
+            {/* Zone Grid */}
+            <div className={`${viewMode === 'grid' ? 'grid grid-cols-2 gap-3' : 'space-y-2'}`}>
+                {filteredData.map(zone => <Zone key={zone.id} zone={zone} />)}
+            </div>
+
+            <Legend />
+
+            {/* AI Suggestions */}
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 border border-blue-200">
+                <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xl">🤖</span>
+                        <h3 className="text-sm font-bold text-gray-800">AI-Powered Recommendations</h3>
+                    </div>
+                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                        {suggestions?.length || 0} suggestions
+                    </span>
+                </div>
+                
+                <div className="max-h-64 overflow-y-auto space-y-2">
+                    {suggestions && suggestions.length > 0 ? (
+                        suggestions.map(s => <Suggestion key={s.id} suggestion={s} />)
+                    ) : (
+                        <div className="text-center py-8 text-gray-500">
+                            <span className="text-4xl mb-2 block">✨</span>
+                            <p className="text-sm">No recommendations at this time.</p>
+                            <p className="text-xs text-gray-400">All zones are performing well!</p>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
 };

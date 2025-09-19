@@ -1,56 +1,76 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from 'react-dom';
 import { MOCK_STORE_LAYOUT_DATA } from "../constants";
 import { HeatmapZoneData } from "../types";
 import Store3DLayout from "./Store3DLayout";
 
-export const HeatmapTooltip: React.FC<{ zone: HeatmapZoneData }> = ({ zone }) => (
-  <section 
-    className="zone-tool-tip w-64 md:w-72 p-3 md:p-4 text-xs md:text-sm text-left text-white bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg md:rounded-xl shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none border border-gray-600" 
-    style={{ 
-      position: 'fixed',
-      top: '-200px',
-      right: '5px',
-      zIndex: 999999999999,
-    }}
-  >
-    <div className="flex items-center space-x-2 border-b border-gray-600 pb-2 md:pb-3 mb-2 md:mb-3">
-      <span className="text-lg md:text-xl">📊</span>
-      <h4 className="font-bold text-base md:text-lg text-cyan-300">
-        {zone.name} Insights
-      </h4>
-    </div>
+export const HeatmapTooltip: React.FC<{ 
+  zone: HeatmapZoneData; 
+  mousePosition: { x: number; y: number } | null;
+  isVisible: boolean;
+}> = ({ zone, mousePosition, isVisible }) => {
+  if (!mousePosition || !isVisible) return null;
 
-    <div className="space-y-2 md:space-y-3 text-xs md:text-sm">
-      <div className="bg-gray-700/50 p-2 md:p-3 rounded-md md:rounded-lg">
-        <p className="font-semibold text-green-300 flex items-center mb-1 md:mb-2">
-          <span className="mr-2">📈</span>
-          SKU Performance
-        </p>
-        <p className="pl-4 md:pl-6 text-gray-300">🏆 Top: <span className="text-green-400 font-medium">{zone.insights.topSku}</span></p>
-        <p className="pl-4 md:pl-6 text-gray-300">📉 Low: <span className="text-red-400 font-medium">{zone.insights.lowPerformer}</span></p>
+  const tooltipContent = (
+    <section 
+      className="fixed z-[9999] w-64 md:w-72 p-3 md:p-4 text-xs md:text-sm text-left text-white bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg md:rounded-xl shadow-2xl border border-gray-600 pointer-events-none transition-opacity duration-200"
+      style={{
+        left: mousePosition.x + 10,
+        top: mousePosition.y - 10,
+        transform: 'translateY(-100%)'
+      }}
+    >
+      <div className="flex items-center space-x-2 border-b border-gray-600 pb-2 md:pb-3 mb-2 md:mb-3">
+        <span className="text-lg md:text-xl">📊</span>
+        <h4 className="font-bold text-base md:text-lg text-cyan-300">
+          {zone.name} Insights
+        </h4>
       </div>
-      <div className="bg-gray-700/50 p-2 md:p-3 rounded-md md:rounded-lg">
-        <p className="font-semibold text-blue-300 flex items-center mb-1 md:mb-2">
-          <span className="mr-2">🛠️</span>
-          Layout Suggestion
-        </p>
-        <p className="pl-4 md:pl-6 text-gray-300">{zone.insights.layoutSuggestion}</p>
-      </div>
-      <div className="bg-gray-700/50 p-2 md:p-3 rounded-md md:rounded-lg">
-        <p className="font-semibold text-purple-300 flex items-center mb-1 md:mb-2">
-          <span className="mr-2">🧠</span>
-          AI Rationale
-        </p>
-        <p className="pl-4 md:pl-6 text-gray-300">{zone.insights.aiRationale}</p>
-      </div>
-    </div>
-    <div className="absolute left-1/2 -translate-x-1/2 bottom-[-5px] md:bottom-[-6px] w-2 h-2 md:w-3 md:h-3 bg-gray-800 rotate-45 border-r border-b border-gray-600"></div>
-  </section>
-);
 
-const Zone: React.FC<{ zone: HeatmapZoneData; isHeatmapOn: boolean }> = ({
+      <div className="space-y-2 md:space-y-3 text-xs md:text-sm">
+        <div className="bg-gray-700/50 p-2 md:p-3 rounded-md md:rounded-lg">
+          <p className="font-semibold text-green-300 flex items-center mb-1 md:mb-2">
+            <span className="mr-2">📈</span>
+            SKU Performance
+          </p>
+          <p className="pl-4 md:pl-6 text-gray-300">🏆 Top: <span className="text-green-400 font-medium">{zone.insights.topSku}</span></p>
+          <p className="pl-4 md:pl-6 text-gray-300">📉 Low: <span className="text-red-400 font-medium">{zone.insights.lowPerformer}</span></p>
+        </div>
+        <div className="bg-gray-700/50 p-2 md:p-3 rounded-md md:rounded-lg">
+          <p className="font-semibold text-blue-300 flex items-center mb-1 md:mb-2">
+            <span className="mr-2">🛠️</span>
+            Layout Suggestion
+          </p>
+          <p className="pl-4 md:pl-6 text-gray-300">{zone.insights.layoutSuggestion}</p>
+        </div>
+        <div className="bg-gray-700/50 p-2 md:p-3 rounded-md md:rounded-lg">
+          <p className="font-semibold text-purple-300 flex items-center mb-1 md:mb-2">
+            <span className="mr-2">🧠</span>
+            AI Rationale
+          </p>
+          <p className="pl-4 md:pl-6 text-gray-300">{zone.insights.aiRationale}</p>
+        </div>
+      </div>
+    </section>
+  );
+
+  return createPortal(tooltipContent, document.body);
+};
+
+
+
+const Zone: React.FC<{ 
+  zone: HeatmapZoneData; 
+  isHeatmapOn: boolean;
+  onMouseEnter: (zone: HeatmapZoneData, event: React.MouseEvent) => void;
+  onMouseLeave: () => void;
+  onMouseMove: (event: React.MouseEvent) => void;
+}> = ({
   zone,
   isHeatmapOn,
+  onMouseEnter,
+  onMouseLeave,
+  onMouseMove,
 }) => {
   const categoryStyles: Record<string, { bg: string; gradient: string; icon: string; textColor: string }> = {
     Produce: { 
@@ -150,9 +170,12 @@ const Zone: React.FC<{ zone: HeatmapZoneData; isHeatmapOn: boolean }> = ({
 
   return (
     <div
-      className={`relative group flex flex-col items-center justify-center p-1 md:p-2 rounded-md md:rounded-lg text-center transition-all duration-300 cursor-pointer ${
+      className={`relative flex flex-col items-center justify-center p-1 md:p-2 rounded-md md:rounded-lg text-center transition-all duration-300 cursor-pointer ${
         zone.gridClass
       } ${isHeatmapOn ? heatmapClasses : staticClasses}`}
+      onMouseEnter={(e) => onMouseEnter(zone, e)}
+      onMouseLeave={onMouseLeave}
+      onMouseMove={onMouseMove}
     >
       <div className="flex flex-col items-center space-y-0.5 md:space-y-1">
         <span className="text-sm md:text-lg">{categoryStyle.icon}</span>
@@ -164,21 +187,18 @@ const Zone: React.FC<{ zone: HeatmapZoneData; isHeatmapOn: boolean }> = ({
           {zone.name.replace(/\s+/g, '\n')}
         </span>
       </div>
-      {isHeatmapOn && zone.insights.topSku !== "N/A" && (
-        <HeatmapTooltip zone={zone} />
-      )}
     </div>
   );
 };
 
 const HeatmapLegend: React.FC = () => (
-  <div className="flex flex-col lg:flex-row lg:justify-start lg:items-center space-y-2 lg:space-y-0 lg:space-x-4 xl:space-x-6 text-sm font-semibold bg-white p-3 rounded-lg shadow-md border w-full lg:w-auto">
+  <div className="flex flex-col lg:justify-start space-y-2 lg:space-y-0  xl:space-x-6 text-sm font-semibold bg-white p-3 rounded-lg shadow-md border w-full lg:w-auto">
     <span className="font-bold text-gray-700 flex items-center text-xs md:text-sm">
       <span className="mr-2">🔥</span>
       <span className="hidden sm:inline">Engagement Heatmap:</span>
       <span className="sm:hidden">Heatmap:</span>
     </span>
-    <div className="flex items-center justify-between lg:justify-start lg:space-x-4 xl:space-x-6">
+    <div className="flex items-center justify-between lg:justify-start engagement-legend space-x-2">
       <div className="flex items-center space-x-2">
         <div className="w-3 h-3 md:w-4 md:h-4 bg-gradient-to-br from-blue-400 to-blue-600 border border-blue-700 rounded-md shadow-sm"></div>
         <span className="text-blue-700 font-medium text-xs md:text-sm">Low</span>
@@ -196,8 +216,29 @@ const HeatmapLegend: React.FC = () => (
 );
 
 export const StoreLayoutMap: React.FC = () => {
-  const [isHeatmapOn, setHeatmapOn] = useState(false);
+ const [isHeatmapOn, setHeatmapOn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hoveredZone, setHoveredZone] = useState<HeatmapZoneData | null>(null);
+  const [mousePosition, setMousePosition] = useState<{ x: number; y: number } | null>(null);
+
+  const handleMouseEnter = (zone: HeatmapZoneData, event: React.MouseEvent) => {
+    if (isHeatmapOn && zone.insights.topSku !== "N/A") {
+      setHoveredZone(zone);
+      setMousePosition({ x: event.clientX, y: event.clientY });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredZone(null);
+    setMousePosition(null);
+  };
+
+  const handleMouseMove = (event: React.MouseEvent) => {
+    if (hoveredZone) {
+      setMousePosition({ x: event.clientX, y: event.clientY });
+    }
+  };
+
 
   // Split MOCK_STORE_LAYOUT_DATA into 4 groups
   const zonesPerGroup = Math.ceil(MOCK_STORE_LAYOUT_DATA.length / 5);
@@ -239,6 +280,12 @@ export const StoreLayoutMap: React.FC = () => {
   });
   return (
     <>
+          {/* Tooltip rendered outside all divs */}
+      <HeatmapTooltip 
+        zone={hoveredZone!} 
+        mousePosition={mousePosition}
+        isVisible={!!hoveredZone && isHeatmapOn}
+      />
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-4 lg:mb-6 space-y-4 lg:space-y-0">
         <div className="flex items-center space-x-3">
           <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md">
@@ -311,16 +358,26 @@ export const StoreLayoutMap: React.FC = () => {
                 </div>
               </div>
               <div className="flex-1 bg-gradient-to-br from-gray-100 to-gray-200 overflow-scroll">
-                <Store3DLayout storeData={zoneData.flat()} is3DHeatmapOn={isHeatmapOn} />
+                <Store3DLayout storeData={zoneData.flat()} is3DHeatmapOn={isHeatmapOn}
+                 onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onMouseMove={handleMouseMove} />
               </div>
             </div>
           </div>
         )}
       </div>
       <div className="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 p-2 md:p-4 border-2 border-gray-300 rounded-xl shadow-lg flex flex-col">
-        <div className="grid grid-cols-6 md:grid-cols-12 grid-rows-12 md:grid-rows-8 gap-1 md:gap-2 flex-grow p-1 md:p-2 bg-white rounded-lg shadow-inner overflow-hidden">
+         <div className="grid grid-cols-6 md:grid-cols-12 grid-rows-4 md:grid-rows-4 gap-1 md:gap-2 flex-grow p-1 md:p-2 bg-white rounded-lg shadow-inner overflow-hidden">
           {MOCK_STORE_LAYOUT_DATA.map((zone) => (
-            <Zone key={zone.id} zone={zone} isHeatmapOn={isHeatmapOn} />
+            <Zone 
+              key={zone.id} 
+              zone={zone} 
+              isHeatmapOn={isHeatmapOn}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onMouseMove={handleMouseMove}
+            />
           ))}
         </div>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mt-4 lg:mt-6 pt-3 lg:pt-4 border-t border-gray-200 space-y-4 lg:space-y-0">
@@ -331,18 +388,18 @@ export const StoreLayoutMap: React.FC = () => {
           )}
           <label
             htmlFor="heatmap-toggle"
-            className="flex items-center cursor-pointer bg-white p-3 rounded-lg shadow-md border hover:shadow-lg transition-shadow w-full lg:w-auto justify-center lg:justify-start"
+            className="toggle-checkbox flex items-center cursor-pointer bg-white p-3 rounded-lg shadow-md border hover:shadow-lg transition-shadow w-full lg:w-auto justify-center lg:justify-start"
           >
             <span className="mr-4 text-xs md:text-sm font-medium text-gray-700 flex items-center">
               <span className="mr-2">🗺️</span>
-              <span className="hidden sm:inline">Heatmap Mode</span>
+              <span className="hidden sm:inline toggle-title ">Heatmap Mode</span>
               <span className="sm:hidden">Heatmap</span>
             </span>
             <div className="relative">
               <input
                 type="checkbox"
                 id="heatmap-toggle"
-                className="sr-only"
+                className="sr-only "
                 checked={isHeatmapOn}
                 onChange={() => setHeatmapOn(!isHeatmapOn)}
               />

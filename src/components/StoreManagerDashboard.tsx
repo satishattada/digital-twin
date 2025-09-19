@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Category, Recommendation } from '../types';
 import { StoreLayoutMap } from './StoreLayoutMap';
@@ -7,6 +6,7 @@ import { PlanogramTracker } from './PlanogramTracker';
 import { KpiPanel } from './KpiGrid';
 import { AiRecommendations } from './AiRecommendations';
 import { InsightsAndAlerts } from './ActionableInsights';
+import { EquipmentMonitor } from './Equipment';
 
 type StoreManagerDashboardProps = {
   selectedCategory: Category;
@@ -34,20 +34,29 @@ export const StoreManagerDashboard: React.FC<StoreManagerDashboardProps> = ({ se
         </div>
       </div>
 
-      {/* --- ROW 2: KPIs, AI Recs, Insights --- */}
-      {/* Grid ensures equal width. Default stretching ensures equal height. */}
-      <div className="grid grid-cols-3 gap-6">
+      {/* --- ROW 2: KPIs & Equipment Monitor --- */}
+      <div className="grid grid-cols-2 gap-6">
         {/* KPI Panel */}
         <div className="rounded-lg bg-gray-50 border p-4 shadow-sm">
            <h2 className="text-lg font-bold text-[#005BAC] mb-2">Key Performance Indicators</h2>
            <KpiPanel />
         </div>
         
+        {/* Equipment Monitor Panel */}
+        <div className="rounded-lg bg-gray-50 border p-4 shadow-sm flex flex-col min-h-0">
+          <h2 className="text-lg font-bold text-[#005BAC] mb-2 shrink-0">Retail Assets Monitoring</h2>
+          <div className="flex-grow -mr-3 pr-3">
+            <EquipmentMonitor />
+          </div>
+        </div>
+      </div>
+
+      {/* --- ROW 3: AI Recs & Insights --- */}
+      <div className="grid grid-cols-2 gap-6 pb-4">
         {/* AI Recommendations Panel */}
-        {/* max-h-[450px] defines the row height and enables scrolling for 4-5 items */}
-        <div className="rounded-lg bg-gray-50 border p-4 shadow-sm flex flex-col min-h-0 max-h-[450px]">
-          <h2 className="text-lg font-bold text-[#005BAC] mb-2 shrink-0">AI Recommendations</h2>
-          <div className="flex-grow overflow-y-auto -mr-3 pr-3">
+        <div className="rounded-lg bg-gray-50 border p-4 shadow-sm flex flex-col min-h-0">
+          <h2 className="text-lg font-bold text-[#005BAC] mb-2 shrink-0">Shelfie Recommendations</h2>
+          <div className="flex-grow -mr-3 pr-3">
             <AiRecommendations 
               recommendations={filteredRecommendations} 
               onCreateTask={onCreateTask}
@@ -57,9 +66,9 @@ export const StoreManagerDashboard: React.FC<StoreManagerDashboardProps> = ({ se
         </div>
         
         {/* Insights & Alerts Panel */}
-        <div className="rounded-lg bg-gray-50 border p-4 shadow-sm flex flex-col min-h-0 max-h-[450px]">
+        <div className="rounded-lg bg-gray-50 border p-4 shadow-sm flex flex-col min-h-0">
           <h2 className="text-lg font-bold text-[#005BAC] mb-2 shrink-0">Insights & Alerts</h2>
-          <div className="flex-grow overflow-y-auto -mr-3 pr-3">
+          <div className="flex-grow -mr-3 pr-3">
             <InsightsAndAlerts selectedCategory={selectedCategory} />
           </div>
         </div>
