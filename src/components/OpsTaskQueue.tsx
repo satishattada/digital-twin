@@ -9,12 +9,10 @@ type OpsTaskQueueProps = {
 const taskTypeFilters: (TaskType | 'All')[] = ['All', 'Restocking', 'Layout Change', 'Compliance', 'PO', 'Investigation'];
 const priorityFilters: (TaskPriority | 'All')[] = ['All', 'High', 'Medium', 'Low'];
 
-const categoryColors: Record<Category, string> = {
-    Dairy: 'bg-blue-100 text-blue-800 border-blue-300',
-    Snacks: 'bg-orange-100 text-orange-800 border-orange-300',
+const categoryColors: Partial<Record<Category | string, string>> = {
+    'Confectionery & Snacks': 'bg-orange-100 text-orange-800 border-orange-300',
     Beverages: 'bg-cyan-100 text-cyan-800 border-cyan-300',
-    'Fresh Produce': 'bg-green-100 text-green-800 border-green-300',
-    Household: 'bg-gray-100 text-gray-800 border-gray-300',
+    'Food Items': 'bg-green-100 text-green-800 border-green-300',
 };
 
 const TaskActionModal: React.FC<{

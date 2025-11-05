@@ -1,0 +1,30 @@
+{
+  "name": "bp-api-proxy",
+  "version": "1.0.0",
+  "description": "BP SiteMaster API Proxy for Digital Twin",
+  "main": "lambda.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "deploy": "set NODE_TLS_REJECT_UNAUTHORIZED=0 && serverless deploy",
+    "remove": "set NODE_TLS_REJECT_UNAUTHORIZED=0 && serverless remove",
+    "logs": "set NODE_TLS_REJECT_UNAUTHORIZED=0 && serverless logs -f api",
+    "deploy-safe": "serverless deploy"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "node-fetch": "^2.6.7",
+    "serverless-http": "^3.2.0"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": ["bp", "api", "proxy", "digital-twin"],
+  "author": "Your Name",
+  "license": "MIT"
+}

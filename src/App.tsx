@@ -26,8 +26,10 @@ import { ShelfieModal } from "./components/ShelfieModal";
 
 const App: React.FC = () => {
   const [activePersona, setActivePersona] = useState<Persona>("Store Manager");
-  const [selectedStore, setSelectedStore] = useState<string>("Kempton Park");
-  const [selectedCategory, setSelectedCategory] = useState<Category>("Dairy");
+  const [selectedStore, setSelectedStore] = useState<string>("SHIRLEY SF CONNECT");
+  const [selectedSiteId, setSelectedSiteId] = useState<string>('13001');
+
+  const [selectedCategory, setSelectedCategory] = useState<Category>("All");
   const [selectedTimePeriod, setSelectedTimePeriod] =
     useState<string>("Last 7 Days");
   const [show3DLayout, setShow3DLayout] = useState<boolean>(false);
@@ -61,7 +63,7 @@ const App: React.FC = () => {
       setSelectedStore("All Stores");
       setSelectedTimePeriod("Last Month");
     } else if (selectedStore === "All Stores") {
-      setSelectedStore("Kempton Park");
+      setSelectedStore("SHIRLEY SF CONNECT");
       setSelectedTimePeriod("Last 7 Days");
     }
   }, [activePersona, selectedStore]);
@@ -140,7 +142,7 @@ const App: React.FC = () => {
     setOpsAlerts((prev) => prev.filter((a) => a.id !== id));
   }, []);
 
-  const handleIgnoreRecommendation = useCallback((id: number) => {
+  const handleIgnoreRecommendation = useCallback((id: string) => {
     setRecommendations((prevRecs) => prevRecs.filter((r) => r.id !== id));
   }, []);
 
@@ -168,6 +170,8 @@ const App: React.FC = () => {
             tasks={tasks}
             setTasks={setTasks}
             selectedCategory={selectedCategory}
+            selectedStore={selectedStore}
+            selectedSiteId={selectedSiteId}
             selectedTimePeriod={selectedTimePeriod}
             insights={opsInsights}
             alerts={opsAlerts}
@@ -222,6 +226,8 @@ const App: React.FC = () => {
               activePersona={activePersona}
               setActivePersona={setActivePersona}
               selectedStore={selectedStore}
+              selectedSiteId={selectedSiteId}
+              setSelectedSiteId={setSelectedSiteId}
               tasks={tasks}
               recommendations={recommendations}
               opsAlerts={opsAlerts}

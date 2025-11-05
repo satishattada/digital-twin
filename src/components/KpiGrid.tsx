@@ -55,14 +55,15 @@ const KpiCard: React.FC<{ kpi: Kpi }> = ({ kpi }) => {
             </div>
 
             {/* Main KPI Value */}
-            <div className="mb-3">
-                <p className="text-4xl font-bold text-[#005BAC] leading-tight">{kpi.value}</p>
+           <div className="mb-3">
+                <p className="text-4xl font-bold text-[#005BAC] leading-tight blink-live-data">{kpi.value}</p>
                 {kpi.change && (
                     <p className="text-sm text-gray-600 mt-1">
-                        vs last period: <span className={isPositiveTrend ? 'text-green-600' : 'text-red-500'}>{kpi.change}</span>
+                        vs last period: <span className={`blink-slow ${isPositiveTrend ? 'text-green-600' : 'text-red-500'}`}>{kpi.change}</span>
                     </p>
                 )}
             </div>
+
 
             {/* Insight */}
             <div className="mt-auto">

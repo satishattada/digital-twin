@@ -5,12 +5,12 @@ import { Recommendation } from "../types"
 type AiRecommendationsProps = {
   recommendations: Recommendation[];
   onCreateTask: (rec: Recommendation) => void;
-  onIgnoreRecommendation: (id: number) => void;
+  onIgnoreRecommendation: (id: string) => void;
 };
 const RecommendationCard: React.FC<{
     rec: Recommendation,
     onCreateTask: (rec: Recommendation) => void,
-    onIgnoreRecommendation: (id: number) => void
+    onIgnoreRecommendation: (id: string) => void
 }> = ({ rec, onCreateTask, onIgnoreRecommendation }) => {
     const [isMenuOpen, setMenuOpen] = useState(false);
 
@@ -25,7 +25,7 @@ const RecommendationCard: React.FC<{
     
     // Enhanced logic for urgency and priority
     const isStockConcerning = rec.skuVelocity === 'Slow-moving' && rec.suggestedReorderQty > 0;
-    const stockPercentage = (rec.currentStock / rec.maxShelfCapacity) * 100;
+    const stockPercentage = (rec.currentStock / (rec.maxShelfCapacity || rec.minThreshold || 100)) * 100;
     const isLowStock = stockPercentage < 20;
     const isCritical = stockPercentage < 10;
     

@@ -1,14 +1,40 @@
 import { ReactNode } from "react";
 
 export type Persona = 'Store Manager' | 'Operations Manager' | 'Regional Manager';
-export type Category = 'Dairy' | 'Snacks' | 'Beverages' | 'Fresh Produce' | 'Household';
 
+export type Category = 
+    | "All"
+    | "Postal Services"
+    | "Stationery & Office" 
+    | "Cards & Gifts"
+    | "Tobacco & Smoking"
+    | "Confectionery & Snacks"
+    | "Beverages"
+    | "Health & Beauty"
+    | "Electronics & Accessories"
+    | "Automotive"
+    | "Publications"
+    | "Travel & Transport"
+    | "Food Items";
+
+// Updated Product type to match constants.ts
 export type Product = {
-  quantity: any;
   id: string;
   name: string;
-  brand: string;
-  imageUrl: string;
+  category: Category;
+  price: number;
+  costPrice: number;
+  stock: number;
+  minStock: number;
+  maxStock: number;
+  supplier: string;
+  sku: string;
+  lastRestock: string;
+  trend: 'stable' | 'increasing' | 'decreasing' | 'declining' | 'seasonal';
+  // Legacy fields for compatibility
+  quantity?: any;
+  brand?: string;
+  imageUrl?: string;
   alert?: 'WRONG_LOCATION' | 'EMPTY_SHELF';
   rationale?: string;
 };
@@ -26,19 +52,26 @@ export type Kpi = {
   definition?: string;
 };
 
+// Updated Recommendation type to match constants.ts
 export type Recommendation = {
-  id: number;
-  category: Category;
-  sku: string;
+  id: string;  // Changed from number to string
   productName: string;
-  shelfCapacity: number;
-  forecastedDemand: number;
-  skuVelocity: 'Fast-moving' | 'Slow-moving';
+  sku: string;
+  category: Category;
   currentStock: number;
+  minThreshold: number;
   suggestedReorderQty: number;
-  maxShelfCapacity: number;
-  expectedSellThrough: number;
+  confidence: "High" | "Medium" | "Low";
   reason: string;
+  estimatedDaysUntilStockout: number;
+  supplier: string;
+  costImpact: number;
+  // Legacy fields for compatibility
+  shelfCapacity?: number;
+  forecastedDemand?: number;
+  skuVelocity?: 'Fast-moving' | 'Slow-moving';
+  maxShelfCapacity?: number;
+  expectedSellThrough?: number;
 };
 
 export type InsightStatus = 'Urgent' | 'Pending' | 'Resolved';
@@ -80,28 +113,45 @@ export type HeatmapZoneData = {
 // --- For Daily Digest ---
 export type DailyTask = {
     id: string;
-    name:string;
-    type: 'Restock' | 'Layout' | 'Compliance' | 'General' | 'PO Approval' | 'Investigation';
+    title: string;
+    category: Category;
+    priority: "high" | "medium" | "low";
+    status: "completed" | "pending" | "in-progress";
+    time: string;
+    // Legacy fields
+    name?: string;
+    type?: 'Restock' | 'Layout' | 'Compliance' | 'General' | 'PO Approval' | 'Investigation';
 };
 
 export type UrgentIssue = {
     id: string;
     title: string;
-    timestamp: string;
+    description: string;
     category: Category;
-    status: 'Urgent' | 'Pending' | 'Completed';
+    severity: "critical" | "high" | "medium" | "low";
+    time: string;
+    // Legacy fields
+    timestamp?: string;
+    status?: 'Urgent' | 'Pending' | 'Completed';
 };
 
 export type DailyDigestData = {
+    date: string;
+    summary: {
+        totalTasks: number;
+        completedTasks: number;
+        urgentIssues: number;
+        revenueToday: number;
+    };
+    tasks: DailyTask[];
     urgentIssues: UrgentIssue[];
-    todayTasks: DailyTask[];
-    completedTasks: DailyTask[];
-}
-
+    // Legacy fields
+    todayTasks?: DailyTask[];
+    completedTasks?: DailyTask[];
+};
 
 // --- Operations Manager Types ---
-
-export type TaskType = 'Restocking' | 'Layout Change' | 'PO' | 'Investigation' | 'Compliance';
+export type TaskType = 'Restocking' | 'Layout Change' | 'PO' | 'Investigation' | 'Compliance' | 'Quality Control' | 'Merchandising';
 export type TaskStatus = 'To Do' | 'In Progress' | 'Completed';
 export type TaskPriority = 'High' | 'Medium' | 'Low';
 
@@ -152,18 +202,20 @@ export type InventorySuggestion = {
   text: string;
 };
 
-export type Urgency = 'Urgent' | 'Pending' | 'Critical' | 'Moderate'; // Expanded for alerts
+// Updated OpsAlert type to match constants.ts
 export type OpsAlert = {
-  severity: ReactNode;
   id: number;
+  title: string;
+  description: string;
+  severity: "critical" | "high" | "medium" | "low";
+  category: Category;
+  timestamp: string;
+  // Legacy fields for compatibility
   sku?: string;
   productName?: string;
-  title: string;
-  urgency: Urgency;
-  message: string;
+  urgency?: 'Urgent' | 'Pending' | 'Critical' | 'Moderate';
+  message?: string;
   recommendation?: string;
-  timestamp: string;
-  category: Category;
 };
 
 export type Trend = 'up' | 'down' | 'stable';
@@ -178,10 +230,14 @@ export type OpsKpi = {
 export type PoStatus = 'Created' | 'Delivered' | 'Pending' | 'In Transit' | 'Delayed';
 export type PurchaseOrder = {
   id: string;
-  supplierName: string;
+  supplierName?: string;
+  supplier: string;
+  orderDate?: string;
+  expectedDelivery?: string;
+  totalValue?: number;
   status: PoStatus;
-  items: number;
-  date: string;
+  items: any;
+  date?: string;
 };
 
 export type Supplier = {
@@ -191,13 +247,18 @@ export type Supplier = {
   underperforming: boolean;
 };
 
+// Updated OpsInsight type to match constants.ts
 export type OpsInsight = {
     id: number;
     title: string;
     description: string;
+    impact: "high" | "medium" | "low";
     action: string;
-    risk: string;
-    rationale: string;
+    category: Category;
+    timestamp: string;
+    // Legacy fields for compatibility
+    risk?: string;
+    rationale?: string;
 };
 
 export type SpaceUtilizationSuggestion = {

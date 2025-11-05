@@ -1,10 +1,70 @@
 import React, { useState, useMemo } from 'react';
-import { Category, OpsKpi, PurchaseOrder, Supplier } from "../types"
+import { Category, PurchaseOrder } from "../types"
 import { MOCK_OPS_DATA } from "../constants"
 
 type OpsKpiDashboardProps = {
   selectedCategory: Category;
 };
+
+// Mock KPI data since it's not in MOCK_OPS_DATA
+const MOCK_KPIS = [
+  {
+    title: "Inventory Accuracy",
+    value: "94.2%",
+    trend: 'up' as const,
+    performance: 'good' as const,
+    definition: "Percentage of inventory counts that match system records"
+  },
+  {
+    title: "Order Fill Rate", 
+    value: "87.8%",
+    trend: 'down' as const,
+    performance: 'warning' as const,
+    definition: "Percentage of orders fulfilled completely on first attempt"
+  },
+  {
+    title: "Supplier On-Time",
+    value: "92.1%", 
+    trend: 'up' as const,
+    performance: 'good' as const,
+    definition: "Percentage of supplier deliveries arriving on scheduled date"
+  },
+  {
+    title: "Stock Turnover",
+    value: "12.4x",
+    trend: 'stable' as const,
+    performance: 'neutral' as const,
+    definition: "Number of times inventory is sold and replaced over a period"
+  }
+];
+
+// Mock supplier data since it's not in MOCK_OPS_DATA  
+const MOCK_SUPPLIERS = [
+  {
+    name: "Royal Mail",
+    fulfillmentAccuracy: 98.5,
+    leadTime: 1,
+    underperforming: false
+  },
+  {
+    name: "Office Direct", 
+    fulfillmentAccuracy: 82.1,
+    leadTime: 3,
+    underperforming: true
+  },
+  {
+    name: "Sweet Supply",
+    fulfillmentAccuracy: 94.8,
+    leadTime: 2, 
+    underperforming: false
+  },
+  {
+    name: "Health Direct",
+    fulfillmentAccuracy: 89.2,
+    leadTime: 1,
+    underperforming: false
+  }
+];
 
 const TrendIcon: React.FC<{trend: 'up' | 'down' | 'stable', value?: string}> = ({trend, value}) => {
     const iconClass = "h-4 w-4";
@@ -34,7 +94,11 @@ const TrendIcon: React.FC<{trend: 'up' | 'down' | 'stable', value?: string}> = (
     );
 };
 
-const KpiCard: React.FC<{kpi: OpsKpi, isExpanded?: boolean, onToggle?: () => void}> = ({kpi, isExpanded, onToggle}) => {
+const KpiCard: React.FC<{
+    kpi: typeof MOCK_KPIS[0], 
+    isExpanded?: boolean, 
+    onToggle?: () => void
+}> = ({kpi, isExpanded, onToggle}) => {
     const [isHovered, setIsHovered] = useState(false);
     
     const getPerformanceStyles = (performance: string) => {
@@ -90,7 +154,7 @@ const KpiCard: React.FC<{kpi: OpsKpi, isExpanded?: boolean, onToggle?: () => voi
                 </h4>
                 <p className="text-xs text-gray-500 mt-1">
                     {kpi.performance === 'good' ? '✅ On Target' :
-                     kpi.performance === 'bad' ? '❌ Below Target' :
+                     kpi.performance === 'warning' ? '❌ Below Target' :
                      kpi.performance === 'neutral' ? '⚠️ Needs Attention' : '📊 Monitoring'}
                 </p>
             </div>
@@ -140,26 +204,36 @@ const PoRow: React.FC<{po: PurchaseOrder, isExpanded?: boolean}> = ({po, isExpan
     const [showDetails, setShowDetails] = useState(false);
     
     const getStatusStyles = (status: string) => {
-        switch (status) {
-            case 'Delivered':
+        const normalizedStatus = status.toLowerCase();
+        switch (normalizedStatus) {
+            case 'delivered':
+            case 'received':
                 return { color: 'bg-green-500', text: 'text-green-700', bg: 'bg-green-50' };
-            case 'In Transit':
+            case 'in-transit':
+            case 'approved':
                 return { color: 'bg-blue-500', text: 'text-blue-700', bg: 'bg-blue-50' };
-            case 'Pending':
+            case 'pending':
+            case 'created':
                 return { color: 'bg-yellow-500', text: 'text-yellow-700', bg: 'bg-yellow-50' };
-            case 'Delayed':
+            case 'delayed':
+            case 'cancelled':
                 return { color: 'bg-red-500', text: 'text-red-700', bg: 'bg-red-50' };
+            case 'urgent':
+                return { color: 'bg-orange-500', text: 'text-orange-700', bg: 'bg-orange-50' };
+            case 'recurring':
+            case 'active':
+                return { color: 'bg-purple-500', text: 'text-purple-700', bg: 'bg-purple-50' };
             default:
                 return { color: 'bg-gray-500', text: 'text-gray-700', bg: 'bg-gray-50' };
         }
     };
 
     const statusStyles = getStatusStyles(po.status);
-    const mockValue = Math.floor(Math.random() * 50000) + 10000;
-    const mockETA = po.status === 'In Transit' ? '2 days' 
-                  : po.status === 'Pending' ? '5 days' 
-                  : po.status === 'Delivered' ? 'Delivered' 
-                  : po.status === 'Delayed' ? '7 days' 
+    const mockETA = po.status.toLowerCase() === 'in-transit' ? '2 days' 
+                  : po.status.toLowerCase() === 'pending' ? '5 days' 
+                  : po.status.toLowerCase() === 'delivered' ? 'Delivered' 
+                  : po.status.toLowerCase() === 'delayed' ? '7 days' 
+                  : po.status.toLowerCase() === 'urgent' ? '1 day'
                   : 'Unknown';
 
     return (
@@ -169,10 +243,10 @@ const PoRow: React.FC<{po: PurchaseOrder, isExpanded?: boolean}> = ({po, isExpan
                 onClick={() => setShowDetails(!showDetails)}
             >
                 <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${statusStyles.color} animate-pulse`}></div>
+                    <div className={`w-3 h-3 rounded-full ${statusStyles.color}`}></div>
                     <div>
                         <span className="font-bold text-sm text-gray-800">{po.id}</span>
-                        <span className="text-xs text-gray-500 ml-2">• {po.supplierName}</span>
+                        <span className="text-xs text-gray-500 ml-2">• {po.supplier}</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -190,15 +264,43 @@ const PoRow: React.FC<{po: PurchaseOrder, isExpanded?: boolean}> = ({po, isExpan
                     <div className="grid grid-cols-2 gap-4 text-xs">
                         <div>
                             <span className="text-gray-500">Value:</span>
-                            <span className="font-semibold ml-1">${mockValue.toLocaleString()}</span>
+                            <span className="font-semibold ml-1">£{(po?.totalValue ?? 0).toLocaleString()}</span>
                         </div>
                         <div>
                             <span className="text-gray-500">ETA:</span>
                             <span className="font-semibold ml-1">{mockETA}</span>
                         </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-500">Order Date: {new Date().toLocaleDateString()}</span>
+                    <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                            <span className="text-gray-500">Order Date:</span>
+                            <span className="font-semibold ml-1">{po.orderDate}</span>
+                        </div>
+                        <div>
+                            <span className="text-gray-500">Items:</span>
+                            <span className="font-semibold ml-1">{po.items.length}</span>
+                        </div>
+                    </div>
+                    {po.items.length > 0 && (
+                        <div className="mt-2 pt-2 border-t border-gray-100">
+                            <div className="text-xs text-gray-600 mb-1">Items:</div>
+                            <div className="space-y-1 max-h-20 overflow-y-auto">
+                                {po.items.slice(0, 3).map((item: any, idx: any) => (
+                                    <div key={idx} className="text-xs text-gray-700 flex justify-between">
+                                        <span className="truncate">{item.productName}</span>
+                                        <span className="font-medium ml-2">×{item.quantity}</span>
+                                    </div>
+                                ))}
+                                {po.items.length > 3 && (
+                                    <div className="text-xs text-gray-500">
+                                        +{po.items.length - 3} more items
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                    <div className="flex items-center justify-between pt-2">
+                        <div className="text-xs text-gray-500">Expected: {po.expectedDelivery}</div>
                         <button className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 transition-colors">
                             📧 Track
                         </button>
@@ -209,7 +311,7 @@ const PoRow: React.FC<{po: PurchaseOrder, isExpanded?: boolean}> = ({po, isExpan
     );
 };
 
-const SupplierCard: React.FC<{supplier: Supplier}> = ({supplier}) => {
+const SupplierCard: React.FC<{supplier: typeof MOCK_SUPPLIERS[0]}> = ({supplier}) => {
     const [isExpanded, setIsExpanded] = useState(false);
     
     const getScoreColor = (accuracy: number) => {
@@ -273,7 +375,7 @@ const SupplierCard: React.FC<{supplier: Supplier}> = ({supplier}) => {
                         </div>
                         <div className="bg-white/50 p-2 rounded border">
                             <span className="text-gray-500">Value:</span>
-                            <span className="font-semibold ml-1">$125K</span>
+                            <span className="font-semibold ml-1">£125K</span>
                         </div>
                     </div>
                     <div className="flex gap-2">
@@ -294,20 +396,29 @@ export const OpsKpiDashboard: React.FC<OpsKpiDashboardProps> = ({ selectedCatego
     const [activeTab, setActiveTab] = useState<'overview' | 'po' | 'suppliers'>('overview');
     const data = MOCK_OPS_DATA[selectedCategory];
 
+    // Use available data or fallbacks
+    const purchaseOrders = data?.purchaseOrders || [];
+    const suppliers = MOCK_SUPPLIERS;
+    const kpis = MOCK_KPIS;
+
     // Calculate summary stats
     const summaryStats = useMemo(() => {
-        const totalPOs = data.purchaseOrders.length;
-        const deliveredPOs = data.purchaseOrders.filter(po => po.status === 'Delivered').length;
-        const underperformingSuppliers = data.suppliers.filter(s => s.underperforming).length;
-        const avgAccuracy = data.suppliers.reduce((acc, s) => acc + s.fulfillmentAccuracy, 0) / data.suppliers.length;
+        const totalPOs = purchaseOrders.length;
+        const deliveredPOs = purchaseOrders.filter(po => 
+            po.status.toLowerCase() === 'delivered' || po.status.toLowerCase() === 'received'
+        ).length;
+        const underperformingSuppliers = suppliers.filter(s => s.underperforming).length;
+        const avgAccuracy = suppliers.length > 0 
+            ? suppliers.reduce((acc, s) => acc + s.fulfillmentAccuracy, 0) / suppliers.length 
+            : 0;
         
         return {
-            deliveryRate: Math.round((deliveredPOs / totalPOs) * 100),
+            deliveryRate: totalPOs > 0 ? Math.round((deliveredPOs / totalPOs) * 100) : 0,
             underperformingSuppliers,
             avgAccuracy: Math.round(avgAccuracy),
-            totalValue: Math.floor(Math.random() * 500000) + 100000
+            totalValue: purchaseOrders.reduce((acc, po) => acc + (po.totalValue ?? 0), 0)
         };
-    }, [data]);
+    }, [purchaseOrders, suppliers]);
 
     return (
         <div className="flex flex-col h-full space-y-4">
@@ -341,7 +452,7 @@ export const OpsKpiDashboard: React.FC<OpsKpiDashboardProps> = ({ selectedCatego
                     <div className="text-xs text-red-600">At Risk Suppliers</div>
                 </div>
                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-center">
-                    <div className="text-lg font-bold text-purple-700">${(summaryStats.totalValue/1000).toFixed(0)}K</div>
+                    <div className="text-lg font-bold text-purple-700">£{(summaryStats.totalValue/1000).toFixed(0)}K</div>
                     <div className="text-xs text-purple-600">Monthly Value</div>
                 </div>
             </div>
@@ -384,7 +495,7 @@ export const OpsKpiDashboard: React.FC<OpsKpiDashboardProps> = ({ selectedCatego
             <div className="flex-grow overflow-y-auto space-y-3">
                 {activeTab === 'overview' && (
                     <div className="grid grid-cols-2 gap-3">
-                        {data.kpis.map((kpi, index) => 
+                        {kpis.map((kpi, index) => 
                             <KpiCard key={kpi.title} kpi={kpi} />
                         )}
                     </div>
@@ -395,12 +506,19 @@ export const OpsKpiDashboard: React.FC<OpsKpiDashboardProps> = ({ selectedCatego
                         <div className="flex items-center justify-between">
                             <h3 className="text-sm font-bold text-gray-700">📦 Purchase Order Tracker</h3>
                             <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                                {data.purchaseOrders.length} orders
+                                {purchaseOrders.length} orders
                             </span>
                         </div>
-                        <div className="space-y-2">
-                            {data.purchaseOrders.map(po => <PoRow key={po.id} po={po} />)}
-                        </div>
+                        {purchaseOrders.length > 0 ? (
+                            <div className="space-y-2">
+                                {purchaseOrders.map(po => <PoRow key={po.id} po={po} />)}
+                            </div>
+                        ) : (
+                            <div className="text-center py-8 text-gray-500">
+                                <span className="text-4xl mb-2 block">📦</span>
+                                <p className="text-sm">No purchase orders found for this category</p>
+                            </div>
+                        )}
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                             <div className="flex items-center gap-2 text-blue-700 mb-2">
                                 <span className="text-sm">💡</span>
@@ -423,11 +541,11 @@ export const OpsKpiDashboard: React.FC<OpsKpiDashboardProps> = ({ selectedCatego
                         <div className="flex items-center justify-between">
                             <h3 className="text-sm font-bold text-gray-700">🏪 Supplier Performance</h3>
                             <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                                {data.suppliers.length} suppliers
+                                {suppliers.length} suppliers
                             </span>
                         </div>
                         <div className="space-y-3">
-                            {data.suppliers.map(supplier => 
+                            {suppliers.map(supplier => 
                                 <SupplierCard key={supplier.name} supplier={supplier} />
                             )}
                         </div>

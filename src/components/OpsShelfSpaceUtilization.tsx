@@ -41,14 +41,16 @@ const Suggestion: React.FC<{suggestion: SpaceUtilizationSuggestion}> = ({suggest
 
 
 export const OpsShelfSpaceUtilization: React.FC<OpsShelfSpaceUtilizationProps> = ({ selectedCategory }) => {
-  const data = MOCK_OPS_DATA[selectedCategory].spaceUtilization;
+  const categoryData = MOCK_OPS_DATA[selectedCategory];
+  // @ts-ignore - spaceUtilization not in all mock data yet
+  const data = categoryData?.spaceUtilization || { zones: [], suggestions: [] };
 
   return (
     <div className="flex flex-col h-full">
         <h2 className="text-md font-bold text-[#005BAC] mb-2">Shelf Space Utilization</h2>
         <div className="bg-gray-200 p-1 rounded-md">
             <div className="grid grid-cols-6 gap-1">
-                {data.zones.map(zone => (
+                {data.zones && data.zones.map((zone: any) => (
                     <div key={zone.id} className={`h-6 rounded-sm ${getUsageColor(zone.usage)}`} title={`Usage: ${zone.usage}%`}></div>
                 ))}
             </div>
@@ -57,7 +59,7 @@ export const OpsShelfSpaceUtilization: React.FC<OpsShelfSpaceUtilizationProps> =
         </div>
         <div className="mt-2 space-y-1.5">
             <h3 className="text-xs font-bold text-gray-600">AI Suggestions:</h3>
-            {data.suggestions.map(s => <Suggestion key={s.id} suggestion={s} />)}
+            {data.suggestions && data.suggestions.map((s: any) => <Suggestion key={s.id} suggestion={s} />)}
         </div>
     </div>
   );

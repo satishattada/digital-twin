@@ -57,8 +57,6 @@ export const HeatmapTooltip: React.FC<{
   return createPortal(tooltipContent, document.body);
 };
 
-
-
 const Zone: React.FC<{ 
   zone: HeatmapZoneData; 
   isHeatmapOn: boolean;
@@ -72,80 +70,243 @@ const Zone: React.FC<{
   onMouseLeave,
   onMouseMove,
 }) => {
+  // Updated category styles for postal office products
   const categoryStyles: Record<string, { bg: string; gradient: string; icon: string; textColor: string }> = {
-    Produce: { 
-      bg: "bg-gradient-to-br from-green-100 to-green-200", 
-      gradient: "from-green-400 to-green-600",
-      icon: "🥬", 
-      textColor: "text-green-800" 
-    },
-    Meat: { 
-      bg: "bg-gradient-to-br from-red-100 to-red-200", 
-      gradient: "from-red-400 to-red-600",
-      icon: "🥩", 
-      textColor: "text-red-800" 
-    },
-    Bakery: { 
-      bg: "bg-gradient-to-br from-orange-100 to-orange-200", 
-      gradient: "from-orange-400 to-orange-600",
-      icon: "🍞", 
-      textColor: "text-orange-800" 
-    },
-    Dairy: { 
+    // Postal Services
+    "Postal": { 
       bg: "bg-gradient-to-br from-blue-100 to-blue-200", 
       gradient: "from-blue-400 to-blue-600",
-      icon: "🥛", 
+      icon: "📮", 
       textColor: "text-blue-800" 
     },
-    Pantry: { 
+    "Stamp": { 
+      bg: "bg-gradient-to-br from-blue-100 to-blue-200", 
+      gradient: "from-blue-400 to-blue-600",
+      icon: "📮", 
+      textColor: "text-blue-800" 
+    },
+    "Counter": { 
+      bg: "bg-gradient-to-br from-blue-100 to-blue-200", 
+      gradient: "from-blue-400 to-blue-600",
+      icon: "🏢", 
+      textColor: "text-blue-800" 
+    },
+    
+    // Stationery & Office
+    "Stationery": { 
       bg: "bg-gradient-to-br from-yellow-100 to-yellow-200", 
       gradient: "from-yellow-400 to-yellow-600",
-      icon: "🥫", 
+      icon: "✏️", 
       textColor: "text-yellow-800" 
     },
-    Frozen: { 
-      bg: "bg-gradient-to-br from-sky-100 to-sky-200", 
-      gradient: "from-sky-400 to-sky-600",
-      icon: "🧊", 
-      textColor: "text-sky-800" 
+    "Office": { 
+      bg: "bg-gradient-to-br from-yellow-100 to-yellow-200", 
+      gradient: "from-yellow-400 to-yellow-600",
+      icon: "📝", 
+      textColor: "text-yellow-800" 
     },
-    Snacks: { 
+    
+    // Cards & Gifts
+    "Card": { 
+      bg: "bg-gradient-to-br from-pink-100 to-pink-200", 
+      gradient: "from-pink-400 to-pink-600",
+      icon: "💌", 
+      textColor: "text-pink-800" 
+    },
+    "Gift": { 
+      bg: "bg-gradient-to-br from-pink-100 to-pink-200", 
+      gradient: "from-pink-400 to-pink-600",
+      icon: "🎁", 
+      textColor: "text-pink-800" 
+    },
+    
+    // Tobacco & Smoking
+    "Tobacco": { 
+      bg: "bg-gradient-to-br from-amber-100 to-amber-200", 
+      gradient: "from-amber-400 to-amber-600",
+      icon: "🚬", 
+      textColor: "text-amber-800" 
+    },
+    "Cigarette": { 
+      bg: "bg-gradient-to-br from-amber-100 to-amber-200", 
+      gradient: "from-amber-400 to-amber-600",
+      icon: "🚬", 
+      textColor: "text-amber-800" 
+    },
+    
+    // Confectionery & Snacks
+    "Confectionery": { 
+      bg: "bg-gradient-to-br from-purple-100 to-purple-200", 
+      gradient: "from-purple-400 to-purple-600",
+      icon: "🍫", 
+      textColor: "text-purple-800" 
+    },
+    "Snack": { 
       bg: "bg-gradient-to-br from-purple-100 to-purple-200", 
       gradient: "from-purple-400 to-purple-600",
       icon: "🍿", 
       textColor: "text-purple-800" 
     },
-    Beverages: { 
+    "Chocolate": { 
+      bg: "bg-gradient-to-br from-purple-100 to-purple-200", 
+      gradient: "from-purple-400 to-purple-600",
+      icon: "🍫", 
+      textColor: "text-purple-800" 
+    },
+    
+    // Beverages
+    "Beverage": { 
       bg: "bg-gradient-to-br from-cyan-100 to-cyan-200", 
       gradient: "from-cyan-400 to-cyan-600",
       icon: "🥤", 
       textColor: "text-cyan-800" 
     },
-    Health: { 
+    "Drink": { 
+      bg: "bg-gradient-to-br from-cyan-100 to-cyan-200", 
+      gradient: "from-cyan-400 to-cyan-600",
+      icon: "🧃", 
+      textColor: "text-cyan-800" 
+    },
+    "Cooler": { 
+      bg: "bg-gradient-to-br from-cyan-100 to-cyan-200", 
+      gradient: "from-cyan-400 to-cyan-600",
+      icon: "🧊", 
+      textColor: "text-cyan-800" 
+    },
+    
+    // Health & Beauty
+    "Health": { 
       bg: "bg-gradient-to-br from-teal-100 to-teal-200", 
       gradient: "from-teal-400 to-teal-600",
       icon: "💊", 
       textColor: "text-teal-800" 
     },
-    "Baby/Pet": { 
-      bg: "bg-gradient-to-br from-pink-100 to-pink-200", 
-      gradient: "from-pink-400 to-pink-600",
-      icon: "🍼", 
-      textColor: "text-pink-800" 
+    "Beauty": { 
+      bg: "bg-gradient-to-br from-teal-100 to-teal-200", 
+      gradient: "from-teal-400 to-teal-600",
+      icon: "💄", 
+      textColor: "text-teal-800" 
     },
-    Household: { 
-      bg: "bg-gradient-to-br from-emerald-100 to-emerald-200", 
-      gradient: "from-emerald-400 to-emerald-600",
-      icon: "🧽", 
-      textColor: "text-emerald-800" 
+    "Medicine": { 
+      bg: "bg-gradient-to-br from-teal-100 to-teal-200", 
+      gradient: "from-teal-400 to-teal-600",
+      icon: "💊", 
+      textColor: "text-teal-800" 
     },
-    POS: { 
+    
+    // Electronics & Accessories
+    "Electronic": { 
       bg: "bg-gradient-to-br from-indigo-100 to-indigo-200", 
       gradient: "from-indigo-400 to-indigo-600",
-      icon: "💳", 
+      icon: "🔌", 
       textColor: "text-indigo-800" 
     },
-    default: { 
+    "Battery": { 
+      bg: "bg-gradient-to-br from-indigo-100 to-indigo-200", 
+      gradient: "from-indigo-400 to-indigo-600",
+      icon: "🔋", 
+      textColor: "text-indigo-800" 
+    },
+    
+    // Publications
+    "Publication": { 
+      bg: "bg-gradient-to-br from-slate-100 to-slate-200", 
+      gradient: "from-slate-400 to-slate-600",
+      icon: "📰", 
+      textColor: "text-slate-800" 
+    },
+    "Magazine": { 
+      bg: "bg-gradient-to-br from-slate-100 to-slate-200", 
+      gradient: "from-slate-400 to-slate-600",
+      icon: "📰", 
+      textColor: "text-slate-800" 
+    },
+    "Newspaper": { 
+      bg: "bg-gradient-to-br from-slate-100 to-slate-200", 
+      gradient: "from-slate-400 to-slate-600",
+      icon: "📰", 
+      textColor: "text-slate-800" 
+    },
+    
+    // Travel & Transport
+    "Travel": { 
+      bg: "bg-gradient-to-br from-emerald-100 to-emerald-200", 
+      gradient: "from-emerald-400 to-emerald-600",
+      icon: "🎫", 
+      textColor: "text-emerald-800" 
+    },
+    "Transport": { 
+      bg: "bg-gradient-to-br from-emerald-100 to-emerald-200", 
+      gradient: "from-emerald-400 to-emerald-600",
+      icon: "🚌", 
+      textColor: "text-emerald-800" 
+    },
+    
+    // Food Items
+    "Food": { 
+      bg: "bg-gradient-to-br from-orange-100 to-orange-200", 
+      gradient: "from-orange-400 to-orange-600",
+      icon: "🥪", 
+      textColor: "text-orange-800" 
+    },
+    
+    // Automotive
+    "Automotive": { 
+      bg: "bg-gradient-to-br from-red-100 to-red-200", 
+      gradient: "from-red-400 to-red-600",
+      icon: "🚗", 
+      textColor: "text-red-800" 
+    },
+    "Car": { 
+      bg: "bg-gradient-to-br from-red-100 to-red-200", 
+      gradient: "from-red-400 to-red-600",
+      icon: "🚗", 
+      textColor: "text-red-800" 
+    },
+    
+    // Point of Sale / Service Counter
+    "POS": { 
+      bg: "bg-gradient-to-br from-violet-100 to-violet-200", 
+      gradient: "from-violet-400 to-violet-600",
+      icon: "💳", 
+      textColor: "text-violet-800" 
+    },
+    "Service": { 
+      bg: "bg-gradient-to-br from-violet-100 to-violet-200", 
+      gradient: "from-violet-400 to-violet-600",
+      icon: "🏪", 
+      textColor: "text-violet-800" 
+    },
+    "Till": { 
+      bg: "bg-gradient-to-br from-violet-100 to-violet-200", 
+      gradient: "from-violet-400 to-violet-600",
+      icon: "💳", 
+      textColor: "text-violet-800" 
+    },
+    
+    // General/Default
+    "General": { 
+      bg: "bg-gradient-to-br from-gray-100 to-gray-200", 
+      gradient: "from-gray-400 to-gray-600",
+      icon: "📦", 
+      textColor: "text-gray-800" 
+    },
+    "Merchandise": { 
+      bg: "bg-gradient-to-br from-gray-100 to-gray-200", 
+      gradient: "from-gray-400 to-gray-600",
+      icon: "🛍️", 
+      textColor: "text-gray-800" 
+    },
+    
+    // Storage/Back Office
+    "Storage": { 
+      bg: "bg-gradient-to-br from-stone-100 to-stone-200", 
+      gradient: "from-stone-400 to-stone-600",
+      icon: "📦", 
+      textColor: "text-stone-800" 
+    },
+    // Default fallback
+    "default": { 
       bg: "bg-gradient-to-br from-gray-100 to-gray-200", 
       gradient: "from-gray-400 to-gray-600",
       icon: "📦", 
@@ -153,10 +314,89 @@ const Zone: React.FC<{
     },
   };
 
-  const categoryKey =
-    Object.keys(categoryStyles).find((key) => zone.name.includes(key)) ||
-    "default";
-  
+  // Enhanced category detection logic
+  const getCategoryKey = (zoneName: string): string => {
+    const name = zoneName.toLowerCase();
+    
+    // Postal Services
+    if (name.includes('postal') || name.includes('stamp') || name.includes('mail') || name.includes('post')) {
+      return 'Postal';
+    }
+    
+    // Service Counter/POS
+    if (name.includes('counter') || name.includes('service') || name.includes('till') || name.includes('pos')) {
+      return 'Counter';
+    }
+    
+    // Stationery
+    if (name.includes('stationery') || name.includes('office') || name.includes('pen') || name.includes('paper')) {
+      return 'Stationery';
+    }
+    
+    // Cards & Gifts
+    if (name.includes('card') || name.includes('gift') || name.includes('greeting')) {
+      return 'Card';
+    }
+    
+    // Tobacco
+    if (name.includes('tobacco') || name.includes('cigarette') || name.includes('smoking')) {
+      return 'Tobacco';
+    }
+    
+    // Confectionery
+    if (name.includes('confectionery') || name.includes('chocolate') || name.includes('sweet') || name.includes('candy')) {
+      return 'Confectionery';
+    }
+    
+    // Beverages
+    if (name.includes('beverage') || name.includes('drink') || name.includes('cooler') || name.includes('cold')) {
+      return 'Beverage';
+    }
+    
+    // Health & Beauty
+    if (name.includes('health') || name.includes('beauty') || name.includes('medicine') || name.includes('pharmacy')) {
+      return 'Health';
+    }
+    
+    // Electronics
+    if (name.includes('electronic') || name.includes('battery') || name.includes('charger') || name.includes('tech')) {
+      return 'Electronic';
+    }
+    
+    // Publications
+    if (name.includes('publication') || name.includes('magazine') || name.includes('newspaper') || name.includes('news')) {
+      return 'Publication';
+    }
+    
+    // Travel & Transport
+    if (name.includes('travel') || name.includes('transport') || name.includes('ticket') || name.includes('oyster')) {
+      return 'Travel';
+    }
+    
+    // Food
+    if (name.includes('food') || name.includes('meal') || name.includes('sandwich') || name.includes('fresh')) {
+      return 'Food';
+    }
+    
+    // Automotive
+    if (name.includes('automotive') || name.includes('car') || name.includes('fuel') || name.includes('oil')) {
+      return 'Automotive';
+    }
+    
+    // Storage/Back Office
+    if (name.includes('storage') || name.includes('stock') || name.includes('back') || name.includes('warehouse')) {
+      return 'Storage';
+    }
+    
+    // General Merchandise
+    if (name.includes('general') || name.includes('merchandise')) {
+      return 'General';
+    }
+    
+    return 'default';
+  };
+
+  const categoryKey = getCategoryKey(zone.name);
   const categoryStyle = categoryStyles[categoryKey];
 
   const heatmapColors = {
@@ -176,6 +416,7 @@ const Zone: React.FC<{
       onMouseEnter={(e) => onMouseEnter(zone, e)}
       onMouseLeave={onMouseLeave}
       onMouseMove={onMouseMove}
+      title={`${zone.name} - ${categoryKey} Zone`}
     >
       <div className="flex flex-col items-center space-y-0.5 md:space-y-1">
         <span className="text-sm md:text-lg">{categoryStyle.icon}</span>
@@ -187,6 +428,14 @@ const Zone: React.FC<{
           {zone.name.replace(/\s+/g, '\n')}
         </span>
       </div>
+      
+      {/* Category indicator dot */}
+      <div 
+        className={`absolute top-1 right-1 w-2 h-2 rounded-full ${
+          isHeatmapOn ? 'bg-white/30' : categoryStyle.bg.replace('bg-gradient-to-br from-', 'bg-').replace(/-100 to-.*/, '-500')
+        }`}
+        title={`${categoryKey} Category`}
+      />
     </div>
   );
 };
@@ -239,8 +488,7 @@ export const StoreLayoutMap: React.FC = () => {
     }
   };
 
-
-  // Split MOCK_STORE_LAYOUT_DATA into 4 groups
+  // Split MOCK_STORE_LAYOUT_DATA into 5 groups
   const zonesPerGroup = Math.ceil(MOCK_STORE_LAYOUT_DATA.length / 5);
   const zoneDataGroups = Array.from({ length: 5 }, (_, i) =>
     MOCK_STORE_LAYOUT_DATA.slice(i * zonesPerGroup, (i + 1) * zonesPerGroup)
@@ -249,24 +497,47 @@ export const StoreLayoutMap: React.FC = () => {
   const zoneData = zoneDataGroups.map((group, i) => {
     const cubeData = group.map((zoneData, i) => {
       const baseBgColors: Record<string, string> = {
-        Produce: "bg-green-100",
-        Meat: "bg-red-100",
-        Bakery: "bg-orange-100",
-        Dairy: "bg-blue-100",
-        Pantry: "bg-yellow-100",
-        Frozen: "bg-sky-200",
-        Snacks: "bg-orange-200",
-        Beverages: "bg-cyan-100",
-        Health: "bg-teal-200",
-        "Baby/Pet": "bg-pink-100",
-        Household: "bg-green-200",
-        POS: "bg-purple-200",
+        Postal: "bg-blue-100",
+        Stationery: "bg-yellow-100",
+        Card: "bg-pink-100",
+        Tobacco: "bg-amber-100",
+        Confectionery: "bg-purple-100",
+        Beverage: "bg-cyan-100",
+        Health: "bg-teal-100",
+        Electronic: "bg-indigo-100",
+        Publication: "bg-slate-100",
+        Travel: "bg-emerald-100",
+        Food: "bg-orange-100",
+        Automotive: "bg-red-100",
+        Counter: "bg-violet-100",
+        Storage: "bg-stone-100",
+        General: "bg-gray-100",
         default: "bg-gray-200",
       };
-      const categoryKey =
-        Object.keys(baseBgColors).find((key) => zoneData.name.includes(key)) ||
-        "default";
+      
+      const getCategoryKey = (zoneName: string): string => {
+        const name = zoneName.toLowerCase();
+        if (name.includes('postal') || name.includes('stamp')) return 'Postal';
+        if (name.includes('counter') || name.includes('service')) return 'Counter';
+        if (name.includes('stationery') || name.includes('office')) return 'Stationery';
+        if (name.includes('card') || name.includes('gift')) return 'Card';
+        if (name.includes('tobacco') || name.includes('cigarette')) return 'Tobacco';
+        if (name.includes('confectionery') || name.includes('chocolate')) return 'Confectionery';
+        if (name.includes('beverage') || name.includes('drink')) return 'Beverage';
+        if (name.includes('health') || name.includes('beauty')) return 'Health';
+        if (name.includes('electronic') || name.includes('battery')) return 'Electronic';
+        if (name.includes('publication') || name.includes('magazine')) return 'Publication';
+        if (name.includes('travel') || name.includes('transport')) return 'Travel';
+        if (name.includes('food') || name.includes('meal')) return 'Food';
+        if (name.includes('automotive') || name.includes('car')) return 'Automotive';
+        if (name.includes('storage') || name.includes('stock')) return 'Storage';
+        if (name.includes('general') || name.includes('merchandise')) return 'General';
+        return 'default';
+      };
+      
+      const categoryKey = getCategoryKey(zoneData.name);
       const staticClasses = `${baseBgColors[categoryKey]} border-gray-300`;
+      
       return {
         className: `cube${i}`,
         faceColor: staticClasses,
@@ -278,9 +549,10 @@ export const StoreLayoutMap: React.FC = () => {
     const blockData = { className: `block${i}`, cubes: cubeData };
     return blockData;
   });
+  
   return (
     <>
-          {/* Tooltip rendered outside all divs */}
+      {/* Tooltip rendered outside all divs */}
       <HeatmapTooltip 
         zone={hoveredZone!} 
         mousePosition={mousePosition}
@@ -291,7 +563,7 @@ export const StoreLayoutMap: React.FC = () => {
           <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md">
             <span className="text-white text-sm md:text-lg">🏪</span>
           </div>
-          <h2 className="text-xl md:text-2xl font-bold text-gray-800">Store Layout</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-gray-800">Post Office Layout</h2>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -314,7 +586,7 @@ export const StoreLayoutMap: React.FC = () => {
                     <span className="text-white text-lg lg:text-xl">🎯</span>
                   </div>
                   <h3 className="text-xl lg:text-3xl font-bold text-gray-800">
-                    3D Store Layout
+                    3D Post Office Layout
                   </h3>
                 </div>
 
@@ -358,10 +630,13 @@ export const StoreLayoutMap: React.FC = () => {
                 </div>
               </div>
               <div className="flex-1 bg-gradient-to-br from-gray-100 to-gray-200 overflow-scroll">
-                <Store3DLayout storeData={zoneData.flat()} is3DHeatmapOn={isHeatmapOn}
-                 onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              onMouseMove={handleMouseMove} />
+                <Store3DLayout 
+                  storeData={zoneData.flat()} 
+                  is3DHeatmapOn={isHeatmapOn}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onMouseMove={handleMouseMove} 
+                />
               </div>
             </div>
           </div>

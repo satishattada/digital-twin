@@ -100,14 +100,12 @@ const AnimatedAvatar: React.FC<{ persona: Persona; isActive: boolean }> = ({ per
 };
 
 const stores = ["Kempton Park", "Hatton Cross", "Ashford SF"];
-const categories: Category[] = [
-  "Dairy",
-  "Snacks",
+const categories: string[] = [
+  "Confectionery & Snacks",
   "Beverages",
-  "Fresh Produce",
-  "Household",
+  "Food Items",
 ];
-const timePeriodsMap: Record<Persona, string[]> = {
+const timePeriodsMap: Partial<Record<Persona, string[]>> = {
   "Store Manager": ["Last 7 Days", "Last 30 Days", "Last Quarter"],
   "Operations Manager": ["Last 24 Hours", "Last 7 Days", "Last 30 Days"],
 };
@@ -127,7 +125,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   selectedTimePeriod,
   setSelectedTimePeriod,
 }) => {
-  const timePeriods = timePeriodsMap[activePersona];
+  const timePeriods = timePeriodsMap[activePersona] || [];
 
   return (
     <>
