@@ -1,6 +1,88 @@
+/* Import Inter font for modern typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* BP Design System Base Styles */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.5;
+    @apply text-gray-900 bg-gray-50;
+  }
+}
+
+/* BP Custom Component Styles */
+@layer components {
+  /* Glass morphism effect for modern UI elements */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Enhanced shadows for depth */
+  .shadow-bp {
+    box-shadow: 0 10px 25px -5px rgba(0, 91, 172, 0.1), 0 10px 10px -5px rgba(0, 91, 172, 0.04);
+  }
+  
+  /* BP Brand gradient */
+  .bg-bp-gradient {
+    background: linear-gradient(135deg, #005BAC 0%, #0c5d58 100%);
+  }
+  
+  /* Card styles matching BP design */
+  .bp-card {
+    @apply bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200;
+  }
+
+  /* Live Data Blinking Animations */
+  .blink-live-data {
+    animation: blinkLiveData 2s ease-in-out infinite;
+  }
+  
+  .blink-critical {
+    animation: blinkCritical 1.5s ease-in-out infinite;
+  }
+  
+  .blink-slow {
+    animation: blinkSlow 3s ease-in-out infinite;
+  }
+  
+  /* BP Button styles */
+  .btn-bp-primary {
+    @apply bg-bp-green-600 hover:bg-bp-green-700 text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-bp-green-500 focus:ring-offset-2;
+  }
+  
+  .btn-bp-secondary {
+    @apply bg-white hover:bg-gray-50 text-bp-green-600 border border-bp-green-200 font-medium px-4 py-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-bp-green-500 focus:ring-offset-2;
+  }
+
+  .btn-bp-blue-primary {
+    @apply bg-bp-blue-600 hover:bg-bp-blue-700 text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-bp-blue-500 focus:ring-offset-2;
+  }
+  
+  .btn-bp-blue-secondary {
+    @apply bg-white hover:bg-gray-50 text-bp-blue-600 border border-bp-blue-200 font-medium px-4 py-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-bp-blue-500 focus:ring-offset-2;
+  }
+}
+
+/* Legacy styles - keeping for compatibility */
+.bg-green-990 {
+  background-color: #0c5d58; /* Dark green shade */
+}
 
 /* 3D Store Layout Styles */
 .perspective-1000 {
@@ -38,11 +120,6 @@
   50% { background-position: 100% 50%; }
 }
 
-
-.bg-green-990 {
-  background-color: #0c5d58; /* Dark green shade */
-}
-
 .engagement-legend {
   margin-left: 0 !important;
 }
@@ -68,4 +145,174 @@
 
 .insight-count {
   margin-top: 12px;
+}
+
+.map-container {
+  position: relative;
+}
+
+.map-search-list {
+  /* position: absolute; */
+  position: absolute;
+    opacity: 0;
+    /* right: 414px; */
+}
+
+.search-wrapper {
+  width: 360px;
+}
+
+.search--with-after {
+  display: flex;
+    padding: 12px;
+    justify-content: space-between;
+}
+
+.search__input-line--filled {
+      display: flex;
+
+    padding: 11px 15px;
+    border: 1px solid;
+    border-radius: 5px;
+        width: 224px;
+}
+
+.search-icon {
+  position: absolute;
+  display: inline-flex;
+}
+.search__left-icon {
+  padding-right: 10px;
+}
+
+.app__sidebar-filter-toggle-button {
+  margin-right: 15px;
+}
+
+.info-window {
+      display: flex
+;
+    flex-direction: column;
+    padding: 12px;
+    color: var(--text-dark-colour);
+    font-family: Roboto, sans-serif;
+    gap: 12px;
+    padding-block-end: 24px;
+}
+
+.info-window__info {
+  display: flex
+;
+    background-color: #fff0;
+    font-size: var(--font-size--body);
+    font-weight: 300;
+    gap: 4px;
+}
+.info-window__title {
+  
+    display: flex
+;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0;
+    background-color: #fff0;
+    font-size: var(--font-size--title);
+    font-weight: 400;
+    gap: 16px;
+    word-wrap: break-word;
+}
+
+.info-window__info-list {
+    --vertical-gap: 8px;
+    display: flex
+;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: #fff0;
+    color: var(--text-dark-colour);
+    gap: 2px;
+    white-space: pre-wrap;
+}
+
+.info-window__links {
+    display: flex
+;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-window__link-button {
+    border: 0;
+    margin: 0;
+    appearance: none;
+    background-color: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-family: inherit;
+    line-height: inherit;
+    outline: none;
+    text-align: unset;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border: 1px solid grey;
+    border-radius: 20px;
+    color: #000;
+    text-decoration: none;
+}
+
+.info-window__link-button {
+    border: 0;
+    margin: 0;
+    appearance: none;
+    background-color: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-family: inherit;
+    line-height: inherit;
+    outline: none;
+    text-align: unset;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border: 1px solid grey;
+    border-radius: 20px;
+    color: #000;
+    text-decoration: none;
+}
+
+/* Keyframe animations for live data blinking */
+@keyframes blinkLiveData {
+  0%, 50% { 
+    opacity: 1; 
+    transform: scale(1);
+  }
+  25% { 
+    opacity: 0.7; 
+    transform: scale(1.02);
+  }
+}
+
+@keyframes blinkCritical {
+  0%, 100% { 
+    opacity: 1; 
+    color: inherit;
+  }
+  50% { 
+    opacity: 0.6; 
+    color: #dc2626; /* red-600 */
+  }
+}
+
+@keyframes blinkSlow {
+  0%, 70% { 
+    opacity: 1; 
+  }
+  35% { 
+    opacity: 0.7; 
+  }
 }
