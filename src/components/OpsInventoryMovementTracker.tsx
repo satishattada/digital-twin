@@ -250,32 +250,42 @@ export const OpsInventoryMovementTracker: React.FC<OpsInventoryMovementTrackerPr
     selectedCategory, 
     selectedTimePeriod 
 }) => {
-    const rawData = MOCK_OPS_DATA[selectedCategory].inventoryMovement;
+    // Fix: Access data from correct structure in MOCK_OPS_DATA
+    const opsData = MOCK_OPS_DATA[selectedCategory];
+    const rawData = opsData && opsData?.inventoryMovement ? opsData?.inventoryMovement : {
+        fastMovers: { name: "No Data", data: [] },
+        slowMovers: { name: "No Data", data: [] },
+        anomaly: null,
+        aiInsight: "No data available for this category",
+        fastMoverEvents: [],
+        slowMoverEvents: []
+    };
+
     const [activeTab, setActiveTab] = useState<'Top' | 'Slow'>('Top');
 
     const processedFastMoverData = useMemo(() => 
-        getProcessedData(rawData.fastMovers.data, selectedTimePeriod), 
-        [rawData.fastMovers.data, selectedTimePeriod]
+        getProcessedData(rawData.fastMovers?.data || [], selectedTimePeriod), 
+        [rawData.fastMovers?.data, selectedTimePeriod]
     );
     const processedSlowMoverData = useMemo(() => 
-        getProcessedData(rawData.slowMovers.data, selectedTimePeriod), 
-        [rawData.slowMovers.data, selectedTimePeriod]
+        getProcessedData(rawData.slowMovers?.data || [], selectedTimePeriod), 
+        [rawData.slowMovers?.data, selectedTimePeriod]
     );
 
     const activeChartData = activeTab === 'Top' ? processedFastMoverData : processedSlowMoverData;
-    const activeProductName = activeTab === 'Top' ? rawData.fastMovers.name : rawData.slowMovers.name;
+    const activeProductName = activeTab === 'Top' ? (rawData.fastMovers?.name || "Unknown Product") : (rawData.slowMovers?.name || "Unknown Product");
     const activeColor = activeTab === 'Top' ? 'bg-green-500' : 'bg-amber-500';
-    const activeEvents = activeTab === 'Top' ? rawData.fastMoverEvents || [] : rawData.slowMoverEvents || [];
+    const activeEvents = activeTab === 'Top' ? (rawData.fastMoverEvents || []) : (rawData.slowMoverEvents || []);
     
     const avgSales = activeChartData.length > 0 
         ? activeChartData.reduce((a, b) => a + b.value, 0) / activeChartData.length 
         : 0;
     
     const totalSales = activeChartData.reduce((a, b) => a + b.value, 0);
-    const peakDay = activeChartData.reduce((max, current) => 
+    const peakDay = activeChartData.length > 0 ? activeChartData.reduce((max, current) => 
         current.value > max.value ? current : max, 
         { value: 0, day: 0 }
-    );
+    ) : { value: 0, day: 0 };
 
     return (
         <div className="flex flex-col h-full space-y-4">
@@ -305,8 +315,8 @@ export const OpsInventoryMovementTracker: React.FC<OpsInventoryMovementTrackerPr
                 />
                 <MetricCard
                     title="Peak Sales Day"
-                    value={`Day ${peakDay.day}`}
-                    subtitle={`${peakDay.value} units`}
+                    value={peakDay.day > 0 ? `Day ${peakDay.day}` : "N/A"}
+                    subtitle={peakDay.value > 0 ? `${peakDay.value} units` : "No data"}
                     icon="🏆"
                     color="bg-green-50 border-green-300 text-green-800"
                 />
@@ -392,6 +402,14 @@ export const OpsInventoryMovementTracker: React.FC<OpsInventoryMovementTrackerPr
                             </div>
                         )}
                     </div>
+                </div>
+            )}
+
+            {/* AI Insight */}
+            {rawData.aiInsight && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <h4 className="text-sm font-bold text-blue-800 mb-2">🤖 AI Insight</h4>
+                    <p className="text-xs text-blue-700">{rawData.aiInsight}</p>
                 </div>
             )}
         </div>

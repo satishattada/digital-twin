@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { OpsAlert, Urgency } from "../types"
+import { OpsAlert } from "../types"
+
+type Urgency = 'Urgent' | 'Pending' | 'Critical' | 'Moderate';
 
 type OpsAlertsProps = {
   alerts: OpsAlert[];
@@ -179,7 +181,7 @@ const AlertCard: React.FC<{
 }> = ({ alert, onDismiss, onAction }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const styles = getStatusStyles(alert.urgency);
+    const styles = getStatusStyles(alert.urgency || 'Pending');
     
     const timeAgo = (timestamp: string) => {
         const now = new Date();
