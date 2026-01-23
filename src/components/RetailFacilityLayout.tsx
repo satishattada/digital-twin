@@ -31,6 +31,7 @@ interface RetailFacilityLayoutProps {
     selectedAssetId?: string;
     viewMode?: "3d" | "2d";
     visibleAssetTypes?: Set<string>;
+    equipmentData?: Array<{id: string; status: 'operational' | 'warning' | 'critical' | 'offline'}>;
 }
 
 export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
@@ -47,6 +48,7 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
         "infrastructure",
         "other",
     ]),
+    equipmentData = [],
 }) => {
     const [showLegend, setShowLegend] = React.useState(true);
     const assets: Asset[] = [
@@ -446,12 +448,13 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
             id: "emergency-shutoff",
             name: "Emergency Fuel Shutoff",
             position2D: { x: 81, y: 53 },
-            position3D: { x: 56, y: 60, z: 4 },
+            position3D: { x: 76, y: 56, z: 4 },
             type: "equipment",
             icon2D: "🛑",
-            icon3D: "/images/3d/placeholder.svg",
+            icon3D: "/images/3d/emergency-shutoff.png",
             depth: 4,
             category: "security",
+            className: "emergency-shutoff-3d",
         },
 
         // ============= SERVICE EQUIPMENT =============
@@ -595,6 +598,7 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
                     visibleAssetTypes={visibleAssetTypes}
                     showLegend={showLegend}
                     setShowLegend={setShowLegend}
+                    equipmentData={equipmentData}
                 />
             ) : (
                 <RetailFacilityLayout2D
@@ -604,6 +608,7 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
                     visibleAssetTypes={visibleAssetTypes}
                     showLegend={showLegend}
                     setShowLegend={setShowLegend}
+                    equipmentData={equipmentData}
                 />
             )}
         </div>
