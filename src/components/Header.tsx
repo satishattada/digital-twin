@@ -19,7 +19,8 @@ type HeaderProps = {
 const timePeriodsMap: Record<Persona, string[]> = {
     'Store Manager': ['Last 7 Days', 'Last 30 Days', 'Last Quarter'],
     'Operations Manager': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days'],
-  'Regional Manager': ['Last 7 Days', 'Last 30 Days', 'Year to Date'],
+    'Regional Manager': ['Last 7 Days', 'Last 30 Days', 'Year to Date'],
+    'Facilities Manager': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days', 'Last Quarter'],
 }
 
 const ActionButton: React.FC<{ 

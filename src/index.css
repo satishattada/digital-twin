@@ -316,3 +316,64 @@
     opacity: 0.7; 
   }
 }
+
+.fuel-pump-3d {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.ev-3d {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.cctv-3d {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+.hvac-3d {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+.vacuum-3d {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+.fuel-tank-3d {
+  width: 130px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.ev-charger-3d {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.solar-panel-3d {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+} 
+.fire-alarm-3d {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+.atm-3d {
+  width: 60px;  
+  height: 60px;
+  object-fit: contain;
+}
+.fuel-system-3d {
+  width: 150px;
+  height: 100px;
+  object-fit: contain;
+} 
+

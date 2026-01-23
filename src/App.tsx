@@ -3,6 +3,7 @@ import { Header } from "./components/Header";
 import { StoreManagerDashboard } from "./components/StoreManagerDashboard";
 import { OperationsManagerDashboard } from "./components/OperationsManagerDashboard";
 import { RegionalManagerDashboard } from "./components/RegionalManagerDashboard";
+import { FacilitiesManagerDashboard } from "./components/FacilitiesManagerDashboard";
 import Store3DLayout from "./components/Store3DLayout";
 import { Sidebar } from "./components/Sidebar";
 import {
@@ -192,6 +193,13 @@ const App: React.FC = () => {
             alerts={opsAlerts}
             onCreateTask={handleCreateTask}
             onIgnoreRecommendation={handleIgnoreRecommendation}
+          />
+        );
+      case "Facilities Manager":
+        return (
+          <FacilitiesManagerDashboard
+            selectedStore={selectedStore}
+            selectedCategory={selectedCategory}
           />
         );
       default:
