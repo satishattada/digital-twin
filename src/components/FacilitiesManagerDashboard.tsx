@@ -476,7 +476,7 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading asset data...</p>
         </div>
       </div>
@@ -486,10 +486,10 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
   return (
     <div className="space-y-4">
       {/* Data Source Info */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+      <div className="bg-green-50 border border-green-200 rounded-lg p-3">
         <div className="flex items-center gap-2">
-          <span className="text-blue-600">ℹ️</span>
-          <p className="text-sm text-blue-800">
+          <span className="text-green-600">ℹ️</span>
+          <p className="text-sm text-green-800">
             <strong>Data Source:</strong> Retail_Assets_Maintenance_Mapping.csv | 
             <strong className="ml-2">Total Assets:</strong> {equipmentData.length} | 
             <strong className="ml-2">Categories:</strong> {assetCategories.length - 1}
@@ -551,20 +551,21 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
                 <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
                   <button
                     onClick={() => setViewMode('3d')}
-                    className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                    className={`px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r   rounded-lg hover:from-green-700 hover:to-green-800 focus:outline-none text-xs md:text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2 lg:w-auto ${
                       viewMode === '3d'
-                        ? 'bg-blue-500 text-white shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'from-green-600 to-green-700 text-white shadow-sm'
+                        : ' hover:text-gray-900'
                     }`}
                   >
                     🎲 3D View
                   </button>
+
                   <button
                     onClick={() => setViewMode('2d')}
-                    className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                    className={`px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r rounded-lg hover:from-green-700 hover:to-green-800 focus:outline-none text-xs md:text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2  lg:w-auto ${
                       viewMode === '2d'
-                        ? 'bg-blue-500 text-white shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'from-green-600 to-green-700 text-white shadow-sm'
+                        : ' hover:text-gray-900'
                     }`}
                   >
                     🗺️ 2D View
@@ -580,7 +581,7 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
             <div className="flex items-center gap-2 flex-wrap bg-gray-50 p-2 rounded-lg border border-gray-200">
               <span className="text-xs font-semibold text-gray-700 mr-1">Show:</span>
               {[
-                { key: 'buildings', label: '🏢 Buildings', color: 'blue' },
+                { key: 'buildings', label: '🏢 Buildings', color: 'teal' },
                 { key: 'fuel', label: '⛽ Fuel', color: 'orange' },
                 { key: 'ev-charging', label: '🔌 EV', color: 'green' },
                 { key: 'energy', label: '🔋 Energy', color: 'yellow' },
@@ -657,7 +658,7 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
             <select
               value={selectedAssetCategory}
               onChange={(e) => setSelectedAssetCategory(e.target.value)}
-              className="w-full px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               {assetCategories.map(category => (
                 <option key={category}>{category}</option>
@@ -671,7 +672,7 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
                 onClick={() => setSelectedEquipment(equipment)}
                 className={`p-2 border rounded-lg cursor-pointer transition-all ${
                   selectedEquipment?.id === equipment.id
-                    ? 'border-blue-500 bg-blue-50'
+                    ? 'border-green-500 bg-green-50'
                     : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                 }`}
               >
@@ -824,7 +825,7 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
       {/* Floating Chat Button */}
       <button
         onClick={() => setIsChatOpen(true)}
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-2xl transition-all duration-300 hover:scale-110 z-50 flex items-center gap-2 group"
+        className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white rounded-full p-4 shadow-2xl transition-all duration-300 hover:scale-110 z-50 flex items-center gap-2 group"
         title="AI Facility Assistant"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
