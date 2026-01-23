@@ -22,6 +22,7 @@ interface Asset {
   depth?: number; // 3D depth/height for isometric view (legacy, use position3D.z)
   category?: string; // Asset category for filtering
   className?: string; // Additional CSS classes
+  status?: 'operational' | 'warning' | 'critical' | 'offline';
 }
 
 // 3D Layout Component
@@ -32,11 +33,18 @@ const RetailFacilityLayout3D: React.FC<{
   visibleAssetTypes: Set<string>;
   showLegend: boolean;
   setShowLegend: (show: boolean) => void;
-}> = ({ assets, onAssetClick, selectedAssetId, visibleAssetTypes, showLegend, setShowLegend }) => {
+  equipmentData?: Array<{id: string; status: 'operational' | 'warning' | 'critical' | 'offline'}>;
+}> = ({ assets, onAssetClick, selectedAssetId, visibleAssetTypes, showLegend, setShowLegend, equipmentData = [] }) => {
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+  
+  // Get asset status from equipment data
+  const getAssetStatus = (assetId: string) => {
+    return equipmentData.find(eq => eq.id === assetId)?.status || 'operational';
+  };
   const getAssetStyle = (asset: Asset): React.CSSProperties => {
     const depth = asset.position3D.z || asset.depth || 0;
     const isSelected = selectedAssetId === asset.id;
+    const status = getAssetStatus(asset.id);
 
     const baseStyle: React.CSSProperties = {
       position: 'absolute',
@@ -67,19 +75,41 @@ const RetailFacilityLayout3D: React.FC<{
       const transformStyle = asset.category === 'service' ?
         `rotateX(28deg) rotateY(40deg) rotateZ(-2deg) translateZ(25px)` : asset.category !== 'energy' ?
         'rotateX(9deg) rotateY(5deg) rotateZ(4deg) translateZ(25px)' : undefined;
+      
+      // Alert styling based on status
+      let filterStyle = 'drop-shadow(0 6px 12px rgba(0,0,0,0.5)) brightness(1.1)';
+      let textShadow = '0 2px 4px rgba(0,0,0,0.3)';
+      let animation = '';
+      
+      if (status === 'critical') {
+        filterStyle = 'drop-shadow(0 0 20px rgba(220, 38, 38, 0.9)) drop-shadow(0 0 10px rgba(220, 38, 38, 0.6)) brightness(1.3)';
+        textShadow = '0 0 12px rgba(220, 38, 38, 1), 0 0 6px rgba(220, 38, 38, 0.8)';
+        animation = 'pulse-red 1.5s ease-in-out infinite';
+      } else if (status === 'warning') {
+        filterStyle = 'drop-shadow(0 0 15px rgba(234, 179, 8, 0.8)) drop-shadow(0 0 8px rgba(234, 179, 8, 0.5)) brightness(1.2)';
+        textShadow = '0 0 10px rgba(234, 179, 8, 1), 0 0 5px rgba(234, 179, 8, 0.7)';
+        animation = 'pulse-yellow 2s ease-in-out infinite';
+      } else if (status === 'offline') {
+        filterStyle = 'drop-shadow(0 6px 12px rgba(0,0,0,0.5)) grayscale(80%) brightness(0.6)';
+        textShadow = '0 2px 4px rgba(0,0,0,0.5)';
+      }
+      
+      if (isSelected) {
+        filterStyle = 'drop-shadow(0 0 15px rgba(59, 130, 246, 0.6)) brightness(1.2) saturate(1.2)';
+        textShadow = '0 0 8px rgba(59, 130, 246, 0.8), 0 2px 4px rgba(0,0,0,0.5)';
+        animation = '';
+      }
+      
       return {
         ...baseStyle,
         fontSize: asset.type === 'tree' ? '24px' : '28px',
         transform: transformStyle,
         transformOrigin: 'center',
         opacity: asset.name.includes('UST ')? 0.5 : 1,
-        filter: isSelected
-          ? 'drop-shadow(0 0 15px rgba(59, 130, 246, 0.6)) brightness(1.2) saturate(1.2)'
-          : 'drop-shadow(0 6px 12px rgba(0,0,0,0.5)) brightness(1.1)',
+        filter: filterStyle,
         transition: 'all 0.3s ease',
-        textShadow: isSelected
-          ? '0 0 8px rgba(59, 130, 246, 0.8), 0 2px 4px rgba(0,0,0,0.5)'
-          : '0 2px 4px rgba(0,0,0,0.3)',
+        textShadow: textShadow,
+        animation: animation,
       };
     }
   };
@@ -425,10 +455,11 @@ const RetailFacilityLayout3D: React.FC<{
               transformOrigin: 'center',
               transformStyle: 'preserve-3d',
               boxShadow: 'inset 0 0 100px rgba(0,0,0,0.3)',
+              pointerEvents: 'none',
             }}
           >
             {/* Asphalt texture with parking lines */}
-            <svg className="absolute inset-0 w-full h-full opacity-30">
+            <svg className="absolute inset-0 w-full h-full opacity-30" style={{ pointerEvents: 'none' }}>
               <defs>
                 <pattern id="asphalt-texture-3d" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
                   <rect width="40" height="40" fill="#2d3748" />
@@ -455,11 +486,14 @@ const RetailFacilityLayout3D: React.FC<{
               key={asset.id}
               style={getAssetStyle(asset)}
               onClick={() => {
+                if (asset.type === 'building' || asset.type === 'structure') {
+                  return;
+                }
                 setSelectedAsset(asset);
                 onAssetClick?.(asset);
               }}
               title={asset.name}
-              className="hover:z-20"
+              // className="hover:z-20"
             >
               {asset.type === 'building' ? (
                 renderBuilding3D(asset)
@@ -629,138 +663,6 @@ const RetailFacilityLayout3D: React.FC<{
           <div>
             <div className="text-xs opacity-90">Retail Fuel Site Facility</div>
             <div className="text-base font-bold">3D Isometric Asset Map</div>
-
-      {/* Asset Details Popup */}
-      {selectedAsset && (
-        <div 
-          className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
-          onClick={() => setSelectedAsset(null)}
-        >
-          <div 
-            className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">{selectedAsset.icon2D}</span>
-                <div>
-                  <h3 className="text-lg font-bold">{selectedAsset.name}</h3>
-                  <p className="text-xs opacity-90">Asset ID: {selectedAsset.id}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedAsset(null)}
-                className="text-white hover:bg-white/20 rounded-full p-1 transition-colors"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Content */}
-            <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
-              {/* Asset Type */}
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase">Type</label>
-                <p className="text-gray-800 font-medium capitalize">{selectedAsset.type}</p>
-              </div>
-
-              {/* Category */}
-              {selectedAsset.category && (
-                <div>
-                  <label className="text-xs font-semibold text-gray-500 uppercase">Category</label>
-                  <p className="text-gray-800 font-medium capitalize">{selectedAsset.category.replace(/-/g, ' ')}</p>
-                </div>
-              )}
-
-              {/* Position Information */}
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase">Position (3D)</label>
-                <div className="grid grid-cols-3 gap-2 mt-1">
-                  <div className="bg-gray-100 rounded p-2">
-                    <div className="text-xs text-gray-500">X</div>
-                    <div className="font-semibold">{selectedAsset.position3D.x}%</div>
-                  </div>
-                  <div className="bg-gray-100 rounded p-2">
-                    <div className="text-xs text-gray-500">Y</div>
-                    <div className="font-semibold">{selectedAsset.position3D.y}%</div>
-                  </div>
-                  <div className="bg-gray-100 rounded p-2">
-                    <div className="text-xs text-gray-500">Z</div>
-                    <div className="font-semibold">{selectedAsset.position3D.z || selectedAsset.depth || 0}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Dimensions */}
-              {(selectedAsset.width || selectedAsset.height) && (
-                <div>
-                  <label className="text-xs font-semibold text-gray-500 uppercase">Dimensions</label>
-                  <div className="grid grid-cols-2 gap-2 mt-1">
-                    {selectedAsset.width && (
-                      <div className="bg-gray-100 rounded p-2">
-                        <div className="text-xs text-gray-500">Width</div>
-                        <div className="font-semibold">{selectedAsset.width}%</div>
-                      </div>
-                    )}
-                    {selectedAsset.height && (
-                      <div className="bg-gray-100 rounded p-2">
-                        <div className="text-xs text-gray-500">Height</div>
-                        <div className="font-semibold">{selectedAsset.height}%</div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Image Preview */}
-              {selectedAsset.icon3D.startsWith('/') && (
-                <div>
-                  <label className="text-xs font-semibold text-gray-500 uppercase">Asset Preview</label>
-                  <div className="mt-2 bg-gray-100 rounded-lg p-4 flex items-center justify-center">
-                    <img 
-                      src={selectedAsset.icon3D} 
-                      alt={selectedAsset.name}
-                      className="max-h-32 object-contain"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Additional Info */}
-              <div className="pt-4 border-t border-gray-200">
-                <div className="text-xs text-gray-500 space-y-1">
-                  <div className="flex justify-between">
-                    <span>2D Position:</span>
-                    <span className="font-mono">({selectedAsset.position2D.x}%, {selectedAsset.position2D.y}%)</span>
-                  </div>
-                  {selectedAsset.className && (
-                    <div className="flex justify-between">
-                      <span>CSS Class:</span>
-                      <span className="font-mono text-xs">{selectedAsset.className}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div className="bg-gray-50 px-6 py-3 flex justify-end gap-2">
-              <button
-                onClick={() => setSelectedAsset(null)}
-                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
           </div>
         </div>
       </div>

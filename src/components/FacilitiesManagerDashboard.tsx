@@ -7,7 +7,7 @@ import { parseCSV, mapAssetToEquipment } from '../utils/csvParser';
 interface Equipment {
   id: string;
   name: string;
-  type: 'refrigerator' | 'freezer' | 'hvac' | 'pos-terminal' | 'security-camera' | 'lighting' | 'door-sensor';
+  type: 'refrigerator' | 'freezer' | 'hvac' | 'pos-terminal' | 'security-camera' | 'lighting' | 'door-sensor' | 'fuel-pump' | 'fuel-tank' | 'ev-charger' | 'solar-panel' | 'vacuum' | 'atm' | 'fire-alarm' | 'building' | 'structure' | 'emergency-system';
   location: string;
   status: 'operational' | 'warning' | 'critical' | 'offline';
   temperature?: number;
@@ -26,154 +26,375 @@ interface Equipment {
 }
 
 const mockEquipmentData: Equipment[] = [
+  // Buildings
   {
-    id: 'HVAC-001',
-    name: 'HVAC Unit - Zone A',
-    type: 'hvac',
-    location: 'Fresh Produce Section',
-    zone: 'Fresh Produce',
+    id: 'store-main',
+    name: 'Main Convenience Store',
+    type: 'building',
+    location: 'Main Facility',
+    zone: 'Convenience Store',
     status: 'operational',
-    temperature: 21.5,
+    lastMaintenance: '2024-01-01',
+    nextMaintenance: '2024-07-01',
+    alerts: [],
+    category: 'buildings'
+  },
+  {
+    id: 'carwash-building',
+    name: 'Automated Car Wash',
+    type: 'building',
+    location: 'West Side',
+    zone: 'Car Wash',
+    status: 'operational',
+    lastMaintenance: '2024-01-15',
+    nextMaintenance: '2024-07-15',
+    alerts: [],
+    category: 'buildings'
+  },
+  {
+    id: 'storage-building',
+    name: 'Storage Building',
+    type: 'building',
+    location: 'South Side',
+    zone: 'Storage',
+    status: 'operational',
+    lastMaintenance: '2024-01-10',
+    nextMaintenance: '2024-07-10',
+    alerts: [],
+    category: 'buildings'
+  },
+
+  // Structures
+  {
+    id: 'forecourt-canopy',
+    name: 'Fuel Forecourt Canopy',
+    type: 'structure',
+    location: 'Fuel Forecourt',
+    zone: 'Fuel Station',
+    status: 'operational',
+    lastMaintenance: '2023-12-15',
+    nextMaintenance: '2024-06-15',
+    alerts: [],
+    category: 'infrastructure'
+  },
+
+  // HVAC Systems
+  {
+    id: 'hvac-store',
+    name: 'Store HVAC Unit 15 Ton',
+    type: 'hvac',
+    location: 'Convenience Store Roof',
+    zone: 'Convenience Store',
+    status: 'critical',
+    temperature: 28.5,
     targetTemp: 22.0,
     lastMaintenance: '2024-01-15',
     nextMaintenance: '2024-04-15',
-    alerts: []
+    alerts: ['Compressor failure - temperature rising', 'Refrigerant leak suspected'],
+    category: 'energy',
+    criticality: 'T1'
   },
   {
-    id: 'REF-001',
-    name: 'Walk-in Refrigerator',
-    type: 'refrigerator',
-    location: 'Meat & Seafood Section',
-    zone: 'Meat & Seafood',
+    id: 'hvac-carwash',
+    name: 'Car Wash HVAC 8 Ton',
+    type: 'hvac',
+    location: 'Car Wash Building',
+    zone: 'Car Wash',
     status: 'operational',
-    temperature: 3.8,
-    targetTemp: 4.0,
-    lastMaintenance: '2024-02-01',
-    nextMaintenance: '2024-05-01',
-    alerts: []
-  },
-  {
-    id: 'FRZ-001',
-    name: 'Display Freezer #1',
-    type: 'freezer',
-    location: 'Dairy & Eggs Section',
-    zone: 'Dairy & Eggs',
-    status: 'warning',
-    temperature: -16.5,
-    targetTemp: -18.0,
+    temperature: 20.8,
+    targetTemp: 21.0,
     lastMaintenance: '2024-01-20',
     nextMaintenance: '2024-04-20',
-    alerts: ['Temperature above target', 'Compressor noise detected']
+    alerts: [],
+    category: 'energy'
   },
+  
+  // Fuel Pumps
   {
-    id: 'POS-001',
-    name: 'Self-Checkout Terminal #1',
-    type: 'pos-terminal',
-    location: 'Checkout Area',
-    zone: 'Bakery',
+    id: 'pump-1a',
+    name: 'Diesel Pump 1A',
+    type: 'fuel-pump',
+    location: 'Fuel Forecourt - Island 1',
+    zone: 'Fuel Station',
     status: 'operational',
-    lastMaintenance: '2024-02-10',
-    nextMaintenance: '2024-05-10',
-    alerts: []
+    lastMaintenance: '2024-02-01',
+    nextMaintenance: '2024-05-01',
+    alerts: [],
+    category: 'fuel'
   },
   {
-    id: 'CAM-001',
-    name: 'Security Camera - Entrance',
-    type: 'security-camera',
-    location: 'Main Entrance',
-    zone: 'Fresh Produce',
+    id: 'pump-1b',
+    name: 'Diesel Pump 1B',
+    type: 'fuel-pump',
+    location: 'Fuel Forecourt - Island 1',
+    zone: 'Fuel Station',
     status: 'operational',
-    lastMaintenance: '2024-01-25',
-    nextMaintenance: '2024-07-25',
-    alerts: []
+    lastMaintenance: '2024-02-01',
+    nextMaintenance: '2024-05-01',
+    alerts: [],
+    category: 'fuel'
   },
   {
-    id: 'HVAC-002',
-    name: 'HVAC Unit - Zone B',
-    type: 'hvac',
-    location: 'Bakery Section',
-    zone: 'Bakery',
+    id: 'pump-2a',
+    name: 'Regular Pump 2A',
+    type: 'fuel-pump',
+    location: 'Fuel Forecourt - Island 2',
+    zone: 'Fuel Station',
+    status: 'operational',
+    lastMaintenance: '2024-01-28',
+    nextMaintenance: '2024-04-28',
+    alerts: [],
+    category: 'fuel'
+  },
+  {
+    id: 'pump-2b',
+    name: 'Regular Pump 2B',
+    type: 'fuel-pump',
+    location: 'Fuel Forecourt - Island 2',
+    zone: 'Fuel Station',
     status: 'critical',
-    temperature: 26.2,
-    targetTemp: 22.0,
-    lastMaintenance: '2023-12-15',
-    nextMaintenance: '2024-03-15',
-    alerts: ['Temperature significantly above target', 'Service overdue', 'Filter replacement needed']
+    lastMaintenance: '2024-01-28',
+    nextMaintenance: '2024-04-28',
+    alerts: ['Fuel leak detected - immediate shutdown required', 'Display flicker detected'],
+    category: 'fuel',
+    criticality: 'T1'
   },
   {
-    id: 'LIGHT-001',
-    name: 'LED Panel - Aisle 1',
-    type: 'lighting',
-    location: 'Fresh Produce Aisle',
-    zone: 'Fresh Produce',
+    id: 'pump-3a',
+    name: 'Premium Pump 3A',
+    type: 'fuel-pump',
+    location: 'Fuel Forecourt - Island 3',
+    zone: 'Fuel Station',
+    status: 'operational',
+    lastMaintenance: '2024-02-05',
+    nextMaintenance: '2024-05-05',
+    alerts: [],
+    category: 'fuel'
+  },
+  {
+    id: 'pump-3b',
+    name: 'Premium Pump 3B',
+    type: 'fuel-pump',
+    location: 'Fuel Forecourt - Island 3',
+    zone: 'Fuel Station',
+    status: 'operational',
+    lastMaintenance: '2024-02-05',
+    nextMaintenance: '2024-05-05',
+    alerts: [],
+    category: 'fuel'
+  },
+
+  // Underground Storage Tanks
+  {
+    id: 'fuel-tank-diesel',
+    name: 'UST - Diesel 40,000L',
+    type: 'fuel-tank',
+    location: 'Underground - Forecourt',
+    zone: 'Fuel Station',
+    status: 'warning',
+    lastMaintenance: '2024-01-10',
+    nextMaintenance: '2024-07-10',
+    alerts: ['Pressure sensor reading anomaly'],
+    category: 'fuel',
+    criticality: 'T1'
+  },
+  {
+    id: 'fuel-tank-regular',
+    name: 'UST - Regular 40,000L',
+    type: 'fuel-tank',
+    location: 'Underground - Forecourt',
+    zone: 'Fuel Station',
+    status: 'operational',
+    lastMaintenance: '2024-01-10',
+    nextMaintenance: '2024-07-10',
+    alerts: [],
+    category: 'fuel'
+  },
+  {
+    id: 'fuel-tank-premium',
+    name: 'UST - Premium 30,000L',
+    type: 'fuel-tank',
+    location: 'Underground - Forecourt',
+    zone: 'Fuel Station',
+    status: 'operational',
+    lastMaintenance: '2024-01-10',
+    nextMaintenance: '2024-07-10',
+    alerts: [],
+    category: 'fuel'
+  },
+
+  // EV Chargers
+  {
+    id: 'ev-level2-1',
+    name: 'Level 2 Charger 7kW',
+    type: 'ev-charger',
+    location: 'Parking Area - Bay 1',
+    zone: 'EV Charging',
     status: 'operational',
     lastMaintenance: '2024-02-01',
     nextMaintenance: '2024-08-01',
-    alerts: []
+    alerts: [],
+    category: 'ev-charging'
   },
   {
-    id: 'DOOR-001',
-    name: 'Auto Door Sensor',
-    type: 'door-sensor',
-    location: 'Main Entrance',
-    zone: 'Fresh Produce',
+    id: 'ev-level2-2',
+    name: 'Level 2 Charger 7kW',
+    type: 'ev-charger',
+    location: 'Parking Area - Bay 2',
+    zone: 'EV Charging',
+    status: 'operational',
+    lastMaintenance: '2024-02-01',
+    nextMaintenance: '2024-08-01',
+    alerts: [],
+    category: 'ev-charging'
+  },
+  {
+    id: 'ev-level2-3',
+    name: 'Level 2 Charger 7kW',
+    type: 'ev-charger',
+    location: 'Parking Area - Bay 3',
+    zone: 'EV Charging',
     status: 'offline',
+    lastMaintenance: '2024-02-01',
+    nextMaintenance: '2024-08-01',
+    alerts: ['Charging cable wear detected', 'Circuit breaker tripped - unit offline'],
+    category: 'ev-charging',
+    criticality: 'T2'
+  },
+
+  // Solar Panels
+  {
+    id: 'solar-panel-1',
+    name: 'Solar Panel Array',
+    type: 'solar-panel',
+    location: 'Store Roof - Section A',
+    zone: 'Convenience Store',
+    status: 'operational',
+    lastMaintenance: '2024-01-15',
+    nextMaintenance: '2024-07-15',
+    alerts: [],
+    category: 'energy'
+  },
+
+  // Security Cameras
+  {
+    id: 'cctv-store',
+    name: 'CCTV - Store Entrance',
+    type: 'security-camera',
+    location: 'Store Main Entrance',
+    zone: 'Convenience Store',
+    status: 'operational',
+    lastMaintenance: '2024-01-25',
+    nextMaintenance: '2024-07-25',
+    alerts: [],
+    category: 'security'
+  },
+  {
+    id: 'cctv-forecourt-1',
+    name: 'CCTV - Forecourt East',
+    type: 'security-camera',
+    location: 'Forecourt East Side',
+    zone: 'Fuel Station',
+    status: 'operational',
+    lastMaintenance: '2024-01-25',
+    nextMaintenance: '2024-07-25',
+    alerts: [],
+    category: 'security'
+  },
+  {
+    id: 'cctv-forecourt-2',
+    name: 'CCTV - Forecourt West',
+    type: 'security-camera',
+    location: 'Forecourt West Side',
+    zone: 'Fuel Station',
+    status: 'operational',
+    lastMaintenance: '2024-01-25',
+    nextMaintenance: '2024-07-25',
+    alerts: [],
+    category: 'security'
+  },
+  {
+    id: 'cctv-carwash',
+    name: 'CCTV - Car Wash',
+    type: 'security-camera',
+    location: 'Car Wash Entrance',
+    zone: 'Car Wash',
+    status: 'warning',
+    lastMaintenance: '2024-01-25',
+    nextMaintenance: '2024-07-25',
+    alerts: ['Lens cleaning required'],
+    category: 'security'
+  },
+  {
+    id: 'cctv-parking',
+    name: 'CCTV - Parking Area',
+    type: 'security-camera',
+    location: 'Main Parking Lot',
+    zone: 'Parking',
+    status: 'operational',
+    lastMaintenance: '2024-01-25',
+    nextMaintenance: '2024-07-25',
+    alerts: [],
+    category: 'security'
+  },
+
+  // Fire Safety
+  {
+    id: 'fire-alarm-1',
+    name: 'Fire Alarm Panel',
+    type: 'fire-alarm',
+    location: 'Store Interior Wall',
+    zone: 'Convenience Store',
+    status: 'warning',
+    lastMaintenance: '2024-02-01',
+    nextMaintenance: '2024-05-01',
+    alerts: ['Battery backup at 15% capacity'],
+    category: 'security',
+    criticality: 'T1'
+  },
+
+  // Emergency Systems
+  {
+    id: 'emergency-shutoff',
+    name: 'Emergency Fuel Shutoff',
+    type: 'emergency-system',
+    location: 'Forecourt Control Station',
+    zone: 'Fuel Station',
+    status: 'operational',
+    lastMaintenance: '2024-01-20',
+    nextMaintenance: '2024-04-20',
+    alerts: [],
+    category: 'security'
+  },
+
+  // Service Equipment
+  {
+    id: 'vacuum-1',
+    name: 'Vacuum Station 1',
+    type: 'vacuum',
+    location: 'Car Wash Exit Area',
+    zone: 'Car Wash',
+    status: 'operational',
     lastMaintenance: '2024-01-30',
     nextMaintenance: '2024-04-30',
-    alerts: ['Sensor not responding', 'Manual operation required']
+    alerts: [],
+    category: 'service'
+  },
+  {
+    id: 'atm',
+    name: 'ATM Machine',
+    type: 'atm',
+    location: 'Store Exterior Wall',
+    zone: 'Convenience Store',
+    status: 'operational',
+    lastMaintenance: '2024-02-05',
+    nextMaintenance: '2024-05-05',
+    alerts: [],
+    category: 'service'
   }
 ];
 
-const mockZoneData: HeatmapZoneData[] = [
-  {
-    id: "1",
-    name: "Fresh Produce",
-    engagement: "high",
-    gridClass: "zone-1",
-    insights: {
-      topSku: "ORG-APPL-001",
-      lowPerformer: "BAN-002",
-      layoutSuggestion: "Optimize produce placement",
-      aiRationale: "High traffic zone with 78% conversion rate"
-    }
-  },
-  {
-    id: "2",
-    name: "Meat & Seafood",
-    engagement: "medium",
-    gridClass: "zone-2",
-    insights: {
-      topSku: "CHKN-BRS-001",
-      lowPerformer: "FISH-003",
-      layoutSuggestion: "Expand seafood section",
-      aiRationale: "Medium engagement with 65% conversion"
-    }
-  },
-  {
-    id: "3",
-    name: "Bakery",
-    engagement: "low",
-    gridClass: "zone-3",
-    insights: {
-      topSku: "BRED-WHT-001",
-      lowPerformer: "CAKE-004",
-      layoutSuggestion: "Relocate to high-traffic area",
-      aiRationale: "Low traffic with 42% conversion rate"
-    }
-  },
-  {
-    id: "4",
-    name: "Dairy & Eggs",
-    engagement: "high",
-    gridClass: "zone-4",
-    insights: {
-      topSku: "MILK-WHL-001",
-      lowPerformer: "YOGURT-005",
-      layoutSuggestion: "Maintain current layout",
-      aiRationale: "High engagement with 82% conversion"
-    }
-  }
-];
+
 
 interface FacilitiesManagerDashboardProps {
   selectedStore: string;
@@ -197,24 +418,10 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
   ]));
 
   useEffect(() => {
-    const loadCSVData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch('/Retail_Assets_Maintenance_Mapping.csv');
-        const csvText = await response.text();
-        const parsedData = parseCSV(csvText);
-        const mappedEquipment = parsedData.map((asset, index) => mapAssetToEquipment(asset, index));
-        setEquipmentData(mappedEquipment);
-      } catch (error) {
-        console.error('Error loading CSV data:', error);
-        // Fall back to mock data if CSV load fails
-        setEquipmentData(mockEquipmentData);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadCSVData();
+    // Use mock data directly instead of loading from CSV
+    // This ensures IDs match with assets in RetailFacilityLayout
+    setEquipmentData(mockEquipmentData);
+    setIsLoading(false);
   }, []);
 
   const handleMouseEnter = (zone: HeatmapZoneData, event: React.MouseEvent) => {
@@ -244,41 +451,6 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
     offline: equipmentData.filter(e => e.status === 'offline').length,
   };
 
-  const storeBlocksWithZones = [
-    {
-      className: "block0",
-      cubes: [
-        { className: "cube0", zone: mockZoneData[0], faces: { front: "Fresh Produce" } },
-        { className: "cube1", zone: mockZoneData[0], faces: { front: "Fresh Produce" } },
-        { className: "cube2", zone: mockZoneData[0], faces: { front: "Fresh Produce" } },
-      ],
-    },
-    {
-      className: "block1",
-      cubes: [
-        { className: "cube0", zone: mockZoneData[1], faces: { front: "Meat & Seafood" } },
-        { className: "cube1", zone: mockZoneData[1], faces: { front: "Meat & Seafood" } },
-        { className: "cube2", zone: mockZoneData[1], faces: { front: "Meat & Seafood" } },
-      ],
-    },
-    {
-      className: "block2",
-      cubes: [
-        { className: "cube0", zone: mockZoneData[2], faces: { front: "Bakery" } },
-        { className: "cube1", zone: mockZoneData[2], faces: { front: "Bakery" } },
-        { className: "cube2", zone: mockZoneData[2], faces: { front: "Bakery" } },
-      ],
-    },
-    {
-      className: "block3",
-      cubes: [
-        { className: "cube0", zone: mockZoneData[3], faces: { front: "Dairy & Eggs" } },
-        { className: "cube1", zone: mockZoneData[3], faces: { front: "Dairy & Eggs" } },
-        { className: "cube2", zone: mockZoneData[3], faces: { front: "Dairy & Eggs" } },
-        { className: "cube3", zone: mockZoneData[3], faces: { front: "Dairy & Eggs" } },
-      ],
-    },
-  ];
 
   const getStatusIcon = (status: Equipment['status']) => {
     switch (status) {
@@ -452,18 +624,18 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
           <div className="relative h-[600px] bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg overflow-hidden border-2 border-gray-300 shadow-inner">
             <RetailFacilityLayout 
               onAssetClick={(asset) => {
-                // Find equipment matching this asset
-                const matchingEquipment = equipmentData.find(eq => 
-                  eq.name.toLowerCase().includes(asset.name.toLowerCase()) ||
-                  asset.name.toLowerCase().includes(eq.name.toLowerCase())
-                );
+                // Find equipment matching this asset by ID
+                const matchingEquipment = equipmentData.find(eq => eq.id === asset.id);
                 if (matchingEquipment) {
                   setSelectedEquipment(matchingEquipment);
+                } else {
+                  console.log(`No equipment found for asset: ${asset.id} (${asset.name})`);
                 }
               }}
               selectedAssetId={selectedEquipment?.id}
               viewMode={viewMode}
               visibleAssetTypes={visibleAssetTypes}
+              equipmentData={equipmentData.map(eq => ({ id: eq.id, status: eq.status }))}
             />
           </div>
         </div>
