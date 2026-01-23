@@ -1,0 +1,50 @@
+﻿Category,Asset,Criticality,Maintenance Mode,Typical Service Frequency,Typical Replacement Cycle,Compliance,Primary KPIs
+Forecourt,Fuel pumps / dispensers,T1,Preventive + Condition-based,Quarterly PM; annual calibration,10–12 yrs,Metrology calibration; ATEX/IECEx,"Uptime %, Flow rate, Calibration drift"
+Forecourt,Underground storage tanks (USTs),T1,Preventive + Compliance,Monthly checks; annual integrity test,25–30 yrs (liner dependent),"Leak detection, cathodic protection, environmental permits","Leak incidents, CP potential, Compliance pass rate"
+Forecourt,"Fuel lines, valves & piping",T1,Preventive + Condition-based,Semi-annual inspection/pressure test,15–20 yrs,Pressure tests; spill prevention,"Leak rate, MTBF"
+Forecourt,Forecourt controller,T1,Preventive + Reactive,Quarterly firmware & health check,6–8 yrs,Electrical safety,"Transaction uptime, Controller faults"
+Forecourt,Outdoor payment terminals (OPT),T1,Preventive + Reactive,Quarterly inspection; monthly patches,5–7 yrs,PCI DSS,"Payment uptime, Decline/timeout rate"
+Forecourt,Vapour recovery systems,T1,Preventive + Compliance,Quarterly inspection; annual certification,10–12 yrs,Emissions standards,"Recovery efficiency, Compliance pass"
+Forecourt,Canopies,T2,Preventive,Annual structural inspection,20–25 yrs,Wind/snow load compliance,Defect closure time
+Forecourt,Canopy lighting,T2,Preventive,Semi-annual,12–15 yrs (LED drivers 7–10),Electrical safety,"Lux levels, Energy/kWh"
+Forecourt,Air & water machines,T3,Preventive + Reactive,Quarterly,8–10 yrs,Electrical & water regulations,"Availability, Vend success"
+Forecourt,Price totem / price display,T2,Preventive + Reactive,Quarterly visual; annual electrical,10–12 yrs,Electrical safety,Display uptime
+Forecourt,EV chargers (AC/DC),T1,Condition-based + Predictive,24×7 remote monitoring; quarterly field,8–10 yrs (power modules 5–7),OCPP/Grid interconnect; electrical safety,"Uptime %, MTTR, Session success"
+Forecourt,Hydrogen dispensers (where applicable),T1,Preventive + Compliance,Quarterly; annual certification,10–12 yrs,Pressure/gas safety,"Uptime %, Safety incidents"
+Car Wash,Automatic car wash,T2,Preventive + Condition-based,Monthly consumables; quarterly mechanical,10–12 yrs,Water discharge permits,"Throughput, Downtime"
+Car Wash,Jet/pressure wash systems,T2,Preventive,Quarterly,8–10 yrs,Electrical & water regulations,Availability
+Car Wash,Water recycling systems,T2,Preventive + Compliance,Monthly water quality checks,10–12 yrs,Water quality/effluent standards,"Reuse %, Water quality score"
+Store Equipment,Coffee machines,T2,Preventive + Consumables,Monthly descaling; quarterly service,5–7 yrs,Food safety; water quality,"Availability, Temperature/taste variance"
+Store Equipment,Beverage dispensers,T2,Preventive,Quarterly,5–7 yrs,Food safety,Dispense accuracy
+Store Equipment,Ovens / bakery equipment,T2,Preventive + Compliance,Quarterly cleaning & safety,7–10 yrs,Electrical & food safety,"Temperature accuracy, Energy use"
+Store Equipment,Microwaves,T3,Reactive + Light preventive,Semi-annual checks,5–7 yrs,Electrical safety,Availability
+Store Equipment,Hot food cabinets,T2,Preventive,Quarterly,6–8 yrs,Food safety,Holding temp compliance
+Refrigeration,Open chillers / freezers,T1,Condition-based + Predictive,Remote temp monitoring; quarterly PM,8–10 yrs (compressors 5–7),F-gas/leak logs; HACCP,"Product temp compliance, Energy/kWh"
+Refrigeration,Compressors & condensers,T1,Condition-based + Predictive,Quarterly,5–7 yrs,Refrigerant management,"MTBF, Energy efficiency"
+HVAC,Packaged/RTU units,T1,Preventive + Condition-based,Quarterly filters; biannual PM,12–15 yrs,Refrigerant compliance,"Comfort SLA, Energy/kWh"
+POS & Kiosks,POS terminals,T2,Preventive + Reactive swap,Quarterly patching; HW health,4–6 yrs,PCI DSS,"Transaction uptime, Failures/1k txns"
+POS & Kiosks,Self-checkout kiosks,T2,Preventive + Reactive,Quarterly,4–6 yrs,PCI DSS,"Availability, Abandon rate"
+Digital,Digital menu boards,T3,Preventive,Quarterly cleaning & firmware,6–8 yrs,Electrical/screen safety,"Uptime, Brightness drift"
+Back-Office IT,Back-office computer/server,T2,Preventive + Patch mgmt,Monthly patching; quarterly health,4–5 yrs,Security standards,"Uptime, Patch compliance"
+Security,CCTV cameras & NVR,T2,Preventive + Reactive,Quarterly,Cameras 6–8 yrs; NVR 5–7 yrs,Privacy/cybersecurity,"Footage retention, Uptime"
+Security,Alarms & sensors,T1,Preventive + Compliance,Quarterly tests; annual certification,8–10 yrs,Local codes,Alarm test pass rate
+Energy,Smart meters,T2,Preventive + Remote,Annual health/firmware,10–12 yrs,Utility standards,"Read success, Data latency"
+Energy,Solar PV,T2,Preventive + Condition-based,Quarterly cleaning; annual electrical,20–25 yrs (inverters 8–12),Electrical/grid standards,"Yield (kWh/kWp), PR ratio"
+Energy,Battery storage,T1,Condition-based + Predictive,Quarterly PM; BMS monitoring,8–12 yrs (chemistry dependent),Electrical/fire safety,"State of Health, Peak shaving"
+Energy,Diesel generators,T1,Preventive + Test runs,Monthly start test; quarterly service,12–15 yrs (batteries 4–6),Emissions; fuel storage,"Start success, Runtime readiness"
+Energy,EaaS/EMS controllers,T1,Condition-based + Predictive,24×7 monitoring; quarterly patch,6–8 yrs,Cybersecurity standards,"Demand peaks, kWh/site, Savings"
+Electrical,Panels & distribution boards,T1,Preventive + Testing,Annual IR/load tests,15–20 yrs,Electrical codes,Outage incidents
+Electrical,UPS (IT racks),T1,Preventive + Testing,Quarterly tests; battery checks,8–10 yrs (batteries 4–6),Electrical safety,"Autonomy minutes, Battery SoH"
+Plumbing,Water heaters & lines,T2,Preventive,Semi-annual,Heaters 10–12 yrs,Legionella/water regulations,Water temp stability
+Building,"Roofs, façade & glazing",T2,Preventive + Reactive,Annual inspection,Roof 20–25 yrs,Weather/structural standards,Water ingress incidents
+Building,Doors (manual/automatic),T2,Preventive + Reactive,Quarterly,10–12 yrs,Safety & accessibility,Fail-to-open incidents
+Building,Flooring & finishes,T3,Reactive + Light preventive,Annual,10–15 yrs,Health & safety,Slip incidents
+Grounds,Landscaping & irrigation,T3,Preventive,Seasonal/quarterly,Irrigation 10–12 yrs,Water use permits,"SLA adherence, Water consumption"
+Grounds,Snow removal (equipment/service),T2 (seasonal),Reactive + Seasonal PM,As required; preseason check,Equipment 8–10 yrs,Safety & access,"Response time, Site accessibility"
+Exterior,Parking lot lighting,T2,Preventive,Semi-annual,12–15 yrs (drivers 7–10),Lux & safety standards,"Outage count, Energy/kWh"
+Exterior,Outdoor signage boards,T3,Preventive + Reactive,Semi-annual,8–10 yrs,Electrical safety,Uptime
+Waste,Bins & compactors,T3,Preventive + Reactive,Quarterly,8–10 yrs,Waste regulations,"Pickup SLA, Overflow events"
+Other,Bicycle stands / street furniture,T3,Reactive,Annual inspection,10–15 yrs,H&S,Availability
+Supplier/MRO,Spare parts inventory,T2,Cycle-count + Min/Max,Monthly cycle counts,N/A,SOX/stock accuracy,"Fill rate, Stockouts"
+Supplier/MRO,Service tools & test gear,T3,Preventive + Calibration,Annual calibration,5–7 yrs,Calibration certificates,Calibration pass rate
+Monitoring,"IoT sensors & gateways (temp, vibration, leak)",T2,Predictive + Condition-based,Remote 24×7; annual battery,5–7 yrs,Cybersecurity policy,"Alert fidelity, False positives"
