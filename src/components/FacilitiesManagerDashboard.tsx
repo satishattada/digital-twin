@@ -667,12 +667,21 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
   const [viewMode, setViewMode] = useAtom(viewModeAtom);
   const [visibleAssetTypes, setVisibleAssetTypes] = useAtom(visibleAssetTypesAtom);
   const [isChatOpen, setIsChatOpen] = useAtom(isChatOpenAtom);
-  const [dashboardView, setDashboardView] = useState<'facility' | 'energy'>('facility');
+  const [dashboardView, setDashboardView] = useState<'facility' | 'energy' | 'case-management'>('facility');
+  const [iframeKey, setIframeKey] = useState(0);
   const [statusModalFilter, setStatusModalFilter] = useState<{
     type: 'status' | 'compliance' | 'maintenance';
     value: string;
     label: string;
   } | null>(null);
+  
+  // Case Management login credentials
+  const caseManagementConfig = {
+    // Direct URL - opens in new window due to MSAL auth restrictions
+    url: 'https://insights.cortix.ai/insights/home',
+    username: 'anish.brabhu@chubbfs.com',
+    password: 'Infosysdemo@123'
+  };
   
   // Derived values from atoms
   const filteredEquipment = useAtomValue(filteredEquipmentAtom);
@@ -792,6 +801,17 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
             <span>⚡</span>
             Energy Metrics
           </button>
+          <button
+            onClick={() => setDashboardView('case-management')}
+            className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${
+              dashboardView === 'case-management'
+                ? 'bg-green-600 text-white shadow-md'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            <span>📋</span>
+            Case Management
+          </button>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-green-500 rounded-full blink-slow"></div>
@@ -802,6 +822,120 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
       {/* Energy Metrics View */}
       {dashboardView === 'energy' && (
         <EnergyMetricsAnalysis selectedCategory={selectedAssetCategory} />
+      )}
+
+      {/* Case Management View */}
+      {dashboardView === 'case-management' && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <div className="bg-gradient-to-r from-green-600 to-green-700 p-4 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold flex items-center gap-2">
+                  <span>📋</span>
+                  Case Management System
+                </h2>
+                {/* <p className="text-sm text-green-100 mt-1">
+                  Cortix Insights Platform
+                </p> */}
+              </div>
+              <button
+                onClick={() => window.open(caseManagementConfig.url, '_blank', 'noopener,noreferrer')}
+                className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-all hover:scale-105 active:scale-95"
+                title="Open in new window"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                <span className="font-medium">Open</span>
+              </button>
+            </div>
+          </div>
+          <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 p-8" style={{ height: 'calc(100vh - 250px)' }}>
+            <div className="max-w-2xl mx-auto h-full flex flex-col justify-center">
+              {/* Warning Message */}
+              {/* <div className="bg-yellow-50 border-l-4 border-yellow-400 p-5 rounded-lg shadow-sm mb-6">
+                <div className="flex items-start">
+                  <svg className="w-6 h-6 text-yellow-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <div>
+                    <h3 className="font-semibold text-yellow-900 mb-2">Authentication Required</h3>
+                    <p className="text-sm text-yellow-800">
+                      This platform uses Microsoft authentication (MSAL) which cannot run inside iframes for security reasons. 
+                      Click the "Open" button above or the launch button below to access it in a new window.
+                    </p>
+                  </div>
+                </div>
+              </div> */}
+
+              {/* Login Credentials Card */}
+              {/* <div className="bg-white rounded-xl shadow-lg p-6 mb-6 border border-gray-200">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <span className="text-2xl">🔐</span>
+                  Login Credentials
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600 uppercase block mb-2">Username</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={caseManagementConfig.username}
+                        readOnly
+                        className="flex-1 px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-sm font-mono text-gray-800"
+                      />
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(caseManagementConfig.username);
+                        }}
+                        className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Copy
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600 uppercase block mb-2">Password</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={caseManagementConfig.password}
+                        readOnly
+                        className="flex-1 px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-sm font-mono text-gray-800"
+                      />
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(caseManagementConfig.password);
+                        }}
+                        className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Copy
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div> */}
+
+              {/* Launch Button */}
+              <button
+                onClick={() => window.open(caseManagementConfig.url, '_blank', 'noopener,noreferrer')}
+                className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-green-700 hover:to-green-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
+              >
+                <span className="text-2xl">🚀</span>
+                Launch Case Management System
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Facility Assets View */}
