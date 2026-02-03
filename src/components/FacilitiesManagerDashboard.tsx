@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import Store3DLayout from './Store3DLayout';
 import { RetailFacilityLayout } from './RetailFacilityLayout';
 import { HeatmapZoneData } from '../types';
 import { parseCSV, mapAssetToEquipment } from '../utils/csvParser';
 import ChatInterface from './ChatInterface';
-
-interface Equipment {
-  id: string;
-  name: string;
-  type: 'refrigerator' | 'freezer' | 'hvac' | 'pos-terminal' | 'security-camera' | 'lighting' | 'door-sensor' | 'fuel-pump' | 'fuel-tank' | 'ev-charger' | 'solar-panel' | 'vacuum' | 'atm' | 'fire-alarm' | 'building' | 'structure' | 'emergency-system';
-  location: string;
-  status: 'operational' | 'warning' | 'critical' | 'offline';
-  temperature?: number;
-  targetTemp?: number;
-  lastMaintenance: string;
-  nextMaintenance: string;
-  alerts: string[];
-  zone: string;
-  category?: string;
-  criticality?: string;
-  maintenanceMode?: string;
-  serviceFrequency?: string;
-  replacementCycle?: string;
-  compliance?: string;
-  kpis?: string;
-}
+import AssetDetailsFullPage from './AssetDetailsFullPage';
+import { EnergyMetricsAnalysis } from './EnergyMetricsAnalysis';
+import {
+  equipmentDataAtom,
+  selectedZoneAtom,
+  selectedAssetCategoryAtom,
+  selectedEquipmentAtom,
+  hoveredZoneAtom,
+  mousePositionAtom,
+  isLoadingAtom,
+  viewModeAtom,
+  visibleAssetTypesAtom,
+  isChatOpenAtom,
+  filteredEquipmentAtom,
+  assetCategoriesAtom,
+  statusCountsAtom,
+  complianceCountsAtom,
+  zonesAtom,
+  Equipment,
+  downloadEquipmentCSV
+} from '../store/facilitiesStore';
 
 const mockEquipmentData: Equipment[] = [
   // Buildings
@@ -75,6 +77,18 @@ const mockEquipmentData: Equipment[] = [
     status: 'operational',
     lastMaintenance: '2023-12-15',
     nextMaintenance: '2024-06-15',
+    alerts: [],
+    category: 'infrastructure'
+  },
+  {
+    id: 'price-list-pillar',
+    name: 'Fuel Price Display',
+    type: 'structure',
+    location: 'Fuel Forecourt Entrance',
+    zone: 'Fuel Station',
+    status: 'operational',
+    lastMaintenance: '2024-01-05',
+    nextMaintenance: '2024-07-05',
     alerts: [],
     category: 'infrastructure'
   },
@@ -392,6 +406,238 @@ const mockEquipmentData: Equipment[] = [
     nextMaintenance: '2024-05-05',
     alerts: [],
     category: 'service'
+  },
+
+  // Store Equipment - Food Service
+  {
+    id: 'coffee-machine-1',
+    name: 'Coffee Machine',
+    type: 'coffee-machine',
+    location: 'Store - Food Service Area',
+    zone: 'Convenience Store',
+    status: 'operational',
+    lastMaintenance: '2024-01-15',
+    nextMaintenance: '2024-02-15',
+    alerts: [],
+    category: 'food-service',
+    criticality: 'T2',
+    maintenanceMode: 'Preventive + Consumables',
+    serviceFrequency: 'Monthly descaling; quarterly service',
+    replacementCycle: '5–7 yrs',
+    compliance: 'Food safety; water quality',
+    kpis: 'Availability, Temperature/taste variance'
+  },
+  {
+    id: 'beverage-dispenser-1',
+    name: 'Beverage Dispenser',
+    type: 'beverage-dispenser',
+    location: 'Store - Beverage Station',
+    zone: 'Convenience Store',
+    status: 'operational',
+    lastMaintenance: '2024-01-10',
+    nextMaintenance: '2024-04-10',
+    alerts: [],
+    category: 'food-service',
+    criticality: 'T2',
+    maintenanceMode: 'Preventive',
+    serviceFrequency: 'Quarterly',
+    replacementCycle: '5–7 yrs',
+    compliance: 'Food safety',
+    kpis: 'Dispense accuracy'
+  },
+  {
+    id: 'oven-1',
+    name: 'Bakery Oven',
+    type: 'oven',
+    location: 'Store - Bakery Section',
+    zone: 'Convenience Store',
+    status: 'warning',
+    temperature: 185,
+    targetTemp: 180,
+    lastMaintenance: '2023-12-20',
+    nextMaintenance: '2024-03-20',
+    alerts: ['Temperature calibration needed'],
+    category: 'food-service',
+    criticality: 'T2',
+    maintenanceMode: 'Preventive + Compliance',
+    serviceFrequency: 'Quarterly cleaning & safety',
+    replacementCycle: '7–10 yrs',
+    compliance: 'Electrical & food safety',
+    kpis: 'Temperature accuracy, Energy use'
+  },
+  {
+    id: 'microwave-1',
+    name: 'Customer Microwave',
+    type: 'microwave',
+    location: 'Store - Customer Area',
+    zone: 'Convenience Store',
+    status: 'operational',
+    lastMaintenance: '2023-12-01',
+    nextMaintenance: '2024-06-01',
+    alerts: [],
+    category: 'food-service',
+    criticality: 'T3',
+    maintenanceMode: 'Reactive + Light preventive',
+    serviceFrequency: 'Semi-annual checks',
+    replacementCycle: '5–7 yrs',
+    compliance: 'Electrical safety',
+    kpis: 'Availability'
+  },
+  {
+    id: 'hot-food-cabinet-1',
+    name: 'Hot Food Display Cabinet',
+    type: 'hot-food-cabinet',
+    location: 'Store - Food Service Area',
+    zone: 'Convenience Store',
+    status: 'operational',
+    temperature: 65,
+    targetTemp: 63,
+    lastMaintenance: '2024-01-05',
+    nextMaintenance: '2024-04-05',
+    alerts: [],
+    category: 'food-service',
+    criticality: 'T2',
+    maintenanceMode: 'Preventive',
+    serviceFrequency: 'Quarterly',
+    replacementCycle: '6–8 yrs',
+    compliance: 'Food safety',
+    kpis: 'Holding temp compliance'
+  },
+
+  // Refrigeration Equipment
+  {
+    id: 'chiller-1',
+    name: 'Open Chiller - Beverages',
+    type: 'refrigerator',
+    location: 'Store - Beverage Section',
+    zone: 'Convenience Store',
+    status: 'operational',
+    temperature: 3.8,
+    targetTemp: 4.0,
+    lastMaintenance: '2024-01-20',
+    nextMaintenance: '2024-04-20',
+    alerts: [],
+    category: 'refrigeration',
+    criticality: 'T1',
+    maintenanceMode: 'Condition-based + Predictive',
+    serviceFrequency: 'Remote temp monitoring; quarterly PM',
+    replacementCycle: '8–10 yrs (compressors 5–7)',
+    compliance: 'F-gas/leak logs; HACCP',
+    kpis: 'Product temp compliance, Energy/kWh'
+  },
+  {
+    id: 'freezer-1',
+    name: 'Open Freezer - Ice Cream',
+    type: 'freezer',
+    location: 'Store - Frozen Section',
+    zone: 'Convenience Store',
+    status: 'operational',
+    temperature: -18.2,
+    targetTemp: -18.0,
+    lastMaintenance: '2024-01-15',
+    nextMaintenance: '2024-04-15',
+    alerts: [],
+    category: 'refrigeration',
+    criticality: 'T1',
+    maintenanceMode: 'Condition-based + Predictive',
+    serviceFrequency: 'Remote temp monitoring; quarterly PM',
+    replacementCycle: '8–10 yrs (compressors 5–7)',
+    compliance: 'F-gas/leak logs; HACCP',
+    kpis: 'Product temp compliance, Energy/kWh'
+  },
+  {
+    id: 'chiller-2',
+    name: 'Walk-in Cooler',
+    type: 'refrigerator',
+    location: 'Store - Back Room',
+    zone: 'Convenience Store',
+    status: 'warning',
+    temperature: 5.5,
+    targetTemp: 4.0,
+    lastMaintenance: '2024-01-10',
+    nextMaintenance: '2024-04-10',
+    alerts: ['Temperature slightly elevated', 'Door seal inspection needed'],
+    category: 'refrigeration',
+    criticality: 'T1',
+    maintenanceMode: 'Condition-based + Predictive',
+    serviceFrequency: 'Remote temp monitoring; quarterly PM',
+    replacementCycle: '8–10 yrs (compressors 5–7)',
+    compliance: 'F-gas/leak logs; HACCP',
+    kpis: 'Product temp compliance, Energy/kWh'
+  },
+  {
+    id: 'compressor-1',
+    name: 'Refrigeration Compressor Unit',
+    type: 'hvac',
+    location: 'Store - Equipment Room',
+    zone: 'Convenience Store',
+    status: 'operational',
+    lastMaintenance: '2024-02-01',
+    nextMaintenance: '2024-05-01',
+    alerts: [],
+    category: 'refrigeration',
+    criticality: 'T1',
+    maintenanceMode: 'Condition-based + Predictive',
+    serviceFrequency: 'Quarterly',
+    replacementCycle: '5–7 yrs',
+    compliance: 'Refrigerant management',
+    kpis: 'MTBF, Energy efficiency'
+  },
+
+  // Car Wash Equipment
+  {
+    id: 'carwash-automatic',
+    name: 'Automatic Car Wash System',
+    type: 'car-wash',
+    location: 'Car Wash Building',
+    zone: 'Car Wash',
+    status: 'operational',
+    lastMaintenance: '2024-01-15',
+    nextMaintenance: '2024-04-15',
+    alerts: [],
+    category: 'car-wash',
+    criticality: 'T2',
+    maintenanceMode: 'Preventive + Condition-based',
+    serviceFrequency: 'Monthly consumables; quarterly mechanical',
+    replacementCycle: '10–12 yrs',
+    compliance: 'Water discharge permits',
+    kpis: 'Throughput, Downtime'
+  },
+  {
+    id: 'pressure-wash-1',
+    name: 'Jet/Pressure Wash System',
+    type: 'pressure-washer',
+    location: 'Car Wash - Bay 1',
+    zone: 'Car Wash',
+    status: 'operational',
+    lastMaintenance: '2024-01-20',
+    nextMaintenance: '2024-04-20',
+    alerts: [],
+    category: 'car-wash',
+    criticality: 'T2',
+    maintenanceMode: 'Preventive',
+    serviceFrequency: 'Quarterly',
+    replacementCycle: '8–10 yrs',
+    compliance: 'Electrical & water regulations',
+    kpis: 'Availability'
+  },
+  {
+    id: 'water-recycler-1',
+    name: 'Water Recycling System',
+    type: 'water-recycler',
+    location: 'Car Wash - Utility Room',
+    zone: 'Car Wash',
+    status: 'warning',
+    lastMaintenance: '2024-01-10',
+    nextMaintenance: '2024-02-10',
+    alerts: ['Monthly water quality check due'],
+    category: 'car-wash',
+    criticality: 'T2',
+    maintenanceMode: 'Preventive + Compliance',
+    serviceFrequency: 'Monthly water quality checks',
+    replacementCycle: '10–12 yrs',
+    compliance: 'Water quality/effluent standards',
+    kpis: 'Reuse %, Water quality score'
   }
 ];
 
@@ -400,31 +646,53 @@ const mockEquipmentData: Equipment[] = [
 interface FacilitiesManagerDashboardProps {
   selectedStore: string;
   selectedCategory: string;
+  onNavigateToAssetDetails?: () => void;
 }
 
 export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProps> = ({
   selectedStore,
-  selectedCategory
+  selectedCategory,
+  onNavigateToAssetDetails
 }) => {
-  const [selectedZone, setSelectedZone] = useState<string>('All Zones');
-  const [hoveredZone, setHoveredZone] = useState<HeatmapZoneData | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
-  const [equipmentData, setEquipmentData] = useState<Equipment[]>(mockEquipmentData);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [selectedAssetCategory, setSelectedAssetCategory] = useState<string>('All Categories');
-  const [viewMode, setViewMode] = useState<'3d' | '2d'>('3d');
-  const [visibleAssetTypes, setVisibleAssetTypes] = useState<Set<string>>(new Set([
-    'buildings', 'fuel', 'ev-charging', 'energy', 'security', 'service', 'infrastructure', 'other'
-  ]));
-  const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+  
+  // Jotai atoms for state management
+  const [selectedZone, setSelectedZone] = useAtom(selectedZoneAtom);
+  const [hoveredZone, setHoveredZone] = useAtom(hoveredZoneAtom);
+  const [mousePosition, setMousePosition] = useAtom(mousePositionAtom);
+  const [selectedEquipment, setSelectedEquipment] = useAtom(selectedEquipmentAtom);
+  const [equipmentData, setEquipmentData] = useAtom(equipmentDataAtom);
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
+  const [selectedAssetCategory, setSelectedAssetCategory] = useAtom(selectedAssetCategoryAtom);
+  const [viewMode, setViewMode] = useAtom(viewModeAtom);
+  const [visibleAssetTypes, setVisibleAssetTypes] = useAtom(visibleAssetTypesAtom);
+  const [isChatOpen, setIsChatOpen] = useAtom(isChatOpenAtom);
+  const [dashboardView, setDashboardView] = useState<'facility' | 'energy'>('facility');
+  const [statusModalFilter, setStatusModalFilter] = useState<{
+    type: 'status' | 'compliance' | 'maintenance';
+    value: string;
+    label: string;
+  } | null>(null);
+  
+  // Derived values from atoms
+  const filteredEquipment = useAtomValue(filteredEquipmentAtom);
+  const assetCategories = useAtomValue(assetCategoriesAtom);
+  const statusCounts = useAtomValue(statusCountsAtom);
+  const complianceCounts = useAtomValue(complianceCountsAtom);
+  const zones = useAtomValue(zonesAtom);
 
   useEffect(() => {
-    // Use mock data directly instead of loading from CSV
-    // This ensures IDs match with assets in RetailFacilityLayout
-    setEquipmentData(mockEquipmentData);
+    // Initialize with mock data only if localStorage is empty
+    // This allows changes from the simulator to persist
+    if (equipmentData.length === 0) {
+      setEquipmentData(mockEquipmentData);
+    }
     setIsLoading(false);
   }, []);
+
+  const handleExportCSV = () => {
+    downloadEquipmentCSV(equipmentData);
+  };
 
   const handleMouseEnter = (zone: HeatmapZoneData, event: React.MouseEvent) => {
     setHoveredZone(zone);
@@ -436,21 +704,6 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
 
   const handleMouseMove = (event: React.MouseEvent) => {
     setMousePosition({ x: event.clientX, y: event.clientY });
-  };
-
-  const filteredEquipment = equipmentData.filter(eq => {
-    const zoneMatch = selectedZone === 'All Zones' || eq.zone === selectedZone;
-    const categoryMatch = selectedAssetCategory === 'All Categories' || eq.category === selectedAssetCategory;
-    return zoneMatch && categoryMatch;
-  });
-
-  const assetCategories = ['All Categories', ...Array.from(new Set(equipmentData.map(eq => eq.category).filter(Boolean)))];
-
-  const statusCounts = {
-    operational: equipmentData.filter(e => e.status === 'operational').length,
-    warning: equipmentData.filter(e => e.status === 'warning').length,
-    critical: equipmentData.filter(e => e.status === 'critical').length,
-    offline: equipmentData.filter(e => e.status === 'offline').length,
   };
 
 
@@ -472,6 +725,35 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
     }
   };
 
+  const getFilteredAssets = () => {
+    if (!statusModalFilter) return [];
+    
+    if (statusModalFilter.type === 'status') {
+      return equipmentData.filter(eq => eq.status === statusModalFilter.value);
+    } else if (statusModalFilter.type === 'compliance') {
+      const today = new Date();
+      if (statusModalFilter.value === 'compliant') {
+        return equipmentData.filter(eq => {
+          const nextMaint = new Date(eq.nextMaintenance);
+          return nextMaint > today;
+        });
+      } else {
+        return equipmentData.filter(eq => {
+          const nextMaint = new Date(eq.nextMaintenance);
+          return nextMaint <= today;
+        });
+      }
+    } else if (statusModalFilter.type === 'maintenance') {
+      const today = new Date();
+      const thirtyDaysFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+      return equipmentData.filter(eq => {
+        const nextMaint = new Date(eq.nextMaintenance);
+        return nextMaint <= thirtyDaysFromNow && nextMaint > today;
+      });
+    }
+    return [];
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -485,21 +767,75 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
 
   return (
     <div className="space-y-4">
-      {/* Data Source Info */}
-      <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+      {/* Dashboard View Tabs */}
+      <div className="flex items-center justify-between bg-white rounded-lg shadow-sm border p-3">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setDashboardView('facility')}
+            className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${
+              dashboardView === 'facility'
+                ? 'bg-green-600 text-white shadow-md'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            <span>🏗️</span>
+            Assets
+          </button>
+          <button
+            onClick={() => setDashboardView('energy')}
+            className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${
+              dashboardView === 'energy'
+                ? 'bg-green-600 text-white shadow-md'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            <span>⚡</span>
+            Energy Metrics
+          </button>
+        </div>
         <div className="flex items-center gap-2">
-          <span className="text-green-600">ℹ️</span>
-          <p className="text-sm text-green-800">
-            <strong>Data Source:</strong> Retail_Assets_Maintenance_Mapping.csv | 
-            <strong className="ml-2">Total Assets:</strong> {equipmentData.length} | 
-            <strong className="ml-2">Categories:</strong> {assetCategories.length - 1}
-          </p>
+          <div className="w-2 h-2 bg-green-500 rounded-full blink-slow"></div>
+          <span className="text-sm text-gray-600">Live Data</span>
         </div>
       </div>
 
+      {/* Energy Metrics View */}
+      {dashboardView === 'energy' && (
+        <EnergyMetricsAnalysis selectedCategory={selectedAssetCategory} />
+      )}
+
+      {/* Facility Assets View */}
+      {dashboardView === 'facility' && (
+        <>
+      {/* Data Source Info with Export Button */}
+      {/* <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-green-600">ℹ️</span>
+            <p className="text-sm text-green-800">
+              <strong>Data Source:</strong> Retail_Assets_Maintenance_Mapping.csv | 
+              <strong className="ml-2">Total Assets:</strong> {equipmentData.length} | 
+              <strong className="ml-2">Categories:</strong> {assetCategories.length - 1}
+            </p>
+          </div>
+          <button
+            onClick={handleExportCSV}
+            className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Export CSV
+          </button>
+        </div>
+      </div> */}
+
       {/* Header Stats */}
-      <div className="grid grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+        <div 
+          onClick={() => setStatusModalFilter({ type: 'status', value: 'operational', label: 'Operational Assets' })}
+          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md hover:border-green-300 transition-all"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Operational</p>
@@ -508,7 +844,10 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
             <span className="text-4xl">✅</span>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div 
+          onClick={() => setStatusModalFilter({ type: 'status', value: 'warning', label: 'Warning Assets' })}
+          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md hover:border-yellow-300 transition-all"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Warning</p>
@@ -517,7 +856,10 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
             <span className="text-4xl">⚠️</span>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div 
+          onClick={() => setStatusModalFilter({ type: 'status', value: 'critical', label: 'Critical Assets' })}
+          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md hover:border-red-300 transition-all"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Critical</p>
@@ -526,7 +868,10 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
             <span className="text-4xl">❌</span>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div 
+          onClick={() => setStatusModalFilter({ type: 'status', value: 'offline', label: 'Offline Assets' })}
+          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md hover:border-gray-300 transition-all"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Offline</p>
@@ -535,12 +880,48 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
             <span className="text-4xl">⭕</span>
           </div>
         </div>
+        <div 
+          onClick={() => setStatusModalFilter({ type: 'compliance', value: 'compliant', label: 'Compliant Assets' })}
+          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md hover:border-blue-300 transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Compliant</p>
+              <p className="text-2xl font-bold text-blue-600">{complianceCounts.compliant}</p>
+            </div>
+            <span className="text-4xl">📋</span>
+          </div>
+        </div>
+        <div 
+          onClick={() => setStatusModalFilter({ type: 'compliance', value: 'non-compliant', label: 'Non-Compliant Assets' })}
+          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md hover:border-orange-300 transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Non-Compliant</p>
+              <p className="text-2xl font-bold text-orange-600">{complianceCounts.nonCompliant}</p>
+            </div>
+            <span className="text-4xl">⚡</span>
+          </div>
+        </div>
+        <div 
+          onClick={() => setStatusModalFilter({ type: 'maintenance', value: 'due', label: 'Maintenance Due (Next 30 Days)' })}
+          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md hover:border-purple-300 transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Maintenance Due</p>
+              <p className="text-2xl font-bold text-purple-600">{complianceCounts.maintenanceChecks}</p>
+            </div>
+            <span className="text-4xl">🔧</span>
+          </div>
+        </div>
       </div>
 
       {/* 3D Retail Facility Layout and Equipment List */}
       <div className="grid grid-cols-12 gap-4">
         {/* Retail Facility Layout - 9 columns */}
-        <div className="col-span-9 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="col-span-12 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="space-y-3 mb-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -587,6 +968,9 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
                 { key: 'energy', label: '🔋 Energy', color: 'yellow' },
                 { key: 'security', label: '📹 Security', color: 'red' },
                 { key: 'service', label: '🛠️ Service', color: 'purple' },
+                { key: 'food-service', label: '🍽️ Food Service', color: 'pink' },
+                { key: 'refrigeration', label: '❄️ Refrigeration', color: 'cyan' },
+                { key: 'car-wash', label: '🚗 Car Wash', color: 'blue' },
                 { key: 'infrastructure', label: '💡 Infrastructure', color: 'indigo' },
                 { key: 'other', label: '🌲 Other', color: 'emerald' },
               ].map(category => {
@@ -615,16 +999,16 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
               })}
               <button
                 onClick={() => {
-                  const allCategories = new Set(['buildings', 'fuel', 'ev-charging', 'energy', 'security', 'service', 'infrastructure', 'other']);
+                  const allCategories = new Set(['buildings', 'fuel', 'ev-charging', 'energy', 'security', 'service', 'infrastructure', 'food-service', 'refrigeration', 'car-wash', 'other']);
                   setVisibleAssetTypes(visibleAssetTypes.size === allCategories.size ? new Set() : allCategories);
                 }}
                 className="ml-2 px-2 py-1 rounded-md text-xs font-medium bg-gray-700 text-white hover:bg-gray-800 transition-all"
               >
-                {visibleAssetTypes.size === 8 ? 'Hide All' : 'Show All'}
+                {visibleAssetTypes.size === 11 ? 'Hide All' : 'Show All'}
               </button>
             </div>
           </div>
-          <div className="relative h-[600px] bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg overflow-hidden border-2 border-gray-300 shadow-inner">
+          <div className="relative h-[700px] bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg overflow-hidden border-2 border-gray-300 shadow-inner">
             <RetailFacilityLayout 
               onAssetClick={(asset) => {
                 // Find equipment matching this asset by ID
@@ -644,7 +1028,7 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
         </div>
 
         {/* Equipment Assets List - 3 columns */}
-        <div className="col-span-3 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        {/* <div className="col-span-3 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <span>⚙️</span>
@@ -712,7 +1096,7 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Equipment Details Panel */}
@@ -726,12 +1110,24 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
               </h2>
               <p className="text-sm text-gray-600">{selectedEquipment.id}</p>
             </div>
-            <button
-              onClick={() => setSelectedEquipment(null)}
-              className="text-gray-400 hover:text-gray-600"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => navigate(`/asset/${selectedEquipment.id}`)}
+                className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                View Details
+              </button>
+              <button
+                onClick={() => setSelectedEquipment(null)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
+            </div>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
@@ -836,8 +1232,142 @@ export const FacilitiesManagerDashboard: React.FC<FacilitiesManagerDashboardProp
         </span>
       </button>
 
+      {/* Asset List Modal */}
+      {statusModalFilter && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-800">
+                  {statusModalFilter.label}
+                </h2>
+                <button
+                  onClick={() => setStatusModalFilter(null)}
+                  className="text-gray-400 hover:text-gray-600 text-2xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all"
+                >
+                  ✕
+                </button>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                Total: {getFilteredAssets().length} asset{getFilteredAssets().length !== 1 ? 's' : ''}
+              </p>
+            </div>
+
+            {/* Modal Body */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {getFilteredAssets().length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 text-lg">No assets found in this category</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {getFilteredAssets().map(asset => (
+                    <div
+                      key={asset.id}
+                      onClick={() => {
+                        setSelectedEquipment(asset);
+                        setStatusModalFilter(null);
+                      }}
+                      className="border border-gray-200 rounded-lg p-4 hover:border-green-500 hover:bg-green-50 cursor-pointer transition-all"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            {getStatusIcon(asset.status)}
+                            <h3 className="font-semibold text-sm">{asset.name}</h3>
+                          </div>
+                          <p className="text-xs text-gray-600">{asset.location}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 flex-wrap mt-2">
+                        <span className={`text-xs px-2 py-1 rounded-md border ${getStatusColor(asset.status)}`}>
+                          {asset.status}
+                        </span>
+                        {asset.category && (
+                          <span className="text-xs bg-gray-100 px-2 py-1 rounded-md">
+                            {asset.category}
+                          </span>
+                        )}
+                        {asset.criticality && (
+                          <span className={`text-xs px-2 py-1 rounded-md font-semibold ${
+                            asset.criticality === 'T1' ? 'bg-red-100 text-red-700' :
+                            asset.criticality === 'T2' ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-green-100 text-green-700'
+                          }`}>
+                            {asset.criticality}
+                          </span>
+                        )}
+                      </div>
+
+                      {asset.alerts.length > 0 && (
+                        <div className="mt-2 pt-2 border-t border-gray-200">
+                          <p className="text-xs text-red-600 flex items-center gap-1">
+                            <span>⚠️</span>
+                            {asset.alerts[0]}
+                          </p>
+                          {asset.alerts.length > 1 && (
+                            <p className="text-xs text-gray-500 mt-1">
+                              +{asset.alerts.length - 1} more alert{asset.alerts.length - 1 !== 1 ? 's' : ''}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-600">
+                        <div className="flex justify-between">
+                          <span>Next Maint:</span>
+                          <span className="font-medium">{asset.nextMaintenance}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-gray-200 bg-gray-50">
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setStatusModalFilter(null)}
+                  className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Chat Interface Modal */}
       <ChatInterface isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+        </>
+      )}
     </div>
   );
+};
+
+// Wrapper component to handle page navigation
+export const FacilitiesManagerDashboardWrapper: React.FC<FacilitiesManagerDashboardProps> = (props) => {
+  const [selectedEquipment] = useAtom(selectedEquipmentAtom);
+  const [showAssetDetailsPage, setShowAssetDetailsPage] = useState(false);
+
+  // Listen to changes in selectedEquipment to control page visibility
+  useEffect(() => {
+    // This allows programmatic navigation to asset details page
+  }, [selectedEquipment]);
+
+  if (showAssetDetailsPage && selectedEquipment) {
+    return (
+      <AssetDetailsFullPage 
+        equipment={selectedEquipment} 
+        onBack={() => setShowAssetDetailsPage(false)} 
+      />
+    );
+  }
+
+  return <FacilitiesManagerDashboard {...props} onNavigateToAssetDetails={() => setShowAssetDetailsPage(true)} />;
 };

@@ -14,7 +14,7 @@ type RegionalManagerDashboardProps = {
   insights: OpsInsight[];
   alerts: OpsAlert[];
   onCreateTask: (rec: Recommendation) => void;
-  onIgnoreRecommendation: (id: string) => void;
+  onIgnoreRecommendation: (id: number) => void;
 };
 
 // Mock regional data with geographic coordinates for UK stores

@@ -20,7 +20,7 @@ const timePeriodsMap: Record<Persona, string[]> = {
     'Store Manager': ['Last 7 Days', 'Last 30 Days', 'Last Quarter'],
     'Operations Manager': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days'],
     'Regional Manager': ['Last 7 Days', 'Last 30 Days', 'Year to Date'],
-    'Facilities Manager': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days', 'Last Quarter'],
+    'Site Manager': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days', 'Last Quarter'],
 }
 
 const ActionButton: React.FC<{ 
@@ -89,14 +89,15 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="flex flex-col">
                 <div className="flex items-center space-x-2">
                   <h1 className="text-xl font-bold tracking-tight text-white">
-                    Shelfie
+                    Retail Operations
                   </h1>
                   <span className="px-2 py-0.5 bg-white/20 rounded-full text-xs font-medium backdrop-blur-sm">
                     Smart Dashboard
                   </span>
                 </div>
                 <p className="text-xs text-white/80 font-medium">
-                  Digital Twin Analytics Platform
+                  {/* Digital Twin Analytics Platform */}
+                  Digital Twin for Stores
                 </p>
               </div>
             </div>
