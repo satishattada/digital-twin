@@ -236,6 +236,15 @@ const AppContent: React.FC = () => {
             />
           }
         />
+        <Route
+          path="/digital-engineer"
+          element={
+            <FacilitiesManagerPage
+              selectedStore={selectedStore}
+              selectedCategory={selectedCategory}
+            />
+          }
+        />
       </Routes>
     </Layout>
   );

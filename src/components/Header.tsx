@@ -21,6 +21,7 @@ const timePeriodsMap: Record<Persona, string[]> = {
     'Operations Manager': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days'],
     'Regional Manager': ['Last 7 Days', 'Last 30 Days', 'Year to Date'],
     'Site Manager': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days', 'Last Quarter'],
+    'Digital Engineer': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days', 'Last Quarter'],
 }
 
 const ActionButton: React.FC<{ 

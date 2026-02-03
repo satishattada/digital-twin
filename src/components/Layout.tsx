@@ -34,6 +34,7 @@ const personaRouteMap: Record<Persona, string> = {
   "Operations Manager": "/operations-manager",
   "Regional Manager": "/regional-manager",
   "Site Manager": "/site-manager",
+  "Digital Engineer": "/digital-engineer",
 };
 
 const routePersonaMap: Record<string, Persona> = {
@@ -41,6 +42,7 @@ const routePersonaMap: Record<string, Persona> = {
   "/operations-manager": "Operations Manager",
   "/regional-manager": "Regional Manager",
   "/site-manager": "Site Manager",
+  "/digital-engineer": "Digital Engineer",
 };
 
 export const Layout: React.FC<LayoutProps> = ({

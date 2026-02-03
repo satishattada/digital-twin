@@ -65,6 +65,7 @@ export const PersonaDropdown: React.FC<{
             <option value="Operations Manager">⚙️ Operations Manager</option>
             <option value="Regional Manager">🌍 Regional Manager</option>
             <option value="Site Manager">🏗️ Site Manager</option>
+            <option value="Digital Engineer">🔧 Digital Engineer</option>
         </select>
     </div>
 );
@@ -99,6 +100,12 @@ const AnimatedAvatar: React.FC<{ persona: Persona; isActive: boolean }> = ({
                     gradient: "from-blue-400 via-cyan-500 to-teal-600",
                     image: "/images/site-manager.jpg",
                     alt: "Site Manager",
+                };
+            case "Digital Engineer":
+                return {
+                    gradient: "from-cyan-400 via-teal-500 to-emerald-600",
+                    image: "/images/digital-engineer.jpg",
+                    alt: "Digital Engineer",
                 };
             default:
                 return {
@@ -205,6 +212,14 @@ const RoleBadge: React.FC<{ persona: Persona }> = ({ persona }) => {
                     emoji: "🏗️",
                     abbr: "SM",
                 };
+            case "Digital Engineer":
+                return {
+                    bg: "bg-emerald-100",
+                    text: "text-emerald-800",
+                    border: "border-emerald-200",
+                    emoji: "🔧",
+                    abbr: "DE",
+                };
             default:
                 return {
                     bg: "bg-gray-100",
@@ -310,6 +325,7 @@ const timePeriodsMap: Record<Persona, string[]> = {
         "Last Year",
     ],
     "Site Manager": ["Last 24 Hours", "Last 7 Days", "Last 30 Days", "Last Quarter"],
+    "Digital Engineer": ["Last 24 Hours", "Last 7 Days", "Last 30 Days", "Last Quarter"],
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({

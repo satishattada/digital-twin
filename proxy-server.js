@@ -52,6 +52,30 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Cortix Insights Proxy - Strips X-Frame-Options and CSP headers
+app.use('/cortix-proxy', createProxyMiddleware({
+  target: 'https://insights.cortix.ai/insights/home',
+  changeOrigin: true,
+  pathRewrite: {
+    '^/cortix-proxy': '', // Remove /cortix-proxy prefix
+  },
+  onProxyRes: (proxyRes, req, res) => {
+    // Remove headers that prevent iframe embedding
+    delete proxyRes.headers['x-frame-options'];
+    delete proxyRes.headers['content-security-policy'];
+    delete proxyRes.headers['x-content-security-policy'];
+    
+    // Add CORS headers
+    proxyRes.headers['access-control-allow-origin'] = '*';
+    proxyRes.headers['access-control-allow-credentials'] = 'true';
+  },
+  onError: (err, req, res) => {
+    console.error('Cortix Proxy Error:', err);
+    res.status(500).json({ error: 'Proxy error', message: err.message });
+  },
+  logLevel: 'debug'
+}));
+
 // Function to get BP OAuth token
 async function getBPAccessToken() {
   // Check if we have a valid cached token
