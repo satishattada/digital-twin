@@ -64,7 +64,7 @@ export const PersonaDropdown: React.FC<{
             <option value="Store Manager">🏪 Store Manager</option>
             <option value="Operations Manager">⚙️ Operations Manager</option>
             <option value="Regional Manager">🌍 Regional Manager</option>
-            <option value="Facilities Manager">🏗️ Facilities Manager</option>
+            <option value="Site Manager">🏗️ Site Manager</option>
         </select>
     </div>
 );
@@ -94,11 +94,11 @@ const AnimatedAvatar: React.FC<{ persona: Persona; isActive: boolean }> = ({
                     image: "/images/regional-manager.jpg",
                     alt: "Regional Manager",
                 };
-            case "Facilities Manager":
+            case "Site Manager":
                 return {
                     gradient: "from-blue-400 via-cyan-500 to-teal-600",
-                    image: "/images/facilities-manager.jpg",
-                    alt: "Facilities Manager",
+                    image: "/images/site-manager.jpg",
+                    alt: "Site Manager",
                 };
             default:
                 return {
@@ -197,13 +197,13 @@ const RoleBadge: React.FC<{ persona: Persona }> = ({ persona }) => {
                     emoji: "🌍",
                     abbr: "RM",
                 };
-            case "Facilities Manager":
+            case "Site Manager":
                 return {
                     bg: "bg-teal-100",
                     text: "text-teal-800",
                     border: "border-teal-200",
                     emoji: "🏗️",
-                    abbr: "FM",
+                    abbr: "SM",
                 };
             default:
                 return {
@@ -309,7 +309,7 @@ const timePeriodsMap: Record<Persona, string[]> = {
         "Last 6 Months",
         "Last Year",
     ],
-    "Facilities Manager": ["Last 24 Hours", "Last 7 Days", "Last 30 Days", "Last Quarter"],
+    "Site Manager": ["Last 24 Hours", "Last 7 Days", "Last 30 Days", "Last Quarter"],
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({

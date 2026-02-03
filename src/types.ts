@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export type Persona = 'Store Manager' | 'Operations Manager' | 'Regional Manager' | 'Facilities Manager';
+export type Persona = 'Store Manager' | 'Operations Manager' | 'Regional Manager' | 'Site Manager';
 
 export type Category = 
     | "All"
