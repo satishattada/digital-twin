@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import RetailFacilityLayout3D from "./RetailFacilityLayout3D";
 import RetailFacilityLayout2D from "./RetailFacilityLayout2D";
+import { Persona } from "@/types";
 
 interface Asset {
     id: string;
@@ -27,18 +28,22 @@ interface Asset {
 }
 
 interface RetailFacilityLayoutProps {
+    persona?: Persona;
     onAssetClick?: (asset: Asset) => void;
     selectedAssetId?: string;
     viewMode?: "3d" | "2d";
     visibleAssetTypes?: Set<string>;
-    equipmentData?: Array<{id: string; status: 'operational' | 'warning' | 'critical' | 'offline'}>;
+    equipmentData?: Array<{
+        id: string;
+        status: "operational" | "warning" | "critical" | "offline";
+    }>;
 }
 
 // Hook for responsive breakpoints
 const useResponsive = () => {
     const [screenSize, setScreenSize] = useState({
-        width: typeof window !== 'undefined' ? window.innerWidth : 1920,
-        height: typeof window !== 'undefined' ? window.innerHeight : 1080,
+        width: typeof window !== "undefined" ? window.innerWidth : 1920,
+        height: typeof window !== "undefined" ? window.innerHeight : 1080,
     });
 
     useEffect(() => {
@@ -49,8 +54,8 @@ const useResponsive = () => {
             });
         };
 
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     return {
@@ -63,6 +68,7 @@ const useResponsive = () => {
 };
 
 export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
+    persona,
     onAssetClick,
     selectedAssetId,
     viewMode = "3d",
@@ -434,7 +440,7 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
             id: "pump-3a",
             name: "Premium Pump 3A",
             position2D: { x: 60, y: 58 },
-            position3D: { x: 60, y: 51  , z: 3 },
+            position3D: { x: 60, y: 51, z: 3 },
             type: "equipment",
             icon2D: "⛽",
             icon3D: "/images/3d/fuel-pump.png",
@@ -607,12 +613,12 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
         //     category: "fuel",
         //     className: "fuel-system-3d",
         // },
-        
+
         // Fuel Price Display Pillar
         {
             id: "price-list-pillar",
             name: "Fuel price display",
-            
+
             position2D: { x: 57, y: 87 },
             position3D: { x: 75, y: 36, z: 10 },
             type: "tree",
@@ -672,7 +678,6 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
             depth: 4,
             category: "ev-charging",
             className: "ev-charger-3d",
-
         },
         {
             id: "ev-level2-3",
@@ -685,7 +690,6 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
             depth: 4,
             category: "ev-charging",
             className: "ev-charger-3d",
-
         },
 
         // ============= BUILDING SYSTEMS =============
@@ -736,7 +740,7 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
         {
             id: "cctv-store",
             name: "CCTV - Store Entrance",
-            position2D: { x: 19, y: 12},
+            position2D: { x: 19, y: 12 },
             position3D: { x: 13, y: 61, z: 4 },
             type: "equipment",
             icon2D: "📹",
@@ -756,7 +760,6 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
             depth: 4,
             category: "security",
             className: "cctv-3d",
-
         },
         {
             id: "cctv-forecourt-2",
@@ -769,7 +772,6 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
             depth: 4,
             category: "security",
             className: "cctv-3d",
-
         },
         {
             id: "cctv-carwash",
@@ -782,7 +784,6 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
             depth: 4,
             category: "security",
             className: "cctv-3d",
-
         },
         {
             id: "cctv-parking",
@@ -795,7 +796,6 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
             depth: 4,
             category: "security",
             className: "cctv-3d",
-
         },
 
         // Emergency Systems
@@ -1119,9 +1119,9 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
     const { isMobile, isTablet, isDesktop, width } = useResponsive();
 
     // Responsive perspective and scale
-    const perspective = isMobile ? '800px' : isTablet ? '1100px' : '1400px';
-    const perspectiveOrigin = isMobile ? '50% 30%' : '50% 25%';
-    const containerPadding = isMobile ? '0.5rem' : '0';
+    const perspective = isMobile ? "800px" : isTablet ? "1100px" : "1400px";
+    const perspectiveOrigin = isMobile ? "50% 30%" : "50% 25%";
+    const containerPadding = isMobile ? "0.5rem" : "0";
 
     return (
         <div
@@ -1134,11 +1134,12 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
                 boxShadow:
                     "inset 0 0 50px rgba(0,0,0,0.1), 0 20px 40px rgba(0,0,0,0.3)",
                 padding: containerPadding,
-                minHeight: isMobile ? '400px' : '500px',
+                minHeight: isMobile ? "400px" : "500px",
             }}
         >
             {viewMode === "3d" ? (
                 <RetailFacilityLayout3D
+                    persona={persona}
                     assets={assets}
                     onAssetClick={onAssetClick}
                     selectedAssetId={selectedAssetId}
@@ -1151,6 +1152,7 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
                 />
             ) : (
                 <RetailFacilityLayout2D
+                    persona={persona}
                     assets={assets}
                     onAssetClick={onAssetClick}
                     selectedAssetId={selectedAssetId}
@@ -1162,15 +1164,15 @@ export const RetailFacilityLayout: React.FC<RetailFacilityLayoutProps> = ({
                     isTablet={isTablet}
                 />
             )}
-            
+
             {/* BP Logo Overlay */}
             <div className="absolute top-4 left-4 z-10">
-                <img 
-                    src="/images/logo.png" 
-                    alt="BP Logo" 
+                <img
+                    src="/images/logo.png"
+                    alt="BP Logo"
                     className="h-12 w-auto drop-shadow-lg opacity-90 hover:opacity-100 transition-opacity"
                     style={{
-                        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+                        filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))",
                     }}
                 />
             </div>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./RetailFacilityLayout2D.css";
+import { Persona } from "@/types";
 
 interface Asset {
     id: string;
@@ -28,6 +29,7 @@ interface Asset {
 
 // 2D Layout Component
 const RetailFacilityLayout2D: React.FC<{
+    persona?: Persona;
     assets: Asset[];
     onAssetClick?: (asset: Asset) => void;
     selectedAssetId?: string;
@@ -42,6 +44,7 @@ const RetailFacilityLayout2D: React.FC<{
     isTablet?: boolean;
 }> = ({
     assets,
+    persona,
     onAssetClick,
     selectedAssetId,
     visibleAssetTypes,
@@ -462,87 +465,109 @@ const RetailFacilityLayout2D: React.FC<{
 
                     {/* Entry and Exit Points */}
                     {/* Main Entry - Bottom Center */}
-                    <div 
+                    <div
                         className="absolute"
                         style={{
-                            left: '48%',
-                            bottom: '-1%',
-                            width: '8%',
-                            height: '4%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            zIndex: 100
+                            left: "48%",
+                            bottom: "-1%",
+                            width: "8%",
+                            height: "4%",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            zIndex: 100,
                         }}
                     >
                         <div className="bg-green-600 border-4 border-green-800 rounded-lg shadow-2xl px-3 py-2 flex items-center gap-2">
                             <span className="text-white text-2xl">🚗</span>
                             <div className="flex flex-col">
-                                <span className="text-white font-bold text-xs">ENTRY</span>
+                                <span className="text-white font-bold text-xs">
+                                    ENTRY
+                                </span>
                                 <div className="flex gap-1 mt-1">
                                     <div className="w-2 h-1 bg-green-300 rounded animate-pulse"></div>
-                                    <div className="w-2 h-1 bg-green-300 rounded animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                                    <div className="w-2 h-1 bg-green-300 rounded animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                                    <div
+                                        className="w-2 h-1 bg-green-300 rounded animate-pulse"
+                                        style={{ animationDelay: "0.2s" }}
+                                    ></div>
+                                    <div
+                                        className="w-2 h-1 bg-green-300 rounded animate-pulse"
+                                        style={{ animationDelay: "0.4s" }}
+                                    ></div>
                                 </div>
                             </div>
                         </div>
                         {/* Entry arrow pointing inward */}
                         <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
-                            <div className="text-green-600 text-4xl animate-bounce">↑</div>
+                            <div className="text-green-600 text-4xl animate-bounce">
+                                ↑
+                            </div>
                         </div>
                     </div>
 
                     {/* Exit - Bottom Left */}
-                    <div 
+                    <div
                         className="absolute"
                         style={{
-                            left: '2%',
-                            bottom: '-1%',
-                            width: '8%',
-                            height: '4%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            zIndex: 100
+                            left: "2%",
+                            bottom: "-1%",
+                            width: "8%",
+                            height: "4%",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            zIndex: 100,
                         }}
                     >
                         <div className="bg-red-600 border-4 border-red-800 rounded-lg shadow-2xl px-3 py-2 flex items-center gap-2">
                             <span className="text-white text-2xl">🚙</span>
                             <div className="flex flex-col">
-                                <span className="text-white font-bold text-xs">EXIT</span>
+                                <span className="text-white font-bold text-xs">
+                                    EXIT
+                                </span>
                                 <div className="flex gap-1 mt-1">
-                                    <div className="w-2 h-1 bg-red-300 rounded animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-                                    <div className="w-2 h-1 bg-red-300 rounded animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                                    <div
+                                        className="w-2 h-1 bg-red-300 rounded animate-pulse"
+                                        style={{ animationDelay: "0.4s" }}
+                                    ></div>
+                                    <div
+                                        className="w-2 h-1 bg-red-300 rounded animate-pulse"
+                                        style={{ animationDelay: "0.2s" }}
+                                    ></div>
                                     <div className="w-2 h-1 bg-red-300 rounded animate-pulse"></div>
                                 </div>
                             </div>
                         </div>
                         {/* Exit arrow pointing outward */}
                         <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1">
-                            <div className="text-red-600 text-4xl animate-bounce">↓</div>
+                            <div className="text-red-600 text-4xl animate-bounce">
+                                ↓
+                            </div>
                         </div>
                     </div>
 
                     {/* Secondary Exit - Top Right */}
-                    <div 
+                    <div
                         className="absolute"
                         style={{
-                            right: '2%',
-                            top: '2%',
-                            width: '6%',
-                            height: '4%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            zIndex: 100
+                            right: "2%",
+                            top: "2%",
+                            width: "6%",
+                            height: "4%",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            zIndex: 100,
                         }}
                     >
                         <div className="bg-orange-600 border-3 border-orange-800 rounded-lg shadow-xl px-2 py-1 flex items-center gap-1">
                             <span className="text-white text-lg">🚗</span>
-                            <span className="text-white font-bold text-xs">EXIT 2</span>
+                            <span className="text-white font-bold text-xs">
+                                EXIT 2
+                            </span>
                         </div>
                         {/* Exit arrow */}
                         <div className="absolute -right-4 top-1/2 transform -translate-y-1/2">
@@ -551,23 +576,25 @@ const RetailFacilityLayout2D: React.FC<{
                     </div>
 
                     {/* Pedestrian Entry - Left side */}
-                    <div 
+                    <div
                         className="absolute"
                         style={{
-                            left: '-1%',
-                            top: '45%',
-                            width: '4%',
-                            height: '6%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            zIndex: 100
+                            left: "-1%",
+                            top: "45%",
+                            width: "4%",
+                            height: "6%",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            zIndex: 100,
                         }}
                     >
                         <div className="bg-blue-600 border-3 border-blue-800 rounded-lg shadow-xl px-2 py-2 flex flex-col items-center gap-1">
                             <span className="text-white text-xl">🚶</span>
-                            <span className="text-white font-bold text-xs text-center">WALK-IN</span>
+                            <span className="text-white font-bold text-xs text-center">
+                                WALK-IN
+                            </span>
                         </div>
                         {/* Pedestrian arrow */}
                         <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-1">
@@ -639,22 +666,34 @@ const RetailFacilityLayout2D: React.FC<{
                             <div className="flex items-center justify-between mb-1">
                                 <div className="flex items-center gap-2">
                                     <span>❄️</span>
-                                    <span className="font-semibold text-red-800">HVAC Unit #1</span>
+                                    <span className="font-semibold text-red-800">
+                                        HVAC Unit #1
+                                    </span>
                                 </div>
-                                <span className="text-red-700 font-bold">125.4 kWh/day</span>
+                                <span className="text-red-700 font-bold">
+                                    125.4 kWh/day
+                                </span>
                             </div>
-                            <div className="text-xs text-red-600">Peak: 18.2 kW | Rating: C</div>
+                            <div className="text-xs text-red-600">
+                                Peak: 18.2 kW | Rating: C
+                            </div>
                         </div>
 
                         <div className="bg-red-50 border border-red-200 rounded p-2">
                             <div className="flex items-center justify-between mb-1">
                                 <div className="flex items-center gap-2">
                                     <span>❄️</span>
-                                    <span className="font-semibold text-red-800">HVAC Unit #2</span>
+                                    <span className="font-semibold text-red-800">
+                                        HVAC Unit #2
+                                    </span>
                                 </div>
-                                <span className="text-red-700 font-bold">118.7 kWh/day</span>
+                                <span className="text-red-700 font-bold">
+                                    118.7 kWh/day
+                                </span>
                             </div>
-                            <div className="text-xs text-red-600">Peak: 17.5 kW | Rating: C</div>
+                            <div className="text-xs text-red-600">
+                                Peak: 17.5 kW | Rating: C
+                            </div>
                         </div>
 
                         {/* Refrigeration */}
@@ -662,22 +701,34 @@ const RetailFacilityLayout2D: React.FC<{
                             <div className="flex items-center justify-between mb-1">
                                 <div className="flex items-center gap-2">
                                     <span>🧊</span>
-                                    <span className="font-semibold text-orange-800">Walk-in Cooler</span>
+                                    <span className="font-semibold text-orange-800">
+                                        Walk-in Cooler
+                                    </span>
                                 </div>
-                                <span className="text-orange-700 font-bold">87.3 kWh/day</span>
+                                <span className="text-orange-700 font-bold">
+                                    87.3 kWh/day
+                                </span>
                             </div>
-                            <div className="text-xs text-orange-600">Peak: 12.1 kW | Rating: B</div>
+                            <div className="text-xs text-orange-600">
+                                Peak: 12.1 kW | Rating: B
+                            </div>
                         </div>
 
                         <div className="bg-orange-50 border border-orange-200 rounded p-2">
                             <div className="flex items-center justify-between mb-1">
                                 <div className="flex items-center gap-2">
                                     <span>🧊</span>
-                                    <span className="font-semibold text-orange-800">Walk-in Freezer</span>
+                                    <span className="font-semibold text-orange-800">
+                                        Walk-in Freezer
+                                    </span>
                                 </div>
-                                <span className="text-orange-700 font-bold">94.8 kWh/day</span>
+                                <span className="text-orange-700 font-bold">
+                                    94.8 kWh/day
+                                </span>
                             </div>
-                            <div className="text-xs text-orange-600">Peak: 13.6 kW | Rating: B</div>
+                            <div className="text-xs text-orange-600">
+                                Peak: 13.6 kW | Rating: B
+                            </div>
                         </div>
 
                         {/* Lighting */}
@@ -685,11 +736,17 @@ const RetailFacilityLayout2D: React.FC<{
                             <div className="flex items-center justify-between mb-1">
                                 <div className="flex items-center gap-2">
                                     <span>💡</span>
-                                    <span className="font-semibold text-yellow-800">LED Canopy Lights</span>
+                                    <span className="font-semibold text-yellow-800">
+                                        LED Canopy Lights
+                                    </span>
                                 </div>
-                                <span className="text-yellow-700 font-bold">45.2 kWh/day</span>
+                                <span className="text-yellow-700 font-bold">
+                                    45.2 kWh/day
+                                </span>
                             </div>
-                            <div className="text-xs text-yellow-600">Peak: 6.8 kW | Rating: A</div>
+                            <div className="text-xs text-yellow-600">
+                                Peak: 6.8 kW | Rating: A
+                            </div>
                         </div>
 
                         {/* EV Charging */}
@@ -697,11 +754,17 @@ const RetailFacilityLayout2D: React.FC<{
                             <div className="flex items-center justify-between mb-1">
                                 <div className="flex items-center gap-2">
                                     <span>⚡</span>
-                                    <span className="font-semibold text-blue-800">DC Fast Charger #1</span>
+                                    <span className="font-semibold text-blue-800">
+                                        DC Fast Charger #1
+                                    </span>
                                 </div>
-                                <span className="text-blue-700 font-bold">38.5 kWh/day</span>
+                                <span className="text-blue-700 font-bold">
+                                    38.5 kWh/day
+                                </span>
                             </div>
-                            <div className="text-xs text-blue-600">Peak: 150 kW | Rating: A</div>
+                            <div className="text-xs text-blue-600">
+                                Peak: 150 kW | Rating: A
+                            </div>
                         </div>
 
                         {/* Car Wash */}
@@ -709,11 +772,17 @@ const RetailFacilityLayout2D: React.FC<{
                             <div className="flex items-center justify-between mb-1">
                                 <div className="flex items-center gap-2">
                                     <span>🚗</span>
-                                    <span className="font-semibold text-purple-800">Car Wash System</span>
+                                    <span className="font-semibold text-purple-800">
+                                        Car Wash System
+                                    </span>
                                 </div>
-                                <span className="text-purple-700 font-bold">32.1 kWh/day</span>
+                                <span className="text-purple-700 font-bold">
+                                    32.1 kWh/day
+                                </span>
                             </div>
-                            <div className="text-xs text-purple-600">Peak: 8.4 kW | Rating: B</div>
+                            <div className="text-xs text-purple-600">
+                                Peak: 8.4 kW | Rating: B
+                            </div>
                         </div>
 
                         {/* Energy Generation */}
@@ -721,29 +790,43 @@ const RetailFacilityLayout2D: React.FC<{
                             <div className="flex items-center justify-between mb-1">
                                 <div className="flex items-center gap-2">
                                     <span>☀️</span>
-                                    <span className="font-semibold text-green-800">Solar Array</span>
+                                    <span className="font-semibold text-green-800">
+                                        Solar Array
+                                    </span>
                                 </div>
-                                <span className="text-green-700 font-bold">-45.8 kWh/day</span>
+                                <span className="text-green-700 font-bold">
+                                    -45.8 kWh/day
+                                </span>
                             </div>
-                            <div className="text-xs text-green-600">Peak: 25 kW | Generation</div>
+                            <div className="text-xs text-green-600">
+                                Peak: 25 kW | Generation
+                            </div>
                         </div>
                     </div>
 
                     <div className="mt-3 pt-2 border-t border-slate-300">
                         <div className="flex justify-between items-center">
-                            <span className="font-bold text-slate-700">Total Consumption:</span>
-                            <span className="font-bold text-red-600">541.4 kWh/day</span>
+                            <span className="font-bold text-slate-700">
+                                Total Consumption:
+                            </span>
+                            <span className="font-bold text-red-600">
+                                541.4 kWh/day
+                            </span>
                         </div>
                         <div className="flex justify-between items-center mt-1">
-                            <span className="font-bold text-slate-700">Net Consumption:</span>
-                            <span className="font-bold text-blue-600">495.6 kWh/day</span>
+                            <span className="font-bold text-slate-700">
+                                Net Consumption:
+                            </span>
+                            <span className="font-bold text-blue-600">
+                                495.6 kWh/day
+                            </span>
                         </div>
                     </div>
                 </div>
             )}
 
             {/* Energy Toggle Button - Show when hidden */}
-            {!showLegend && (
+            {persona !== "Digital Engineer" && !showLegend && (
                 <button
                     onClick={() => setShowLegend(true)}
                     className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-sm px-3 py-2 rounded-lg shadow-lg border border-slate-300 hover:bg-blue-50 transition-all text-sm font-semibold text-slate-700 hover:text-blue-600"

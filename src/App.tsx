@@ -233,6 +233,7 @@ const AppContent: React.FC = () => {
             <FacilitiesManagerPage
               selectedStore={selectedStore}
               selectedCategory={selectedCategory}
+              persona="Site Manager"
             />
           }
         />
@@ -242,6 +243,7 @@ const AppContent: React.FC = () => {
             <FacilitiesManagerPage
               selectedStore={selectedStore}
               selectedCategory={selectedCategory}
+              persona="Digital Engineer"
             />
           }
         />
