@@ -1,0 +1,92 @@
+{
+	"info": {
+		"_postman_id": "94edf8fe-eabf-408f-9db6-a557f1d8ee11",
+		"name": "SiteMaster Consumer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32025094"
+	},
+	"item": [
+		{
+			"name": "Site Master Consumer AU",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "scope",
+							"value": "stock-api/stock.read",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "m4hsr17drj9r9sq81ivvjld2f4bpq0s2el1ml0lrs97hsrg3pa8",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "1iscd5u2j69mcv1mu8o81ek0lu",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://auth-dsp.bp.com/oauth2/token",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "ScanNGo",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "Bearer",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api-dsp.bp.com/stock/position?siteId=10441",
+					"protocol": "https",
+					"host": [
+						"api-dsp",
+						"bp",
+						"com"
+					],
+					"path": [
+						"stock",
+						"position"
+					],
+					"query": [
+						{
+							"key": "siteId",
+							"value": "10441"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

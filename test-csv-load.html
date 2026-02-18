@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSV Test</title>
+</head>
+<body>
+    <h1>CSV Energy Data Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        fetch('/Retail_Assets_Maintenance_Mapping.csv')
+            .then(response => response.text())
+            .then(csvText => {
+                const lines = csvText.split('\n');
+                const header = lines[0];
+                const dataLines = lines.slice(1, 6); // First 5 data rows
+                
+                let html = '<h2>Header:</h2><pre>' + header + '</pre>';
+                html += '<h2>Sample Data (first 5 rows):</h2>';
+                
+                dataLines.forEach((line, i) => {
+                    const cols = parseCSVRow(line);
+                    html += '<div style="margin: 10px 0; padding: 10px; border: 1px solid #ccc;">';
+                    html += '<strong>Row ' + (i+1) + ':</strong><br>';
+                    html += 'Category: ' + cols[0] + '<br>';
+                    html += 'Asset: ' + cols[1] + '<br>';
+                    html += 'Energy: ' + cols[8] + ' kWh/day<br>';
+                    html += 'Peak: ' + cols[9] + ' kW<br>';
+                    html += 'Rating: ' + cols[10] + '<br>';
+                    html += 'Trend: ' + cols[11] + '<br>';
+                    html += '</div>';
+                });
+                
+                document.getElementById('results').innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('results').innerHTML = 
+                    '<div style="color: red;">Error: ' + error.message + '</div>';
+            });
+        
+        function parseCSVRow(row) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim().replace(/^["']|["']$/g, ''));
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current.trim().replace(/^["']|["']$/g, ''));
+            return result;
+        }
+    </script>
+</body>
+</html>

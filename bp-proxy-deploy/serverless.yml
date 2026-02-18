@@ -1,0 +1,29 @@
+service: bp-api-proxy
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  memorySize: 128
+  timeout: 30
+  environment:
+    BP_CLIENT_ID: ${env:BP_CLIENT_ID, '1iscd5u2j69mcv1mu8o81ek0lu'}
+    BP_CLIENT_SECRET: ${env:BP_CLIENT_SECRET, 'm4hsr17drj9r9sq81ivvjld2f4bpq0s2el1ml0lrs97hsrg3pa8'}
+    USE_REAL_BP_API: ${env:USE_REAL_BP_API, 'true'}
+    NODE_ENV: production
+
+functions:
+  api:
+    handler: lambda.handler
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: '*'
+      - httpApi:
+          path: /
+          method: '*'
+
+plugins:
+  - serverless-offline
