@@ -1,0 +1,80 @@
+.emptyChat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    padding: 40px;
+  }
+  
+  .icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+  }
+  
+  .emptyChat h2 {
+    font-size: 1.5rem;
+    margin: 0 0 12px;
+    color: #fff;
+  }
+  
+  .emptyChat > p {
+    color: #a0aec0;
+    max-width: 500px;
+    margin: 0 0 24px;
+    line-height: 1.6;
+  }
+  
+  .selectedAssetBadge {
+    padding: 10px 16px;
+    background: rgba(236, 201, 75, 0.2);
+    border: 1px solid rgba(236, 201, 75, 0.4);
+    border-radius: 8px;
+    color: #ecc94b;
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+  }
+  
+  .selectedAssetBadge strong {
+    color: #f6e05e;
+  }
+  
+  .suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .suggestionCategory h3 {
+    font-size: 0.9rem;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 10px;
+    text-align: left;
+  }
+  
+  .suggestionButtons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .suggestionButton {
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .suggestionButton:hover {
+    background: rgba(66, 153, 225, 0.2);
+    border-color: rgba(66, 153, 225, 0.4);
+  }
