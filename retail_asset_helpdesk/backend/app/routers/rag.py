@@ -32,15 +32,20 @@ async def ingest_documents():
     total_chunks = 0
     
     for doc_path in documents:
+        # Use filename+hash to allow same content with different filenames
         file_hash = doc_processor.get_file_hash(doc_path)
+        file_key = f"{doc_path.name}:{file_hash}"
         
-        if rag_service.is_file_ingested(file_hash):
+        if rag_service.is_file_ingested(file_key):
             skipped_files.append(doc_path.name)
             continue
         
         chunks = doc_processor.process_document(doc_path)
         
         if chunks:
+            # Update chunks to use the file_key
+            for chunk in chunks:
+                chunk['file_hash'] = file_key
             ingested = rag_service.ingest_chunks(chunks)
             total_chunks += ingested
             new_files.append(doc_path.name)
@@ -65,11 +70,12 @@ async def get_ingest_status():
     files_status = []
     for doc_path in documents:
         file_hash = doc_processor.get_file_hash(doc_path)
+        file_key = f"{doc_path.name}:{file_hash}"
         asset_category = extract_category_from_filename(doc_path.name)
         
         files_status.append(FileStatus(
             filename=doc_path.name,
-            ingested=file_hash in ingested_hashes,
+            ingested=file_key in ingested_hashes,
             asset_category=asset_category
         ))
     

@@ -25,6 +25,49 @@ export interface Asset {
   status: AssetStatus;
   lastMaintenance: string;
   serialNumber: string;
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  installationDate?: string;
+  warrantyExpiry?: string;
+  imageUrl?: string;
+  specifications?: AssetSpecifications;
+  maintenanceHistory?: MaintenanceRecord[];
+  issueHistory?: IssueRecord[];
+}
+
+export interface AssetSpecifications {
+  voltage?: string;
+  power?: string;
+  capacity?: string;
+  dimensions?: string;
+  weight?: string;
+  connectivity?: string;
+  [key: string]: string | undefined;
+}
+
+export interface MaintenanceRecord {
+  id: string;
+  date: string;
+  type: 'routine' | 'preventive' | 'corrective' | 'emergency';
+  description: string;
+  technician: string;
+  cost?: number;
+  partsReplaced?: string[];
+  nextDueDate?: string;
+}
+
+export interface IssueRecord {
+  id: string;
+  reportedDate: string;
+  resolvedDate?: string;
+  issueType: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  description: string;
+  resolution?: string;
+  downtime?: string;
+  cost?: number;
+  status: 'open' | 'in-progress' | 'resolved' | 'closed';
 }
 
 export interface Document {
