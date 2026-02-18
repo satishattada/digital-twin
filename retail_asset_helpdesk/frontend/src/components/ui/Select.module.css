@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .label {
+    font-size: 0.85rem;
+    color: #a0aec0;
+  }
+  
+  .select {
+    width: 100%;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  
+  .select:focus {
+    outline: none;
+    border-color: #4299e1;
+  }
+  
+  .select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .select option {
+    background: #2d3748;
+    color: #e2e8f0;
+  }
