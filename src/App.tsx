@@ -7,7 +7,8 @@ import { RegionalManagerPage } from "./pages/RegionalManagerPage";
 import { FacilitiesManagerPage } from "./pages/FacilitiesManagerPage";
 import { AssetDetailsPage } from "./pages/AssetDetailsPage";
 import { AssetStrategyPage } from "./pages/AssetStrategyPage";
-import { SupplierPerformancePage } from "./pages/SupplierPerformancePage";
+import SupplierPerformancePage from "./pages/SupplierPerformancePage_New";
+import AssetStrategyControlTower from "./pages/AssetStrategyControlTower";
 import {
   Category,
   Recommendation,
@@ -253,6 +254,15 @@ const AppContent: React.FC = () => {
           path="/asset-strategy"
           element={
             <AssetStrategyPage
+              selectedStore={selectedStore}
+              selectedCategory={selectedCategory}
+            />
+          }
+        />
+        <Route
+          path="/asset-strategy-control-tower"
+          element={
+            <AssetStrategyControlTower
               selectedStore={selectedStore}
               selectedCategory={selectedCategory}
             />
