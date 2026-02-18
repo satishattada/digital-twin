@@ -1,12 +1,14 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
-import { Header } from "./components/Header";
-import { StoreManagerDashboard } from "./components/StoreManagerDashboard";
-import { OperationsManagerDashboard } from "./components/OperationsManagerDashboard";
-import { RegionalManagerDashboard } from "./components/RegionalManagerDashboard";
-import Store3DLayout from "./components/Store3DLayout";
-import { Sidebar } from "./components/Sidebar";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Layout } from "./components/Layout";
+import { StoreManagerPage } from "./pages/StoreManagerPage";
+import { OperationsManagerPage } from "./pages/OperationsManagerPage";
+import { RegionalManagerPage } from "./pages/RegionalManagerPage";
+import { FacilitiesManagerPage } from "./pages/FacilitiesManagerPage";
+import { AssetDetailsPage } from "./pages/AssetDetailsPage";
+import { AssetStrategyPage } from "./pages/AssetStrategyPage";
+import { SupplierPerformancePage } from "./pages/SupplierPerformancePage";
 import {
-  Persona,
   Category,
   Recommendation,
   Task,
@@ -21,16 +23,15 @@ import {
   MOCK_DAILY_DIGEST_DATA,
   MOCK_OPS_DAILY_DIGEST_DATA,
 } from "./constants";
-import { DailyDigestSidebar } from "./components/DailyDigestSidebar";
-import { ShelfieModal } from "./components/ShelfieModal";
 
-const App: React.FC = () => {
-  const [activePersona, setActivePersona] = useState<Persona>("Store Manager");
-  const [selectedStore, setSelectedStore] = useState<string>("Kempton Park");
-  const [selectedCategory, setSelectedCategory] = useState<Category>("Dairy");
+const AppContent: React.FC = () => {
+  const location = useLocation();
+  const [selectedStore, setSelectedStore] = useState<string>("SHIRLEY SF CONNECT");
+  const [selectedSiteId, setSelectedSiteId] = useState<string>('13001');
+
+  const [selectedCategory, setSelectedCategory] = useState<Category>("All");
   const [selectedTimePeriod, setSelectedTimePeriod] =
     useState<string>("Last 7 Days");
-  const [show3DLayout, setShow3DLayout] = useState<boolean>(false);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
   const [recommendations, setRecommendations] = useState<Recommendation[]>(
@@ -47,6 +48,15 @@ const App: React.FC = () => {
   const [isDigestOpen, setDigestOpen] = useState(false);
   const [isShelfieOpen, setShelfieOpen] = useState(false);
 
+  // Determine active persona based on route
+  const activePersona = useMemo(() => {
+    const path = location.pathname;
+    if (path.includes("operations-manager")) return "Operations Manager";
+    if (path.includes("regional-manager")) return "Regional Manager";
+    if (path.includes("site-manager")) return "Site Manager";
+    return "Store Manager";
+  }, [location.pathname]);
+
   // Reset data when category changes for the Ops Manager
   useEffect(() => {
     if (activePersona === "Operations Manager") {
@@ -61,7 +71,7 @@ const App: React.FC = () => {
       setSelectedStore("All Stores");
       setSelectedTimePeriod("Last Month");
     } else if (selectedStore === "All Stores") {
-      setSelectedStore("Kempton Park");
+      setSelectedStore("SHIRLEY SF CONNECT");
       setSelectedTimePeriod("Last 7 Days");
     }
   }, [activePersona, selectedStore]);
@@ -140,7 +150,7 @@ const App: React.FC = () => {
     setOpsAlerts((prev) => prev.filter((a) => a.id !== id));
   }, []);
 
-  const handleIgnoreRecommendation = useCallback((id: number) => {
+  const handleIgnoreRecommendation = useCallback((id: string) => {
     setRecommendations((prevRecs) => prevRecs.filter((r) => r.id !== id));
   }, []);
 
@@ -150,106 +160,126 @@ const App: React.FC = () => {
       : MOCK_OPS_DAILY_DIGEST_DATA;
   }, [activePersona]);
 
-  // Render dashboard based on active persona
-  const renderDashboard = () => {
-    switch (activePersona) {
-      case "Store Manager":
-        return (
-          <StoreManagerDashboard
-            selectedCategory={selectedCategory}
-            recommendations={recommendations}
-            onCreateTask={handleCreateTask}
-            onIgnoreRecommendation={handleIgnoreRecommendation}
-          />
-        );
-      case "Operations Manager":
-        return (
-          <OperationsManagerDashboard
-            tasks={tasks}
-            setTasks={setTasks}
-            selectedCategory={selectedCategory}
-            selectedTimePeriod={selectedTimePeriod}
-            insights={opsInsights}
-            alerts={opsAlerts}
-            onCreateTaskFromInsight={handleCreateTaskFromInsight}
-            onIgnoreInsight={handleIgnoreInsight}
-            onDismissAlert={handleDismissAlert}
-          />
-        );
-      case "Regional Manager":
-        return (
-          <RegionalManagerDashboard
-            selectedStore={selectedStore}
-            selectedCategory={selectedCategory}
-            selectedTimePeriod={selectedTimePeriod}
-            tasks={tasks}
-            recommendations={recommendations}
-            insights={opsInsights}
-            alerts={opsAlerts}
-            onCreateTask={handleCreateTask}
-            onIgnoreRecommendation={handleIgnoreRecommendation}
-          />
-        );
-      default:
-        return (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-gray-500">Unknown persona selected</p>
-          </div>
-        );
-    }
-  };
-
   return (
-    <>
-      <main className="bg-slate-200 min-h-screen w-full flex flex-col items-center font-sans">
-        <div className="w-full max-w-[1600px] aspect-[16/9] bg-[#F3F4F6] shadow-2xl flex flex-col overflow-hidden h-[100vh]">
-          <Header
-            activePersona={activePersona}
-            setActivePersona={setActivePersona}
-            selectedStore={selectedStore}
-            setSelectedStore={setSelectedStore}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            selectedTimePeriod={selectedTimePeriod}
-            setSelectedTimePeriod={setSelectedTimePeriod}
-            onDigestToggle={() => setDigestOpen(true)}
-            onShelfieToggle={() => setShelfieOpen(true)}
-          />
-          <div className="flex flex-grow overflow-hidden">
-            <Sidebar
-              sidebarOpen={sidebarOpen}
-              setSidebarOpen={setSidebarOpen}
-              activePersona={activePersona}
-              setActivePersona={setActivePersona}
+    <Layout
+      sidebarOpen={sidebarOpen}
+      setSidebarOpen={setSidebarOpen}
+      selectedStore={selectedStore}
+      setSelectedStore={setSelectedStore}
+      selectedSiteId={selectedSiteId}
+      setSelectedSiteId={setSelectedSiteId}
+      selectedCategory={selectedCategory}
+      setSelectedCategory={setSelectedCategory}
+      selectedTimePeriod={selectedTimePeriod}
+      setSelectedTimePeriod={setSelectedTimePeriod}
+      tasks={tasks}
+      recommendations={recommendations}
+      opsAlerts={opsAlerts}
+      isDigestOpen={isDigestOpen}
+      setDigestOpen={setDigestOpen}
+      isShelfieOpen={isShelfieOpen}
+      setShelfieOpen={setShelfieOpen}
+      digestData={digestData}
+      onInitiateRestock={handleInitiateRestock}
+    >
+      <Routes>
+        <Route path="/" element={<Navigate to="/store-manager" replace />} />
+        <Route
+          path="/store-manager"
+          element={
+            <StoreManagerPage
+              selectedCategory={selectedCategory}
+              recommendations={recommendations}
+              onCreateTask={handleCreateTask}
+              onIgnoreRecommendation={handleIgnoreRecommendation}
+            />
+          }
+        />
+        <Route
+          path="/operations-manager"
+          element={
+            <OperationsManagerPage
+              tasks={tasks}
+              setTasks={setTasks}
+              selectedCategory={selectedCategory}
               selectedStore={selectedStore}
+              selectedSiteId={selectedSiteId}
+              selectedTimePeriod={selectedTimePeriod}
+              insights={opsInsights}
+              alerts={opsAlerts}
+              onCreateTaskFromInsight={handleCreateTaskFromInsight}
+              onIgnoreInsight={handleIgnoreInsight}
+              onDismissAlert={handleDismissAlert}
+            />
+          }
+        />
+        <Route
+          path="/regional-manager"
+          element={
+            <RegionalManagerPage
+              selectedStore={selectedStore}
+              selectedCategory={selectedCategory}
+              selectedTimePeriod={selectedTimePeriod}
               tasks={tasks}
               recommendations={recommendations}
-              opsAlerts={opsAlerts}
-              setSelectedStore={setSelectedStore}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              selectedTimePeriod={selectedTimePeriod}
-              setSelectedTimePeriod={setSelectedTimePeriod}
+              insights={opsInsights}
+              alerts={opsAlerts}
+              onCreateTask={handleCreateTask}
+              onIgnoreRecommendation={handleIgnoreRecommendation}
             />
+          }
+        />  
+        <Route
+          path="/site-manager"
+          element={
+            <FacilitiesManagerPage
+              selectedStore={selectedStore}
+              selectedCategory={selectedCategory}
+              persona="Site Manager"
+            />
+          }
+        />
+        <Route
+          path="/digital-engineer"
+          element={
+            <FacilitiesManagerPage
+              selectedStore={selectedStore}
+              selectedCategory={selectedCategory}
+              persona="Digital Engineer"
+            />
+          }
+        />
+        <Route
+          path="/asset-strategy"
+          element={
+            <AssetStrategyPage
+              selectedStore={selectedStore}
+              selectedCategory={selectedCategory}
+            />
+          }
+        />
+        <Route
+          path="/supplier-performance"
+          element={
+            <SupplierPerformancePage
+              selectedStore={selectedStore}
+              selectedCategory={selectedCategory}
+            />
+          }
+        />
+      </Routes>
+    </Layout>
+  );
+};
 
-            {/* Main Content */}
-            <div className="flex-grow overflow-y-auto p-4 md:p-6 bg-grey-100">
-              {renderDashboard()}
-            </div>
-          </div>
-        </div>
-      </main>
-      <DailyDigestSidebar
-        isOpen={isDigestOpen}
-        onClose={() => setDigestOpen(false)}
-        data={digestData}
-      />
-      <ShelfieModal
-        isOpen={isShelfieOpen}
-        onClose={() => setShelfieOpen(false)}
-        onInitiateRestock={handleInitiateRestock}
-      />
-    </>
+const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/asset/:assetId" element={<AssetDetailsPage />} />
+        <Route path="/*" element={<AppContent />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

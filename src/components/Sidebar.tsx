@@ -7,6 +7,8 @@ interface SidebarProps {
     activePersona: Persona;
     setActivePersona: (persona: Persona) => void;
     selectedStore: string;
+    selectedSiteId: string; // Added selectedSiteId prop
+    setSelectedSiteId: (siteId: string) => void; // Added setSelectedSiteId prop    
     tasks: Task[];
     recommendations: Recommendation[];
     opsAlerts: OpsAlert[];
@@ -45,27 +47,27 @@ const FilterDropdown: React.FC<{
     </div>
 );
 
+
 // Persona Dropdown Component
-const PersonaDropdown: React.FC<{
+export const PersonaDropdown: React.FC<{
     activePersona: Persona;
     setActivePersona: (persona: Persona) => void;
 }> = ({ activePersona, setActivePersona }) => (
     <div className="flex flex-col w-full">
-        <label
-            htmlFor="persona"
-            className="text-sm font-medium text-gray-300 pb-1"
-        >
-            Role:
-        </label>
+
         <select
             id="persona"
             value={activePersona}
             onChange={(e) => setActivePersona(e.target.value as Persona)}
-            className="bg-green-990 text-white border w-full border-green-400 rounded-md shadow-sm px-3 text-sm focus:outline-none focus:ring-2 focus:ring-white"
+            className="bg-green-990 text-white border w-full border-green-400 rounded-md shadow-sm px-3 text-sm focus:outline-none focus:ring-2 focus:ring-white p-1"
         >
             <option value="Store Manager">🏪 Store Manager</option>
             <option value="Operations Manager">⚙️ Operations Manager</option>
             <option value="Regional Manager">🌍 Regional Manager</option>
+            <option value="Site Manager">🏗️ Site Manager</option>
+            <option value="Digital Engineer">🔧 Digital Engineer</option>
+            <option value="Asset Strategy">💼 Asset Strategy</option>
+            <option value="Supplier Performance">🤝 Supplier Performance</option>
         </select>
     </div>
 );
@@ -94,6 +96,24 @@ const AnimatedAvatar: React.FC<{ persona: Persona; isActive: boolean }> = ({
                     gradient: "from-purple-400 via-pink-500 to-red-600",
                     image: "/images/regional-manager.jpg",
                     alt: "Regional Manager",
+                };
+            case "Site Manager":
+                return {
+                    gradient: "from-blue-400 via-cyan-500 to-teal-600",
+                    image: "/images/site-manager.jpg",
+                    alt: "Site Manager",
+                };
+            case "Digital Engineer":
+                return {
+                    gradient: "from-cyan-400 via-teal-500 to-emerald-600",
+                    image: "/images/digital-engineer.jpg",
+                    alt: "Digital Engineer",
+                };
+            case "Asset Strategy":
+                return {
+                    gradient: "from-amber-400 via-orange-500 to-red-600",
+                    image: "/images/asset-strategy.jpg",
+                    alt: "Asset Strategy",
                 };
             default:
                 return {
@@ -192,6 +212,38 @@ const RoleBadge: React.FC<{ persona: Persona }> = ({ persona }) => {
                     emoji: "🌍",
                     abbr: "RM",
                 };
+            case "Site Manager":
+                return {
+                    bg: "bg-teal-100",
+                    text: "text-teal-800",
+                    border: "border-teal-200",
+                    emoji: "🏗️",
+                    abbr: "SM",
+                };
+            case "Digital Engineer":
+                return {
+                    bg: "bg-emerald-100",
+                    text: "text-emerald-800",
+                    border: "border-emerald-200",
+                    emoji: "🔧",
+                    abbr: "DE",
+                };
+            case "Asset Strategy":
+                return {
+                    bg: "bg-amber-100",
+                    text: "text-amber-800",
+                    border: "border-amber-200",
+                    emoji: "💼",
+                    abbr: "AS",
+                };
+            case "Supplier Performance":
+                return {
+                    bg: "bg-indigo-100",
+                    text: "text-indigo-800",
+                    border: "border-indigo-200",
+                    emoji: "🤝",
+                    abbr: "SP",
+                };
             default:
                 return {
                     bg: "bg-gray-100",
@@ -215,14 +267,77 @@ const RoleBadge: React.FC<{ persona: Persona }> = ({ persona }) => {
     );
 };
 
-const stores = ["Kempton Park", "Hatton Cross", "Ashford SF"];
-const categories: Category[] = [
-    "Dairy",
-    "Snacks",
-    "Beverages",
-    "Fresh Produce",
-    "Household",
+// Store configuration with siteId's from site-products.json
+const storeConfigs = [
+    {
+        siteId: "10070",
+        displayName: "SHIRLEY SF CONNECT",
+        fullName: "SHIRLEY SF CONNECT Service Station"
+    },
+    {
+        siteId: "13001",
+        displayName: "BOREHAM SF CONNECT",
+        fullName: "BOREHAM SF CONNECT Service Station"  
+    },
+    {
+        siteId: "13097",
+        displayName: "BURY STREET SF CONNECT",
+        fullName: "BURY STREET SF CONNECT Service Station"
+    },
+    {
+        siteId: "10441",
+        displayName: "ST ALBANS SF CONNECT",
+        fullName: "ST ALBANS SF CONNECT Service Station"
+    },
+    {
+        siteId: "10491",
+        displayName: "BESSBOROUGH SF CONNECT",
+        fullName: "BESSBOROUGH SF CONNECT Service Station"
+    }
 ];
+
+// Extract display names for dropdown options
+const stores = storeConfigs.map(store => store.displayName);
+
+// Helper function to get siteId from store display name
+export const getSiteIdFromStore = (storeDisplayName: string): string => {
+    const storeConfig = storeConfigs.find(store => store.displayName === storeDisplayName);
+    return storeConfig?.siteId || "10070"; // Default to first store if not found
+};
+
+// Helper function to get store display name from siteId
+export const getStoreFromSiteId = (siteId: string): string => {
+    const storeConfig = storeConfigs.find(store => store.siteId === siteId);
+    return storeConfig?.displayName || "SHIRLEY SF CONNECT"; // Default to first store if not found
+};
+
+// Helper function to get full store information
+export const getStoreConfig = (identifier: string): typeof storeConfigs[0] => {
+    // Try to find by siteId first, then by display name
+    let storeConfig = storeConfigs.find(store => store.siteId === identifier);
+    if (!storeConfig) {
+        storeConfig = storeConfigs.find(store => store.displayName === identifier);
+    }
+    return storeConfig || storeConfigs[0]; // Default to first store
+};
+
+// Updated categories based on site-products.json analysis
+const categories: Category[] = [
+    "All", // Default option to show all categories
+    "Postal Services", // Stamps, postage, envelopes
+    "Stationery & Office", // Pens, paper, notebooks, writing materials
+    "Cards & Gifts", // Greeting cards, gift items
+    "Tobacco & Smoking", // Cigarettes, tobacco products, lighters
+    "Confectionery & Snacks", // Chocolates, sweets, candy, snacks
+    "Beverages", // Drinks, juices, water, soft drinks
+    "Health & Beauty", // Medicine, cosmetics, toiletries
+    "Electronics & Accessories", // Batteries, chargers, cables, phone accessories
+    "Automotive", // Car-related products, oil, fuel additives
+    "Publications", // Newspapers, magazines, journals
+    "Travel & Transport", // Travel tickets, transport cards
+    "Food Items", // Food products, meals, fresh items
+];
+
 const timePeriodsMap: Record<Persona, string[]> = {
     "Store Manager": ["Last 7 Days", "Last 30 Days", "Last Quarter"],
     "Operations Manager": ["Last 24 Hours", "Last 7 Days", "Last 30 Days"],
@@ -233,6 +348,10 @@ const timePeriodsMap: Record<Persona, string[]> = {
         "Last 6 Months",
         "Last Year",
     ],
+    "Site Manager": ["Last 24 Hours", "Last 7 Days", "Last 30 Days", "Last Quarter"],
+    "Digital Engineer": ["Last 24 Hours", "Last 7 Days", "Last 30 Days", "Last Quarter"],
+    "Asset Strategy": ["Last 30 Days", "Last Quarter", "Year to Date", "Last 3 Years"],
+    "Supplier Performance": ["Last 30 Days", "Last Quarter", "Year to Date", "Last Fiscal Year"],
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -241,6 +360,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     activePersona,
     setActivePersona,
     selectedStore,
+    setSelectedSiteId, // Added setSelectedSiteId prop
+    selectedSiteId, // Added selectedSiteId prop
     tasks,
     recommendations,
     opsAlerts,
@@ -257,6 +378,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
         activePersona === "Regional Manager"
             ? ["All Stores", ...stores]
             : stores;
+
+    // Get current store configuration for display
+    const currentStoreConfig = getStoreConfig(selectedStore);
+
+    // Enhanced store change handler that logs siteId changes
+    const handleStoreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newStore = e.target.value;
+        const newSiteId = getSiteIdFromStore(newStore);
+        
+        console.log(`Sidebar: Store changing from ${selectedStore} (${selectedSiteId}) to ${newStore} (${newSiteId})`);
+        
+        setSelectedStore(newStore);
+        setSelectedSiteId(newSiteId)
+    };
 
     return (
         <>
@@ -354,13 +489,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <nav className="flex-grow pl-4 pr-4 overflow-y-auto relative">
                     {sidebarOpen && (
                         <div className="space-y-2">
-                            {/* Persona Selection Dropdown */}
-                            {/* <div className="flex items-center p-3 rounded cursor-pointer transition-colors">
-                                <PersonaDropdown
-                                    activePersona={activePersona}
-                                    setActivePersona={setActivePersona}
-                                />
-                            </div> */}
                             {activePersona !== "Regional Manager" && (
                                 <>
                                     <div className="flex items-center p-3 rounded cursor-pointer transition-colors">
@@ -368,9 +496,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                             label={"Store"}
                                             value={selectedStore}
                                             options={availableStores}
-                                            onChange={(e) =>
-                                                setSelectedStore(e.target.value)
-                                            }
+                                            onChange={handleStoreChange}
                                         />
                                     </div>
                                     <div className="flex items-center p-3 rounded cursor-pointer transition-colors">
@@ -409,6 +535,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                 Quick Stats
                             </h3>
                             <div className="space-y-3">
+                                {/* Store Information with SiteId Display */}
+                                {activePersona !== "Regional Manager" && (
+                                    <div className="bg-gray-800 p-3 rounded-lg hover:bg-gray-750 transition-colors">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <span className="text-sm text-gray-300 flex items-center gap-2">
+                                                <span className="text-blue-400">
+                                                    🏪
+                                                </span>
+                                                Store Info
+                                            </span>
+                                        </div>
+                                        <div className="text-xs text-gray-400">
+                                            <div className="flex items-center justify-between">
+                                                <span>Site ID:</span>
+                                                <span className="font-mono font-bold text-blue-300">
+                                                    {selectedSiteId}
+                                                </span>
+                                            </div>
+                                            <div className="truncate mt-1">{currentStoreConfig.fullName}</div>
+                                        </div>
+                                    </div>
+                                )}
+                                
                                 <div className="bg-gray-800 p-3 rounded-lg hover:bg-gray-750 transition-colors">
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm text-gray-300 flex items-center gap-2">
@@ -484,17 +633,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                         </div>
                                     </>
                                 )}
+
+                                {/* Category-specific stats when a category is selected */}
+                                {selectedCategory && selectedCategory !== "All" && (
+                                    <div className="bg-gray-800 p-3 rounded-lg hover:bg-gray-750 transition-colors">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm text-gray-300 flex items-center gap-2">
+                                                <span className="text-cyan-400">
+                                                    🏷️
+                                                </span>
+                                                {selectedCategory}
+                                            </span>
+                                            <span className="text-lg font-bold text-cyan-400">
+                                                Active
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
 
                     {/* Persona Selection Dropdown */}
-                    <div className="flex items-center p-3 rounded cursor-pointer transition-colors absolute bottom-0 left-0 right-0 mx-4">
+                    {/* <div className="flex items-center p-3 rounded cursor-pointer transition-colors absolute bottom-0 left-0 right-0 mx-4">
                         <PersonaDropdown
                             activePersona={activePersona}
                             setActivePersona={setActivePersona}
                         />
-                    </div>
+                    </div> */}
                 </nav>
 
                 {/* User Profile - Bottom */}
@@ -513,6 +679,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                     <div className="text-xs text-gray-400 flex items-center gap-1">
                                         <span>📍</span>
                                         {selectedStore}
+                                        <span className="text-gray-500 font-mono">({selectedSiteId})</span>
                                     </div>
                                 )}
                                 <div className="text-xs text-gray-500 mt-1">
@@ -526,7 +693,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                     {activePersona}
                                 </div>
                                 <div className="text-xs text-gray-400">
-                                    {selectedStore}
+                                    {selectedStore} ({selectedSiteId})
                                 </div>
                             </div>
                         )}
