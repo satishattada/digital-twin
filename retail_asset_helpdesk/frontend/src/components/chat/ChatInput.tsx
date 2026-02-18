@@ -36,9 +36,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 
   return (
     <div className={styles.container}>
-      {selectedAsset && (
+      {/* {selectedAsset && (
         <div className={styles.activeFilter}>
-          <span>🔧 Asking about:</span>
+          <span>Report:</span>
           <span className={styles.filterTag}>{selectedAsset}</span>
           {onClearAsset && (
             <button className={styles.clearFilter} onClick={onClearAsset}>
@@ -46,7 +46,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             </button>
           )}
         </div>
-      )}
+      )} */}
 
       <form onSubmit={handleSubmit} className={styles.inputWrapper}>
         <textarea
@@ -70,7 +70,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 
       <p className={styles.disclaimer}>
         AI-powered assistance based on equipment manuals and documentation.
-        Always verify critical procedures.
+        Based on past tickets and resolutions.
       </p>
     </div>
   );

@@ -1,0 +1,72 @@
+{
+  "family": "retail-helpdesk-simple",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::084828565262:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "backend",
+      "image": "084828565262.dkr.ecr.us-east-1.amazonaws.com/retail-helpdesk-backend:latest",
+      "cpu": 256,
+      "memory": 512,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "QDRANT_HOST",
+          "value": "localhost"
+        },
+        {
+          "name": "QDRANT_PORT",
+          "value": "6333"
+        },
+        {
+          "name": "OPENAI_MODEL",
+          "value": "gpt-4o-mini"
+        },
+        {
+          "name": "OPENAI_API_KEY",
+          "value": "sk-your-openai-key-here"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/retail-helpdesk-simple",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "backend",
+          "awslogs-create-group": "true"
+        }
+      }
+    },
+    {
+      "name": "qdrant",
+      "image": "084828565262.dkr.ecr.us-east-1.amazonaws.com/retail-helpdesk-qdrant:latest",
+      "cpu": 512,
+      "memory": 1024,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 6333,
+          "protocol": "tcp"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/retail-helpdesk-simple",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "qdrant",
+          "awslogs-create-group": "true"
+        }
+      }
+    }
+  ]
+}

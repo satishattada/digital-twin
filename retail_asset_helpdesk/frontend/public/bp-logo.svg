@@ -1,0 +1,11 @@
+<svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- BP Green Shield -->
+  <path d="M30 10 L40 5 L50 10 L50 30 L40 35 L30 30 Z" fill="#00A651" stroke="#00A651" stroke-width="1"/>
+  <path d="M30 30 L40 35 L50 30 L50 50 L40 55 L30 50 Z" fill="#00853E" stroke="#00853E" stroke-width="1"/>
+  
+  <!-- White BP letters -->
+  <text x="35" y="28" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">bp</text>
+  
+  <!-- Company name -->
+  <text x="65" y="35" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#00A651">bp</text>
+</svg>
