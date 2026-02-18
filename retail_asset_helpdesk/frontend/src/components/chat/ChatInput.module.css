@@ -1,0 +1,109 @@
+.container {
+    padding: 16px 24px 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+  }
+  
+  .activeFilter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    color: #a0aec0;
+  }
+  
+  .filterTag {
+    padding: 4px 10px;
+    background: rgba(236, 201, 75, 0.2);
+    border-radius: 4px;
+    color: #ecc94b;
+    font-weight: 500;
+  }
+  
+  .clearFilter {
+    background: rgba(245, 101, 101, 0.2);
+    border: none;
+    color: #fc8181;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+  }
+  
+  .clearFilter:hover {
+    background: rgba(245, 101, 101, 0.4);
+  }
+  
+  .inputWrapper {
+    display: flex;
+    gap: 12px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .textarea {
+    flex: 1;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: none;
+    min-height: 50px;
+    max-height: 150px;
+    transition: border-color 0.2s;
+  }
+  
+  .textarea::placeholder {
+    color: #718096;
+  }
+  
+  .textarea:focus {
+    outline: none;
+    border-color: #4299e1;
+  }
+  
+  .textarea:disabled {
+    opacity: 0.6;
+  }
+  
+  .sendButton {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  
+  .sendButton:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+  }
+  
+  .sendButton:disabled {
+    background: #4a5568;
+    cursor: not-allowed;
+  }
+  
+  .disclaimer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #718096;
+    margin: 12px 0 0;
+  }
