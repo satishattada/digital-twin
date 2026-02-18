@@ -6,6 +6,8 @@ import { OperationsManagerPage } from "./pages/OperationsManagerPage";
 import { RegionalManagerPage } from "./pages/RegionalManagerPage";
 import { FacilitiesManagerPage } from "./pages/FacilitiesManagerPage";
 import { AssetDetailsPage } from "./pages/AssetDetailsPage";
+import { AssetStrategyPage } from "./pages/AssetStrategyPage";
+import { SupplierPerformancePage } from "./pages/SupplierPerformancePage";
 import {
   Category,
   Recommendation,
@@ -244,6 +246,24 @@ const AppContent: React.FC = () => {
               selectedStore={selectedStore}
               selectedCategory={selectedCategory}
               persona="Digital Engineer"
+            />
+          }
+        />
+        <Route
+          path="/asset-strategy"
+          element={
+            <AssetStrategyPage
+              selectedStore={selectedStore}
+              selectedCategory={selectedCategory}
+            />
+          }
+        />
+        <Route
+          path="/supplier-performance"
+          element={
+            <SupplierPerformancePage
+              selectedStore={selectedStore}
+              selectedCategory={selectedCategory}
             />
           }
         />
