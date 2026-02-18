@@ -1,0 +1,126 @@
+{
+  "family": "retail-asset-helpdesk",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::084828565262:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::084828565262:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "backend",
+      "image": "084828565262.dkr.ecr.us-east-1.amazonaws.com/retail-helpdesk-backend:latest",
+      "cpu": 256,
+      "memory": 512,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "QDRANT_HOST",
+          "value": "localhost"
+        },
+        {
+          "name": "QDRANT_PORT",
+          "value": "6333"
+        },
+        {
+          "name": "OPENAI_MODEL",
+          "value": "gpt-4o-mini"
+        },
+        {
+          "name": "EMBEDDING_MODEL",
+          "value": "all-MiniLM-L6-v2"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "OPENAI_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:084828565262:secret:retail-helpdesk/openai-api-key"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "docs-storage",
+          "containerPath": "/app/docs",
+          "readOnly": false
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/retail-helpdesk",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "backend"
+        }
+      },
+      "healthCheck": {
+        "command": ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    },
+    {
+      "name": "qdrant",
+      "image": "084828565262.dkr.ecr.us-east-1.amazonaws.com/retail-helpdesk-qdrant:latest",
+      "cpu": 512,
+      "memory": 1024,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 6333,
+          "protocol": "tcp"
+        },
+        {
+          "containerPort": 6334,
+          "protocol": "tcp"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "qdrant-storage",
+          "containerPath": "/qdrant/storage",
+          "readOnly": false
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/retail-helpdesk",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "qdrant"
+        }
+      }
+    }
+  ],
+  "volumes": [
+    {
+      "name": "qdrant-storage",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-XXXXXXXXX",
+        "rootDirectory": "/qdrant",
+        "transitEncryption": "ENABLED",
+        "authorizationConfig": {
+          "iam": "ENABLED"
+        }
+      }
+    },
+    {
+      "name": "docs-storage",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-XXXXXXXXX",
+        "rootDirectory": "/docs",
+        "transitEncryption": "ENABLED",
+        "authorizationConfig": {
+          "iam": "ENABLED"
+        }
+      }
+    }
+  ]
+}

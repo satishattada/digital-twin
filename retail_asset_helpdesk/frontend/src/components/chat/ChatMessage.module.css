@@ -2,12 +2,13 @@
     display: flex;
     gap: 14px;
     animation: fadeIn 0.3s ease;
+    margin: 10px;
   }
   
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(10px);      
     }
     to {
       opacity: 1;
@@ -22,7 +23,8 @@
   .avatar {
     width: 40px;
     height: 40px;
-    background: rgba(255, 255, 255, 0.1);
+    background: #f9f9f9;
+    border: 2px solid #e5e5e5;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -32,7 +34,8 @@
   }
   
   .user .avatar {
-    background: linear-gradient(135deg, #4299e1, #667eea);
+    background: #025a38;
+    border-color: #025a38;
   }
   
   .content {
@@ -46,23 +49,27 @@
   
   .assetBadge {
     font-size: 0.75rem;
-    padding: 4px 8px;
-    background: rgba(236, 201, 75, 0.2);
-    border-radius: 4px;
-    color: #ecc94b;
+    padding: 4px 10px;
+    background: #f9f9f9;
+    border: 2px solid #FFCB05;
+    border-radius: 6px;
+    color: #025a38;
     margin-bottom: 6px;
     display: inline-block;
+    font-weight: 600;
   }
   
   .text {
-    background: rgba(255, 255, 255, 0.08);
+    background: #f9f9f9;
+    border: 2px solid #e5e5e5;
     padding: 14px 18px;
     border-radius: 16px;
     border-top-left-radius: 4px;
   }
   
   .user .text {
-    background: linear-gradient(135deg, #4299e1, #667eea);
+    background: #025a38;
+    border-color: #025a38;
     border-top-left-radius: 16px;
     border-top-right-radius: 4px;
   }
@@ -70,7 +77,11 @@
   .text p {
     margin: 0 0 8px;
     line-height: 1.5;
-    color: #e2e8f0;
+    color: #333333;
+  }
+  
+  .user .text p {
+    color: #ffffff;
   }
   
   .text p:last-child {
@@ -91,22 +102,24 @@
   
   .sourcesLabel {
     font-size: 0.8rem;
-    color: #718096;
+    color: #666666;
+    font-weight: 600;
   }
   
   .sourceTag {
     font-size: 0.75rem;
-    padding: 4px 8px;
-    background: rgba(72, 187, 120, 0.2);
-    border: 1px solid rgba(72, 187, 120, 0.3);
-    border-radius: 4px;
-    color: #68d391;
+    padding: 4px 10px;
+    background: #ffffff;
+    border: 2px solid #025a38;
+    border-radius: 6px;
+    color: #025a38;
+    font-weight: 600;
   }
   
   .timestamp {
     display: block;
     font-size: 0.75rem;
-    color: #718096;
+    color: #666666;
     margin-top: 6px;
   }
   
@@ -120,7 +133,7 @@
   .typing span {
     width: 8px;
     height: 8px;
-    background: #a0aec0;
+    background: #025a38;
     border-radius: 50%;
     animation: typing 1.4s infinite;
   }

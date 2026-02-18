@@ -1,6 +1,6 @@
 from typing import Optional, List, Dict
 from enum import Enum
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class AssetCategory(str, Enum):
@@ -31,11 +31,17 @@ class Asset(BaseModel):
     manufacturer: str
     location: str
     status: AssetStatus
-    last_maintenance: str
-    serial_number: str
+    lastMaintenance: str = Field(serialization_alias='lastMaintenance')
+    serialNumber: str = Field(serialization_alias='serialNumber')
+    contactName: Optional[str] = Field(default=None, serialization_alias='contactName')
+    contactEmail: Optional[str] = Field(default=None, serialization_alias='contactEmail')
+    contactPhone: Optional[str] = Field(default=None, serialization_alias='contactPhone')
+    
+    class Config:
+        populate_by_name = True
 
 
 class AssetStats(BaseModel):
     total: int
-    by_category: Dict[str, int]
-    by_status: Dict[str, int]
+    byCategory: Dict[str, int] = Field(serialization_alias='byCategory')
+    byStatus: Dict[str, int] = Field(serialization_alias='byStatus')

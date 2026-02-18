@@ -14,25 +14,42 @@ class QdrantRAGService:
     """RAG service using Qdrant vector database."""
     
     def __init__(self):
-        self.qdrant = QdrantClient(
-            host=settings.QDRANT_HOST,
-            port=settings.QDRANT_PORT
-        )
-        self.COLLECTION_NAME = settings.QDRANT_COLLECTION
-        
-        # Initialize embedding model
-        print(f"Loading embedding model: {settings.EMBEDDING_MODEL}")
-        self.embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL)
-        
-        # Initialize OpenAI client
-        self.openai_client = OpenAI(api_key=settings.OPENAI_API_KEY)
-        
-        # Track ingested files
-        self._ingested_hashes: Set[str] = set()
-        
-        # Ensure collection exists
-        self._ensure_collection()
-        self._load_ingested_hashes()
+        try:
+            self.qdrant = QdrantClient(
+                host=settings.QDRANT_HOST,
+                port=settings.QDRANT_PORT,
+                timeout=5.0  # 5 second timeout
+            )
+            self.COLLECTION_NAME = settings.QDRANT_COLLECTION
+            
+            # Initialize embedding model
+            print(f"Loading embedding model: {settings.EMBEDDING_MODEL}")
+            self.embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL)
+            
+            # Initialize OpenAI client
+            self.openai_client = OpenAI(api_key=settings.OPENAI_API_KEY)
+            
+            # Track ingested files
+            self._ingested_hashes: Set[str] = set()
+            
+            # Ensure collection exists
+            self._ensure_collection()
+            self._load_ingested_hashes()
+            
+            self._available = True
+            print("✅ Qdrant service initialized successfully")
+        except Exception as e:
+            print(f"⚠️  Qdrant service not available: {e}")
+            print("   RAG features will be disabled, but asset management will work")
+            self._available = False
+            self.qdrant = None
+            self.embedding_model = None
+            self.openai_client = None
+            self._ingested_hashes = set()
+    
+    def is_available(self) -> bool:
+        """Check if Qdrant service is available."""
+        return self._available
     
     def _ensure_collection(self):
         """Create collection if it doesn't exist."""
@@ -78,6 +95,8 @@ class QdrantRAGService:
     
     def is_file_ingested(self, file_hash: str) -> bool:
         """Check if a file has already been ingested."""
+        if not self._available:
+            return False
         return file_hash in self._ingested_hashes
     
     def get_ingested_files(self) -> Set[str]:
@@ -86,6 +105,8 @@ class QdrantRAGService:
     
     def _embed_text(self, text: str) -> List[float]:
         """Generate embedding for text."""
+        if not self._available:
+            return []
         return self.embedding_model.encode(text).tolist()
     
     def _embed_batch(self, texts: List[str]) -> List[List[float]]:
@@ -94,6 +115,8 @@ class QdrantRAGService:
     
     def ingest_chunks(self, chunks: List[Dict[str, Any]]) -> int:
         """Ingest document chunks into Qdrant."""
+        if not self._available:
+            raise Exception("Qdrant service not available")
         if not chunks:
             return 0
         
