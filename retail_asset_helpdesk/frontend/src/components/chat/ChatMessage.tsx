@@ -32,7 +32,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         </div>
 
         {/* Sources */}
-        {message.sources && message.sources.length > 0 && (
+        {/* {message.sources && message.sources.length > 0 && (
           <div className={styles.sources}>
             <span className={styles.sourcesLabel}>Sources:</span>
             {message.sources.map((source, idx) => (
@@ -41,7 +41,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
               </span>
             ))}
           </div>
-        )}
+        )} */}
 
         {/* Timestamp */}
         <span className={styles.timestamp}>

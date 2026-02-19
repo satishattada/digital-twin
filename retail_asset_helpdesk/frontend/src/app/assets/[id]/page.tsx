@@ -519,7 +519,7 @@ export default function AssetDetailsPage() {
                     </div>
                     <div className={styles.statLabel}>Issues Reported</div>
                   </div>
-                  <div className={styles.statCard}>
+                  {/* <div className={styles.statCard}>
                     <div className={styles.statIcon}>💰</div>
                     <div className={styles.statValue}>
                       $
@@ -530,7 +530,7 @@ export default function AssetDetailsPage() {
                     <div className={styles.statLabel}>
                       Total Maintenance Cost
                     </div>
-                  </div>
+                  </div> */}
                   <div className={styles.statCard}>
                     <div className={styles.statIcon}>⏱️</div>
                     <div className={styles.statValue}>
