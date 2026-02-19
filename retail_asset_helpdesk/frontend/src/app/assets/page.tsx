@@ -102,15 +102,15 @@ export default function AssetsPage() {
         <div className={styles.headerLeft}>
           <Link href="/">
             <Button variant="ghost">
-              ← Back
+              ← 
             </Button>
           </Link>
           <img src="/logo.png" alt="BP" className={styles.logo} />
           <h1>Asset Inventory</h1>
         </div>
-        <div className={styles.headerRight}>
+        {/* <div className={styles.headerRight}>
           <span className={styles.count}>{filteredAssets.length} Assets</span>
-        </div>
+        </div> */}
       </header>
 
       {/* Filters */}
