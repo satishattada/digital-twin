@@ -124,8 +124,8 @@
   flex-direction: column;
   gap: 8px;
   margin-top: 24px;
-  padding-top: 24px;
-  border-top: 2px solid #e5e5e5;
+  /* padding-top: 24px; */
+  /* border-top: 2px solid #e5e5e5; */
 }
 
 .assetTab {
@@ -295,7 +295,7 @@
 
   .assetCard {
     max-width: 100%;
-    margin: 0 auto;
+    /* margin: 0 auto; */
     padding: 16px;
   }
 
