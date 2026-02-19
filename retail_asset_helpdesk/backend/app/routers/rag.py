@@ -11,6 +11,7 @@ from app.schemas.rag import (
     StatsResponse,
     FileStatus
 )
+from app.schemas.chat import SummarizeRequest, SummarizeResponse
 from app.services.document_processor import DocumentProcessor
 from app.services.qdrant_service import QdrantRAGService
 from app.utils.helpers import extract_category_from_filename
@@ -138,3 +139,15 @@ async def delete_collection():
         return {"message": "Collection deleted and recreated"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/summarize", response_model=SummarizeResponse)
+async def summarize_chat(request: SummarizeRequest):
+    """Summarize a chat conversation."""
+    if not request.messages:
+        raise HTTPException(status_code=400, detail="No messages provided")
+    
+    messages = [{"role": m.role, "content": m.content} for m in request.messages]
+    summary = rag_service.summarize_chat(messages)
+    
+    return SummarizeResponse(summary=summary)

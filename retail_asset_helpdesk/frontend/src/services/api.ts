@@ -73,6 +73,15 @@ class ApiClient {
     });
   }
 
+  async summarizeChat(
+    messages: { role: string; content: string }[]
+  ): Promise<{ summary: string }> {
+    return this.request<{ summary: string }>('/summarize', {
+      method: 'POST',
+      body: JSON.stringify({ messages }),
+    });
+  }
+
   // ==================
   // Health Check
   // ==================

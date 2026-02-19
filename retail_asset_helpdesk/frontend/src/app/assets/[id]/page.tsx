@@ -34,6 +34,8 @@ export default function AssetDetailsPage() {
   const [isQuerying, setIsQuerying] = useState(false);
   const [showEscalation, setShowEscalation] = useState(false);
   const [showFollowUp, setShowFollowUp] = useState(false);
+  const [chatSummary, setChatSummary] = useState("");
+  const [isLoadingSummary, setIsLoadingSummary] = useState(false);
 
   useEffect(() => {
     loadAsset();
@@ -283,6 +285,33 @@ export default function AssetDetailsPage() {
     } catch (error) {
       console.error("Failed to submit escalation:", error);
       alert("Failed to submit escalation. Please try again.");
+    }
+  };
+
+  const handleOpenEscalation = async () => {
+    setShowEscalation(true);
+    setChatSummary("");
+    
+    // Only summarize if there are messages
+    if (messages.length > 0) {
+      setIsLoadingSummary(true);
+      try {
+        const chatMessages = messages.map((m) => ({
+          role: m.role,
+          content: m.content,
+        }));
+        const response = await api.summarizeChat(chatMessages);
+        setChatSummary(response.summary);
+      } catch (error) {
+        console.error("Failed to summarize chat:", error);
+        // Fallback: use last user message as description
+        const lastUserMessage = [...messages].reverse().find((m) => m.role === "user");
+        if (lastUserMessage) {
+          setChatSummary(lastUserMessage.content);
+        }
+      } finally {
+        setIsLoadingSummary(false);
+      }
     }
   };
 
@@ -771,7 +800,7 @@ export default function AssetDetailsPage() {
                <div className={styles.escalationPrompt}>
                     <p>Can't resolve your issue?</p>
                     <button
-                      onClick={() => setShowEscalation(true)}
+                      onClick={handleOpenEscalation}
                       className={styles.escalationButton}
                     >
                       🔺 Submit to Expert
@@ -791,6 +820,8 @@ export default function AssetDetailsPage() {
           contactName={asset.contactName}
           contactEmail={asset.contactEmail}
           contactPhone={asset.contactPhone}
+          initialDescription={chatSummary}
+          isLoadingDescription={isLoadingSummary}
           onClose={() => setShowEscalation(false)}
           onSubmit={handleEscalationSubmit}
         />
