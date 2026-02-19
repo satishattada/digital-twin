@@ -8,6 +8,8 @@ interface EscalationFormProps {
   contactName?: string;
   contactEmail?: string;
   contactPhone?: string;
+  initialDescription?: string; // Add this
+  isLoadingDescription?: boolean; // Add this
   onClose: () => void;
   onSubmit: (data: EscalationData) => Promise<void>;
 }
@@ -29,16 +31,25 @@ export const EscalationForm: React.FC<EscalationFormProps> = ({
   contactName,
   contactEmail,
   contactPhone,
+  initialDescription = '', // Add this
+  isLoadingDescription = false, // Add this
   onClose,
   onSubmit,
 }) => {
   const [userName, setUserName] = useState(contactName || '');
   const [email, setEmail] = useState(contactEmail || '');
   const [phone, setPhone] = useState(contactPhone || '');
-  const [issueDescription, setIssueDescription] = useState('');
+  const [issueDescription, setIssueDescription] = useState(initialDescription);
   const [additionalInfo, setAdditionalInfo] = useState('');
   const [images, setImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Update description when initialDescription changes (from API)
+  React.useEffect(() => {
+    if (initialDescription) {
+      setIssueDescription(initialDescription);
+    }
+  }, [initialDescription]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -53,7 +64,7 @@ export const EscalationForm: React.FC<EscalationFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!userName || !email || !issueDescription) {
       alert('Please fill in all required fields');
       return;
@@ -93,7 +104,7 @@ export const EscalationForm: React.FC<EscalationFormProps> = ({
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formSection}>
             <h3>Contact Information</h3>
-            
+
             <div className={styles.formGroup}>
               <label htmlFor="userName">
                 Name <span className={styles.required}>*</span>
@@ -136,19 +147,26 @@ export const EscalationForm: React.FC<EscalationFormProps> = ({
 
           <div className={styles.formSection}>
             <h3>Issue Details</h3>
-            
+
             <div className={styles.formGroup}>
               <label htmlFor="issueDescription">
                 Issue Description <span className={styles.required}>*</span>
               </label>
-              <textarea
-                id="issueDescription"
-                value={issueDescription}
-                onChange={(e) => setIssueDescription(e.target.value)}
-                placeholder="Describe the issue you're experiencing..."
-                rows={4}
-                required
-              />
+              {isLoadingDescription ? (
+                <div className={styles.loadingDescription}>
+                  <span className={styles.spinner}></span>
+                  Generating summary from chat...
+                </div>
+              ) : (
+                <textarea
+                  id="issueDescription"
+                  value={issueDescription}
+                  onChange={(e) => setIssueDescription(e.target.value)}
+                  placeholder="Describe the issue you're experiencing..."
+                  rows={4}
+                  required
+                />
+              )}
             </div>
 
             <div className={styles.formGroup}>
@@ -165,7 +183,7 @@ export const EscalationForm: React.FC<EscalationFormProps> = ({
 
           <div className={styles.formSection}>
             <h3>Attachments</h3>
-            
+
             <div className={styles.formGroup}>
               <label htmlFor="images">Upload Images (Optional)</label>
               <input
@@ -176,7 +194,9 @@ export const EscalationForm: React.FC<EscalationFormProps> = ({
                 onChange={handleImageUpload}
                 className={styles.fileInput}
               />
-              <p className={styles.hint}>You can upload multiple images (JPG, PNG, etc.)</p>
+              <p className={styles.hint}>
+                You can upload multiple images (JPG, PNG, etc.)
+              </p>
             </div>
 
             {images.length > 0 && (
