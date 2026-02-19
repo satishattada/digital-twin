@@ -171,13 +171,13 @@ class QdrantRAGService:
         # Build filter
         filter_conditions = []
         
-        if asset_category:
-            filter_conditions.append(
-                models.FieldCondition(
-                    key="asset_category",
-                    match=models.MatchValue(value=asset_category)
-                )
-            )
+        # if asset_category:
+        #     filter_conditions.append(
+        #         models.FieldCondition(
+        #             key="asset_category",
+        #             match=models.MatchValue(value=asset_category)
+        #         )
+        #     )
         
         if filename:
             filter_conditions.append(
@@ -255,11 +255,19 @@ class QdrantRAGService:
         system_prompt = """You are a helpful retail equipment support assistant. Your role is to help users troubleshoot equipment issues, find maintenance procedures, understand error codes, and provide guidance based on equipment documentation.
 
 Guidelines:
+- For greetings (hi, hello, hey, etc.) or casual conversation, respond briefly and friendly without diving into technical details. Simply greet back and ask how you can help.
+- Only provide technical guidance when the user asks a specific question about equipment.
 - Provide clear, step-by-step instructions when applicable
 - If the documentation mentions safety warnings, always include them
 - If you're not sure about something, say so rather than guessing
 - Reference specific error codes or procedures when mentioned in the documentation
-- Be concise but thorough"""
+- Be concise and to the point, brief the answers to max of 5 pointed steps. Each step should be of 1 short sentence.
+- Even if the documentation doesn't contain relevant information to answer the question, there is no need to let the user know that documentation. You can suggest from overall understanding of retail equipment.
+
+Examples:
+- User: "Hi" → Response: "Hello! How can I help you with your equipment today?"
+- User: "Hey there" → Response: "Hi! What can I assist you with?"
+- User: "Coffee machine not working" → Provide troubleshooting steps"""
 
         user_prompt = f"""Based on the following documentation excerpts, please answer the user's question.
 
@@ -330,3 +338,42 @@ Please provide a helpful response based on the documentation above. If the docum
         self.qdrant.delete_collection(self.COLLECTION_NAME)
         self._ingested_hashes.clear()
         self._ensure_collection()
+    
+    def summarize_chat(self, messages: List[Dict[str, str]]) -> str:
+        """Summarize a chat conversation."""
+        if not self._available or not self.openai_client:
+            # Fallback: just concatenate last messages
+            return "\n".join([f"{m['role']}: {m['content']}" for m in messages[-10:]])
+        
+        # Format chat history
+        chat_history = "\n".join([
+            f"{'User' if m['role'] == 'user' else 'Assistant'}: {m['content']}"
+            for m in messages
+        ])
+        
+        system_prompt = """You are a support conversation summarizer. Given a chat conversation, create a concise summary that includes:
+1. The main issue or question
+2. Key troubleshooting steps attempted
+3. Current status/outcome
+4. Any error codes or specific equipment mentioned
+
+Keep the summary under 200 words and focus on actionable information."""
+
+        user_prompt = f"""Please summarize this support conversation:
+
+{chat_history}"""
+
+        try:
+            response = self.openai_client.chat.completions.create(
+                model=settings.OPENAI_MODEL,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.3,
+                max_tokens=300
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            print(f"Summarization error: {e}")
+            return "\n".join([f"{m['role']}: {m['content']}" for m in messages[-5:]])
