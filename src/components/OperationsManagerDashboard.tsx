@@ -45,7 +45,7 @@ export const OperationsManagerDashboard: React.FC<OperationsManagerDashboardProp
           <OpsShelfInventoryStatus selectedCategory={selectedCategory} selectedStore={selectedStore} selectedSiteId={selectedSiteId}/>
         </div>
         <div className="rounded-lg bg-gray-50 border p-3 shadow-sm flex flex-col">
-          <OpsInventoryMovementTracker selectedCategory={selectedCategory} selectedTimePeriod={selectedTimePeriod} />
+          <OpsInventoryMovementTracker selectedCategory={selectedCategory} selectedTimePeriod={selectedTimePeriod} selectedSiteId={selectedSiteId}/>
         </div>
       </div>
 

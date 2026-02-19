@@ -1,0 +1,115 @@
+.documentList {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px;
+  }
+  
+  .selectionInfo {
+    padding: 8px 12px;
+    background: rgba(66, 153, 225, 0.1);
+    border-left: 3px solid #4299e1;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 12px;
+  }
+  
+  .selectionInfo p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #a0aec0;
+  }
+  
+  .documentList h3 {
+    font-size: 0.85rem;
+    color: #a0aec0;
+    text-transform: uppercase;
+    margin: 16px 0 8px;
+  }
+  
+  .pendingHeader {
+    margin-top: 24px !important;
+  }
+  
+  .documentList ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .documentItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    margin-bottom: 6px;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+  
+  .documentItem:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(66, 153, 225, 0.3);
+  }
+  
+  .documentItem.selected {
+    background: rgba(66, 153, 225, 0.2);
+    border-color: #4299e1;
+  }
+  
+  .documentItem.pending {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .selectIndicator {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: #718096;
+    flex-shrink: 0;
+  }
+  
+  .documentItem.selected .selectIndicator {
+    color: #4299e1;
+    font-weight: bold;
+  }
+  
+  .docIcon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  
+  .docInfo {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .docName {
+    display: block;
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .docCategory {
+    display: block;
+    font-size: 0.7rem;
+    color: #718096;
+    margin-top: 2px;
+  }
+  
+  .emptyState {
+    color: #718096;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+  }

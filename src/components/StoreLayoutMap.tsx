@@ -643,7 +643,7 @@ export const StoreLayoutMap: React.FC = () => {
         )}
       </div>
       <div className="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 p-2 md:p-4 border-2 border-gray-300 rounded-xl shadow-lg flex flex-col">
-         <div className="grid grid-cols-6 md:grid-cols-12 grid-rows-4 md:grid-rows-4 gap-1 md:gap-2 flex-grow p-1 md:p-2 bg-white rounded-lg shadow-inner overflow-hidden">
+         <div className="grid grid-cols-12 grid-rows-4 gap-1 md:gap-2 flex-grow p-1 md:p-2 bg-white rounded-lg shadow-inner overflow-hidden">
           {MOCK_STORE_LAYOUT_DATA.map((zone) => (
             <Zone 
               key={zone.id} 

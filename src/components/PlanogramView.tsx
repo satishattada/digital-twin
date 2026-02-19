@@ -101,7 +101,7 @@ const ProductTile: React.FC<{ product: Product; isOptimized?: boolean }> = ({ pr
 export const PlanogramView: React.FC<PlanogramViewProps> = ({ data, isOptimized = false }) => {
   return (
     <div className={`h-full p-2 border-2 rounded-lg ${isOptimized ? 'border-green-300 bg-white' : 'border-gray-300 bg-white'}`}>
-      <div className="grid grid-cols-4 grid-rows-3 gap-2 h-[500px]">
+      <div className="grid grid-cols-4 grid-rows-3 gap-2 h-[400px]">
         {data.products.slice(0, 12).map(product => <ProductTile key={product.id} product={product} isOptimized={isOptimized} />)}
       </div>
     </div>

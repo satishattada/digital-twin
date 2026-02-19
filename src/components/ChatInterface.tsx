@@ -26,97 +26,135 @@ const getDetailedData = (content: string): { title: string; data: any } => {
   // Analyze the content to determine what type of details to show
   const lowerContent = content.toLowerCase();
   
-  if (lowerContent.includes('inventory') || lowerContent.includes('stock') || lowerContent.includes('supply')) {
+  if (lowerContent.includes('inventory') || lowerContent.includes('stock') || lowerContent.includes('supply') || lowerContent.includes('fuel')) {
     return {
-      title: 'Inventory Management Details',
+      title: 'Fuel & Energy Inventory Status',
       data: {
         overview: {
-          totalSKUs: 147,
-          lowStock: 12,
-          outOfStock: 3,
-          overstock: 8,
-          turnoverRate: 4.2
+          totalAssets: 29,
+          fuelSystems: 12,
+          evCharging: 3,
+          energySystems: 3,
+          criticalAlerts: 2
         },
         criticalItems: [
           {
-            sku: 'DRY-001',
-            name: 'Whole Milk 1 Gallon',
-            currentStock: 23,
-            minThreshold: 50,
-            supplier: 'Local Dairy Co.',
-            lastDelivery: '2025-01-08',
-            nextDelivery: '2025-01-12',
-            urgency: 'HIGH'
+            sku: 'FUEL-DSL-001',
+            name: 'Diesel UST 40,000L',
+            currentLevel: '65%',
+            minThreshold: '20%',
+            supplier: 'BP Fuel Supply',
+            lastDelivery: '2024-01-15',
+            nextDelivery: '2024-01-25',
+            urgency: 'MEDIUM',
+            status: 'Warning - Pressure anomaly'
           },
           {
-            sku: 'DRY-045',
-            name: 'Greek Yogurt 32oz',
-            currentStock: 8,
-            minThreshold: 25,
-            supplier: 'Dairy Fresh Ltd.',
-            lastDelivery: '2025-01-09',
-            nextDelivery: '2025-01-13',
-            urgency: 'MEDIUM'
+            sku: 'FUEL-REG-001',
+            name: 'Regular Unleaded UST 40,000L',
+            currentLevel: '42%',
+            minThreshold: '20%',
+            supplier: 'BP Fuel Supply',
+            lastDelivery: '2024-01-16',
+            nextDelivery: '2024-01-26',
+            urgency: 'LOW',
+            status: 'Operational'
           },
           {
-            sku: 'DRY-089',
-            name: 'Organic Butter 1lb',
-            currentStock: 0,
-            minThreshold: 15,
-            supplier: 'Organic Valley',
-            lastDelivery: '2025-01-07',
-            nextDelivery: '2025-01-14',
-            urgency: 'CRITICAL'
+            sku: 'FUEL-PRE-001',
+            name: 'Premium Unleaded UST 30,000L',
+            currentLevel: '78%',
+            minThreshold: '20%',
+            supplier: 'BP Fuel Supply',
+            lastDelivery: '2024-01-14',
+            nextDelivery: '2024-01-24',
+            urgency: 'LOW',
+            status: 'Operational'
           }
         ]
       }
     };
   }
   
-  if (lowerContent.includes('equipment') || lowerContent.includes('temperature') || lowerContent.includes('maintenance')) {
+  if (lowerContent.includes('equipment') || lowerContent.includes('temperature') || lowerContent.includes('maintenance') || lowerContent.includes('hvac') || lowerContent.includes('pump')) {
     return {
-      title: 'Equipment Monitoring Details',
+      title: 'Facility Equipment Monitoring',
       data: {
         overview: {
-          totalUnits: 8,
-          operational: 7,
-          alerts: 1,
-          efficiency: '94%'
+          totalAssets: 29,
+          operational: 24,
+          warning: 3,
+          critical: 1,
+          offline: 1
         },
-        units: [
+        criticalAlerts: [
           {
-            id: 'COOLER-001',
-            name: 'Dairy Cooler #1',
-            temperature: 38.2,
-            targetTemp: 38,
-            status: 'Normal',
-            lastMaintenance: '2025-09-15',
-            nextMaintenance: '2025-10-15'
+            id: 'hvac-store',
+            name: 'Store HVAC Unit 15 Ton',
+            type: 'HVAC',
+            location: 'Convenience Store Roof',
+            temperature: 28.5,
+            targetTemp: 22.0,
+            status: 'CRITICAL',
+            issue: 'Compressor failure - temperature rising',
+            lastMaintenance: '2024-01-15',
+            nextMaintenance: '2024-04-15',
+            urgency: 'CRITICAL'
           },
           {
-            id: 'COOLER-002',
-            name: 'Dairy Cooler #2',
-            temperature: 37.8,
-            targetTemp: 38,
-            status: 'Normal',
-            lastMaintenance: '2025-09-10',
-            nextMaintenance: '2025-10-10'
+            id: 'pump-2b',
+            name: 'Regular Pump 2B',
+            type: 'Fuel Pump',
+            location: 'Forecourt - Island 2',
+            status: 'CRITICAL',
+            issue: 'Fuel leak detected - immediate shutdown required',
+            lastMaintenance: '2024-01-28',
+            nextMaintenance: '2024-04-28',
+            urgency: 'CRITICAL'
           },
           {
-            id: 'COOLER-003',
-            name: 'Dairy Cooler #3',
-            temperature: 39.1,
-            targetTemp: 38,
-            status: 'Alert',
-            alert: 'Door sensor malfunction',
-            lastMaintenance: '2025-09-05',
-            nextMaintenance: '2025-10-05'
+            id: 'fuel-tank-diesel',
+            name: 'UST - Diesel 40,000L',
+            type: 'Underground Storage Tank',
+            location: 'Underground - Forecourt',
+            status: 'WARNING',
+            issue: 'Pressure sensor reading anomaly',
+            lastMaintenance: '2024-01-10',
+            nextMaintenance: '2024-07-10',
+            urgency: 'HIGH'
+          },
+          {
+            id: 'fire-alarm-1',
+            name: 'Fire Alarm Panel',
+            type: 'Safety System',
+            location: 'Store Interior Wall',
+            status: 'WARNING',
+            issue: 'Battery backup at 15% capacity',
+            lastMaintenance: '2024-02-01',
+            nextMaintenance: '2024-05-01',
+            urgency: 'HIGH'
+          },
+          {
+            id: 'ev-level2-3',
+            name: 'Level 2 Charger 7kW',
+            type: 'EV Charger',
+            location: 'Parking Area - Bay 3',
+            status: 'OFFLINE',
+            issue: 'Circuit breaker tripped - unit offline',
+            lastMaintenance: '2024-02-01',
+            nextMaintenance: '2024-08-01',
+            urgency: 'MEDIUM'
           }
+        ],
+        recentActivity: [
+          { time: '10 min ago', event: 'HVAC temperature alert triggered', severity: 'critical' },
+          { time: '25 min ago', event: 'Fuel pump 2B leak detected', severity: 'critical' },
+          { time: '1 hour ago', event: 'EV charger 3 went offline', severity: 'warning' },
+          { time: '2 hours ago', event: 'Fire alarm battery low', severity: 'warning' }
         ]
       }
     };
   }
-
     
   if (lowerContent.includes('planogram') || lowerContent.includes('shelf') || lowerContent.includes('layout') || lowerContent.includes('compliance')) {
     return {
@@ -538,36 +576,44 @@ const DetailModal: React.FC<DetailModalProps> = ({ isOpen, onClose, data, type }
 const getAIResponse = (userMessage: string): Message => {
   const responses = [
     {
-      trigger: ['stock', 'inventory', 'restock', 'low stock'],
-      response: "📦 I can help with inventory management! Based on current data:\n\n• 3 items in Dairy are running low (Whole Milk, Greek Yogurt, Butter)\n• Recommended restock: 24 units each\n• Delivery window: Tomorrow 6-8 AM\n\nWould you like me to create restock tasks automatically?"
+      trigger: ['critical', 'alerts', 'urgent', 'emergency'],
+      response: "🚨 Critical Alerts Detected:\n\n• HVAC Store Unit: Temperature at 28.5°C (Critical - Compressor failure)\n• Fuel Pump 2B: Fuel leak detected - SHUTDOWN REQUIRED\n• Fire Alarm: Battery at 15% capacity\n• EV Charger Bay 3: Offline due to circuit breaker trip\n\nShall I initiate emergency protocols and contact maintenance teams?"
     },
     {
-      trigger: ['sales', 'revenue', 'performance', 'top sellers'],
-      response: "📈 Great news on sales performance! Here's your Dairy category update:\n\n• Revenue: ↗️ 12% vs last week\n• Top performers: Whole Milk (+18%), Greek Yogurt (+15%)\n• Underperformer: Organic Cheese (-5%)\n\nShould I analyze customer preferences or suggest promotional strategies?"
+      trigger: ['hvac', 'temperature', 'climate', 'heating', 'cooling'],
+      response: "🌡️ HVAC System Status:\n\n• Store HVAC: 🔴 CRITICAL - 28.5°C (Target: 22°C)\n  Issue: Compressor failure, temperature rising\n  Action: Immediate technician dispatch recommended\n\n• Car Wash HVAC: ✅ Operational - 20.8°C (Target: 21°C)\n\nWould you like me to schedule emergency maintenance?"
     },
     {
-      trigger: ['layout', 'planogram', 'space', 'shelf', 'aisle'],
-      response: "🏪 I've detected some planogram opportunities:\n\n• Aisle 3: Yogurt section 73% compliant (target: 90%)\n• Suggestion: Move premium yogurt to eye-level shelves\n• Expected impact: +8% sales lift\n\nWant me to generate a detailed layout optimization plan?"
+      trigger: ['fuel', 'pump', 'diesel', 'gas', 'forecourt'],
+      response: "⛽ Fuel System Status:\n\n🔴 Critical Issues:\n• Pump 2B: Fuel leak detected - IMMEDIATE SHUTDOWN\n• Diesel UST: Pressure sensor anomaly\n\n✅ Operational:\n• 4 pumps functioning normally\n• Regular & Premium tanks at safe levels (42% & 78%)\n\nRecommend immediate inspection of Pump 2B. Schedule maintenance?"
     },
     {
-      trigger: ['equipment', 'temperature', 'freezer', 'cooler'],
-      response: "🌡️ Equipment status looking good! Current monitoring shows:\n\n• Dairy cooler: 38°F (optimal)\n• Freezer units: -2°F (optimal)\n• 1 minor alert: Door sensor in dairy case #3\n\nShall I schedule maintenance or provide troubleshooting steps?"
+      trigger: ['ev', 'charger', 'charging', 'electric'],
+      response: "🔌 EV Charging Status:\n\n• Level 2 Charger Bay 1: ✅ Operational\n• Level 2 Charger Bay 2: ✅ Operational\n• Level 2 Charger Bay 3: 🔴 OFFLINE\n  Issue: Circuit breaker tripped\n  Action: Electrician needed\n\nWant me to create a maintenance work order?"
     },
     {
-      trigger: ['alerts', 'issues', 'problems', 'urgent'],
-      response: "⚠️ Current alerts summary:\n\n• 2 medium priority: Shelf space optimization needed\n• 1 low priority: Price tag update required\n• 0 urgent issues\n\nEverything's running smoothly! Any specific area you'd like me to investigate?"
+      trigger: ['security', 'camera', 'cctv', 'surveillance'],
+      response: "📹 Security System Status:\n\n✅ All CCTV cameras operational:\n• Store Entrance: Active\n• Forecourt East/West: Active\n• Car Wash: Active (lens cleaning recommended)\n• Parking Area: Active\n\n⚠️ Fire Alarm: Battery low (15%)\n\nShall I schedule camera maintenance and battery replacement?"
+    },
+    {
+      trigger: ['maintenance', 'service', 'repair'],
+      response: "🔧 Maintenance Overview:\n\n🔴 Urgent (2):\n• HVAC compressor replacement\n• Fuel pump leak repair\n\n⚠️ High Priority (2):\n• Fire alarm battery replacement\n• Diesel tank pressure sensor check\n\n📋 Scheduled (5):\n• EV charger inspections due in 2 weeks\n\nWant me to prioritize and create work orders?"
+    },
+    {
+      trigger: ['energy', 'solar', 'power', 'electricity'],
+      response: "🔋 Energy Systems Status:\n\n✅ Solar Panel Array: Operational\n• Output: 15.2 kW\n• Efficiency: 92%\n\n✅ Main Store Power: Normal\n✅ Forecourt Canopy Lighting: Operational\n\nAll energy systems functioning within normal parameters."
+    },
+    {
+      trigger: ['building', 'facility', 'structure'],
+      response: "🏢 Facility Status:\n\n✅ Buildings:\n• Main Convenience Store: Operational\n• Car Wash Building: Operational\n• Storage Building: Operational\n\n✅ Structures:\n• Forecourt Canopy: Operational\n\n⚠️ Minor issues in HVAC - addressed above.\n\nOverall facility in good condition."
     },
     {
       trigger: ['help', 'what can you do', 'capabilities'],
-      response: "🤖 I'm your AI Store Assistant! I can help with:\n\n📊 Real-time inventory analysis\n📈 Sales performance insights\n🏪 Planogram optimization\n🌡️ Equipment monitoring\n⚠️ Alert management\n📋 Task automation\n\nJust ask me anything about your store operations!"
+      response: "🤖 I'm your AI Facility Assistant! I can help with:\n\n🏢 Facility asset monitoring\n⛽ Fuel system management\n🔌 EV charging stations\n🌡️ HVAC & climate control\n📹 Security systems\n🔧 Maintenance scheduling\n⚡ Energy systems\n🚨 Critical alerts\n\nJust ask me about any facility operations!"
     },
     {
-      trigger: ['customers', 'feedback', 'satisfaction'],
-      response: "😊 Customer insights for your store:\n\n• Satisfaction score: 4.2/5 (↗️ +0.3 this month)\n• Top compliment: 'Well-organized dairy section'\n• Main concern: 'Sometimes out of organic options'\n\nWant me to suggest improvements based on customer feedback?"
-    },
-    {
-      trigger: ['tasks', 'todo', 'schedule', 'reminders'],
-      response: "📋 I can help manage your tasks! Current pending items:\n\n• 3 restock recommendations\n• 1 planogram adjustment\n• 2 equipment checks\n\nShould I prioritize these or create new tasks based on current data?"
+      trigger: ['status', 'overview', 'summary', 'dashboard'],
+      response: "📊 Facility Overview:\n\n🏢 Total Assets: 29\n✅ Operational: 24 (83%)\n⚠️ Warning: 3 (10%)\n🔴 Critical: 1 (3%)\n⭕ Offline: 1 (3%)\n\nTop Priorities:\n1. HVAC compressor failure\n2. Fuel pump leak\n3. Fire alarm battery\n4. EV charger offline\n\nShall I provide detailed breakdowns?"
     }
   ];
 
@@ -578,7 +624,7 @@ const getAIResponse = (userMessage: string): Message => {
 
   return {
     id: `ai-${Date.now()}`,
-    text: matchedResponse?.response || "🤔 I understand you're asking about store operations. Could you be more specific? I can help with:\n\n• 📦 Inventory & restocking\n• 📈 Sales analysis\n• 🏪 Layout optimization\n• 🌡️ Equipment monitoring\n• 📋 Task management\n\nWhat would you like to know?",
+    text: matchedResponse?.response || "🤔 I can help you with facility management. Try asking about:\n\n• 🚨 Critical alerts & emergencies\n• ⛽ Fuel systems & pumps\n• 🔌 EV charging stations\n• 🌡️ HVAC & temperature control\n• 📹 Security systems\n• 🔧 Maintenance schedules\n• 🏢 Building & facility status\n\nWhat would you like to know?",
     sender: 'ai',
     timestamp: new Date(),
     type: 'text'
@@ -589,7 +635,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ isOpen, onClose })
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
-      text: "👋 Hello! I'm your AI Store Assistant for the Dairy section. I can help you with:\n\n📦 Inventory management\n📈 Sales insights\n🏪 Planogram optimization\n🌡️ Equipment monitoring\n\nWhat would you like to know about your store today?",
+      text: "👋 Hello! I'm your AI Facility Assistant. I monitor and manage your retail facility operations:\n\n🏢 29 Total Assets\n⛽ Fuel Systems & Forecourt\n🔌 EV Charging Stations\n🌡️ HVAC & Climate Control\n📹 Security Systems\n🔧 Maintenance Scheduling\n\n🚨 ALERT: 2 critical issues require immediate attention!\n\nWhat would you like to check?",
       sender: 'ai',
       timestamp: new Date(),
       type: 'text'

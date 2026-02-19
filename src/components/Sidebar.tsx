@@ -64,6 +64,11 @@ export const PersonaDropdown: React.FC<{
             <option value="Store Manager">🏪 Store Manager</option>
             <option value="Operations Manager">⚙️ Operations Manager</option>
             <option value="Regional Manager">🌍 Regional Manager</option>
+            <option value="Site Manager">🏗️ Site Manager</option>
+            <option value="Digital Engineer">🔧 Digital Engineer</option>
+            <option value="Asset Strategy">💼 Asset Strategy</option>
+            <option value="Asset Strategy Control Tower">🎯 Asset Strategy Control Tower</option>
+            <option value="Supplier Performance">🤝 Supplier Performance</option>
         </select>
     </div>
 );
@@ -92,6 +97,30 @@ const AnimatedAvatar: React.FC<{ persona: Persona; isActive: boolean }> = ({
                     gradient: "from-purple-400 via-pink-500 to-red-600",
                     image: "/images/regional-manager.jpg",
                     alt: "Regional Manager",
+                };
+            case "Site Manager":
+                return {
+                    gradient: "from-blue-400 via-cyan-500 to-teal-600",
+                    image: "/images/site-manager.jpg",
+                    alt: "Site Manager",
+                };
+            case "Digital Engineer":
+                return {
+                    gradient: "from-cyan-400 via-teal-500 to-emerald-600",
+                    image: "/images/digital-engineer.jpg",
+                    alt: "Digital Engineer",
+                };
+            case "Asset Strategy":
+                return {
+                    gradient: "from-amber-400 via-orange-500 to-red-600",
+                    image: "/images/asset-strategy.jpg",
+                    alt: "Asset Strategy",
+                };
+            case "Asset Strategy Control Tower":
+                return {
+                    gradient: "from-green-400 via-emerald-500 to-teal-600",
+                    image: "/images/asset-strategy.jpg",
+                    alt: "Asset Strategy Control Tower",
                 };
             default:
                 return {
@@ -189,6 +218,46 @@ const RoleBadge: React.FC<{ persona: Persona }> = ({ persona }) => {
                     border: "border-purple-200",
                     emoji: "🌍",
                     abbr: "RM",
+                };
+            case "Site Manager":
+                return {
+                    bg: "bg-teal-100",
+                    text: "text-teal-800",
+                    border: "border-teal-200",
+                    emoji: "🏗️",
+                    abbr: "SM",
+                };
+            case "Digital Engineer":
+                return {
+                    bg: "bg-emerald-100",
+                    text: "text-emerald-800",
+                    border: "border-emerald-200",
+                    emoji: "🔧",
+                    abbr: "DE",
+                };
+            case "Asset Strategy":
+                return {
+                    bg: "bg-amber-100",
+                    text: "text-amber-800",
+                    border: "border-amber-200",
+                    emoji: "💼",
+                    abbr: "AS",
+                };
+            case "Asset Strategy Control Tower":
+                return {
+                    bg: "bg-green-100",
+                    text: "text-green-800",
+                    border: "border-green-200",
+                    emoji: "🎯",
+                    abbr: "CT",
+                };
+            case "Supplier Performance":
+                return {
+                    bg: "bg-indigo-100",
+                    text: "text-indigo-800",
+                    border: "border-indigo-200",
+                    emoji: "🤝",
+                    abbr: "SP",
                 };
             default:
                 return {
@@ -294,6 +363,11 @@ const timePeriodsMap: Record<Persona, string[]> = {
         "Last 6 Months",
         "Last Year",
     ],
+    "Site Manager": ["Last 24 Hours", "Last 7 Days", "Last 30 Days", "Last Quarter"],
+    "Digital Engineer": ["Last 24 Hours", "Last 7 Days", "Last 30 Days", "Last Quarter"],
+    "Asset Strategy": ["Last 30 Days", "Last Quarter", "Year to Date", "Last 3 Years"],
+    "Asset Strategy Control Tower": ["Last 30 Days", "Last Quarter", "Year to Date", "Last 3 Years"],
+    "Supplier Performance": ["Last 30 Days", "Last Quarter", "Year to Date", "Last Fiscal Year"],
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -380,7 +454,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div
                 className={`${
                     sidebarOpen ? "w-64" : "w-16"
-                } bg-green-990 text-white transition-all duration-300 flex flex-col`}
+                } bg-green-990 text-white transition-all duration-300 flex flex-col print:hidden`}
             >
                 {/* Sidebar Header with Toggle */}
                 <div className="border-b p-4 border-green-700 flex items-center justify-between">

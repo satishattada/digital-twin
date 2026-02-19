@@ -1,0 +1,51 @@
+﻿Category,Asset,Criticality,Maintenance Mode,Typical Service Frequency,Typical Replacement Cycle,Compliance,Primary KPIs,Energy Consumption (kWh/day),Peak Demand (kW),Energy Efficiency Rating,Trend (Last 30 Days)
+Forecourt,Fuel pumps / dispensers,T1,Preventive + Condition-based,Quarterly PM; annual calibration,10–12 yrs,Metrology calibration; ATEX/IECEx,"Uptime %, Flow rate, Calibration drift",12.5,4.2,B,+5%
+Forecourt,Underground storage tanks (USTs),T1,Preventive + Compliance,Monthly checks; annual integrity test,25–30 yrs (liner dependent),"Leak detection, cathodic protection, environmental permits","Leak incidents, CP potential, Compliance pass rate",2.4,0.8,A,+2%
+Forecourt,"Fuel lines, valves & piping",T1,Preventive + Condition-based,Semi-annual inspection/pressure test,15–20 yrs,Pressure tests; spill prevention,"Leak rate, MTBF",0.5,0.2,A,0%
+Forecourt,Forecourt controller,T1,Preventive + Reactive,Quarterly firmware & health check,6–8 yrs,Electrical safety,"Transaction uptime, Controller faults",1.8,0.6,B,+1%
+Forecourt,Outdoor payment terminals (OPT),T1,Preventive + Reactive,Quarterly inspection; monthly patches,5–7 yrs,PCI DSS,"Payment uptime, Decline/timeout rate",3.2,1.1,B,-3%
+Forecourt,Vapour recovery systems,T1,Preventive + Compliance,Quarterly inspection; annual certification,10–12 yrs,Emissions standards,"Recovery efficiency, Compliance pass",8.6,3.5,C,+8%
+Forecourt,Canopies,T2,Preventive,Annual structural inspection,20–25 yrs,Wind/snow load compliance,Defect closure time,0,0,N/A,0%
+Forecourt,Canopy lighting,T2,Preventive,Semi-annual,12–15 yrs (LED drivers 7–10),Electrical safety,"Lux levels, Energy/kWh",18.4,7.2,A,-12%
+Forecourt,Air & water machines,T3,Preventive + Reactive,Quarterly,8–10 yrs,Electrical & water regulations,"Availability, Vend success",6.8,2.5,C,+4%
+Forecourt,Price totem / price display,T2,Preventive + Reactive,Quarterly visual; annual electrical,10–12 yrs,Electrical safety,Display uptime,4.8,1.8,B,+2%
+Forecourt,Fuel price display,T2,Preventive + Reactive,Quarterly inspection; annual electrical,10–12 yrs,Electrical safety,Display uptime,5.2,2.0,B,+2%
+Forecourt,EV chargers (AC/DC),T1,Condition-based + Predictive,24×7 remote monitoring; quarterly field,8–10 yrs (power modules 5–7),OCPP/Grid interconnect; electrical safety,"Uptime %, MTTR, Session success",156.5,50.0,B,+18%
+Forecourt,Hydrogen dispensers (where applicable),T1,Preventive + Compliance,Quarterly; annual certification,10–12 yrs,Pressure/gas safety,"Uptime %, Safety incidents",24.5,8.5,C,+6%
+Car Wash,Automatic car wash,T2,Preventive + Condition-based,Monthly consumables; quarterly mechanical,10–12 yrs,Water discharge permits,"Throughput, Downtime",85.2,28.5,C,+15%
+Car Wash,Jet/pressure wash systems,T2,Preventive,Quarterly,8–10 yrs,Electrical & water regulations,Availability,15.4,5.8,B,+3%
+Car Wash,Water recycling systems,T2,Preventive + Compliance,Monthly water quality checks,10–12 yrs,Water quality/effluent standards,"Reuse %, Water quality score",12.8,4.2,A,-8%
+Store Equipment,Coffee machines,T2,Preventive + Consumables,Monthly descaling; quarterly service,5–7 yrs,Food safety; water quality,"Availability, Temperature/taste variance",22.4,7.5,B,+4%
+Store Equipment,Beverage dispensers,T2,Preventive,Quarterly,5–7 yrs,Food safety,Dispense accuracy,8.6,3.2,B,+1%
+Store Equipment,Ovens / bakery equipment,T2,Preventive + Compliance,Quarterly cleaning & safety,7–10 yrs,Electrical & food safety,"Temperature accuracy, Energy use",45.8,15.2,C,+12%
+Store Equipment,Microwaves,T3,Reactive + Light preventive,Semi-annual checks,5–7 yrs,Electrical safety,Availability,8.4,3.0,B,-2%
+Store Equipment,Hot food cabinets,T2,Preventive,Quarterly,6–8 yrs,Food safety,Holding temp compliance,18.5,6.2,B,+3%
+Refrigeration,Open chillers / freezers,T1,Condition-based + Predictive,Remote temp monitoring; quarterly PM,8–10 yrs (compressors 5–7),F-gas/leak logs; HACCP,"Product temp compliance, Energy/kWh",125.6,42.5,C,+22%
+Refrigeration,Compressors & condensers,T1,Condition-based + Predictive,Quarterly,5–7 yrs,Refrigerant management,"MTBF, Energy efficiency",95.4,32.8,C,+18%
+HVAC,Packaged/RTU units,T1,Preventive + Condition-based,Quarterly filters; biannual PM,12–15 yrs,Refrigerant compliance,"Comfort SLA, Energy/kWh",145.8,48.6,C,+25%
+POS & Kiosks,POS terminals,T2,Preventive + Reactive swap,Quarterly patching; HW health,4–6 yrs,PCI DSS,"Transaction uptime, Failures/1k txns",4.8,1.6,A,0%
+POS & Kiosks,Self-checkout kiosks,T2,Preventive + Reactive,Quarterly,4–6 yrs,PCI DSS,"Availability, Abandon rate",7.2,2.4,A,+1%
+Digital,Digital menu boards,T3,Preventive,Quarterly cleaning & firmware,6–8 yrs,Electrical/screen safety,"Uptime, Brightness drift",12.5,4.5,B,+2%
+Back-Office IT,Back-office computer/server,T2,Preventive + Patch mgmt,Monthly patching; quarterly health,4–5 yrs,Security standards,"Uptime, Patch compliance",15.8,5.2,B,+3%
+Security,CCTV cameras & NVR,T2,Preventive + Reactive,Quarterly,Cameras 6–8 yrs; NVR 5–7 yrs,Privacy/cybersecurity,"Footage retention, Uptime",24.6,8.5,B,+4%
+Security,Alarms & sensors,T1,Preventive + Compliance,Quarterly tests; annual certification,8–10 yrs,Local codes,Alarm test pass rate,2.4,0.8,A,+1%
+Energy,Smart meters,T2,Preventive + Remote,Annual health/firmware,10–12 yrs,Utility standards,"Read success, Data latency",0.5,0.2,A,0%
+Energy,Solar PV,T2,Preventive + Condition-based,Quarterly cleaning; annual electrical,20–25 yrs (inverters 8–12),Electrical/grid standards,"Yield (kWh/kWp), PR ratio",-180.5,-60.0,A,-5%
+Energy,Battery storage,T1,Condition-based + Predictive,Quarterly PM; BMS monitoring,8–12 yrs (chemistry dependent),Electrical/fire safety,"State of Health, Peak shaving",-25.4,-12.0,A,+8%
+Energy,Diesel generators,T1,Preventive + Test runs,Monthly start test; quarterly service,12–15 yrs (batteries 4–6),Emissions; fuel storage,"Start success, Runtime readiness",2.5,85.0,D,0%
+Energy,EaaS/EMS controllers,T1,Condition-based + Predictive,24×7 monitoring; quarterly patch,6–8 yrs,Cybersecurity standards,"Demand peaks, kWh/site, Savings",1.2,0.4,A,-15%
+Electrical,Panels & distribution boards,T1,Preventive + Testing,Annual IR/load tests,15–20 yrs,Electrical codes,Outage incidents,0.8,0.3,A,0%
+Electrical,UPS (IT racks),T1,Preventive + Testing,Quarterly tests; battery checks,8–10 yrs (batteries 4–6),Electrical safety,"Autonomy minutes, Battery SoH",3.6,1.2,B,+1%
+Plumbing,Water heaters & lines,T2,Preventive,Semi-annual,Heaters 10–12 yrs,Legionella/water regulations,Water temp stability,32.5,12.5,C,+7%
+Building,"Roofs, façade & glazing",T2,Preventive + Reactive,Annual inspection,Roof 20–25 yrs,Weather/structural standards,Water ingress incidents,0,0,N/A,0%
+Building,Doors (manual/automatic),T2,Preventive + Reactive,Quarterly,10–12 yrs,Safety & accessibility,Fail-to-open incidents,1.5,0.5,B,0%
+Building,Flooring & finishes,T3,Reactive + Light preventive,Annual,10–15 yrs,Health & safety,Slip incidents,0,0,N/A,0%
+Grounds,Landscaping & irrigation,T3,Preventive,Seasonal/quarterly,Irrigation 10–12 yrs,Water use permits,"SLA adherence, Water consumption",5.5,2.0,B,+2%
+Grounds,Snow removal (equipment/service),T2 (seasonal),Reactive + Seasonal PM,As required; preseason check,Equipment 8–10 yrs,Safety & access,"Response time, Site accessibility",0.5,0.2,B,0%
+Exterior,Parking lot lighting,T2,Preventive,Semi-annual,12–15 yrs (drivers 7–10),Lux & safety standards,"Outage count, Energy/kWh",28.5,12.5,A,-10%
+Exterior,Outdoor signage boards,T3,Preventive + Reactive,Semi-annual,8–10 yrs,Electrical safety,Uptime,15.8,6.5,B,+1%
+Waste,Bins & compactors,T3,Preventive + Reactive,Quarterly,8–10 yrs,Waste regulations,"Pickup SLA, Overflow events",4.2,1.5,B,+1%
+Other,Bicycle stands / street furniture,T3,Reactive,Annual inspection,10–15 yrs,H&S,Availability,0,0,N/A,0%
+Supplier/MRO,Spare parts inventory,T2,Cycle-count + Min/Max,Monthly cycle counts,N/A,SOX/stock accuracy,"Fill rate, Stockouts",0,0,N/A,0%
+Supplier/MRO,Service tools & test gear,T3,Preventive + Calibration,Annual calibration,5–7 yrs,Calibration certificates,Calibration pass rate,0.5,0.2,A,0%
+Monitoring,"IoT sensors & gateways (temp, vibration, leak)",T2,Predictive + Condition-based,Remote 24×7; annual battery,5–7 yrs,Cybersecurity policy,"Alert fidelity, False positives",1.8,0.6,A,+1%

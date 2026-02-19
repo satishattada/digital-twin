@@ -19,7 +19,11 @@ type HeaderProps = {
 const timePeriodsMap: Record<Persona, string[]> = {
     'Store Manager': ['Last 7 Days', 'Last 30 Days', 'Last Quarter'],
     'Operations Manager': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days'],
-  'Regional Manager': ['Last 7 Days', 'Last 30 Days', 'Year to Date'],
+    'Regional Manager': ['Last 7 Days', 'Last 30 Days', 'Year to Date'],
+    'Site Manager': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days', 'Last Quarter'],
+    'Digital Engineer': ['Last 24 Hours', 'Last 7 Days', 'Last 30 Days', 'Last Quarter'],
+    'Asset Strategy': ['Last 30 Days', 'Last Quarter', 'Year to Date', 'Last 3 Years'],
+    'Supplier Performance': ['Last 30 Days', 'Last Quarter', 'Year to Date', 'Last Fiscal Year'],
 }
 
 const ActionButton: React.FC<{ 
@@ -64,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({
   const timePeriods = timePeriodsMap[activePersona];
   
   return (
-    <header className="relative bg-green-990 text-white shadow-2xl border-b border-bp-blue-500/20">
+    <header className="relative bg-green-990 text-white shadow-2xl border-b border-bp-blue-500/20 print:hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
       
@@ -88,14 +92,15 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="flex flex-col">
                 <div className="flex items-center space-x-2">
                   <h1 className="text-xl font-bold tracking-tight text-white">
-                    Shelfie
+                    Retail Operations
                   </h1>
                   <span className="px-2 py-0.5 bg-white/20 rounded-full text-xs font-medium backdrop-blur-sm">
                     Smart Dashboard
                   </span>
                 </div>
                 <p className="text-xs text-white/80 font-medium">
-                  Digital Twin Analytics Platform
+                  {/* Digital Twin Analytics Platform */}
+                  Digital Twin for Stores
                 </p>
               </div>
             </div>

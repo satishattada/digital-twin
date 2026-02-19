@@ -1066,7 +1066,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone1', 
       name: 'Postal Counter', 
       engagement: 'high', 
-      gridClass: 'col-span-4 row-span-2', 
+      gridClass: 'col-start-1 col-span-4 row-start-1 row-span-1', 
       insights: { 
         topSku: '1st Class Stamps - 150 units/wk', 
         lowPerformer: 'Special Delivery - 8 units/wk', 
@@ -1078,7 +1078,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone2', 
       name: 'Confectionery & Snacks', 
       engagement: 'high', 
-      gridClass: 'col-span-3 row-span-2', 
+      gridClass: 'col-start-5 col-span-4 row-start-1 row-span-1', 
       insights: { 
         topSku: 'Mars Bar - 98 units/wk', 
         lowPerformer: 'Rice Cakes - 12 units/wk', 
@@ -1090,7 +1090,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone3', 
       name: 'Beverages Cooler', 
       engagement: 'high', 
-      gridClass: 'col-span-3 row-span-2', 
+      gridClass: 'col-start-9 col-span-4 row-start-1 row-span-1', 
       insights: { 
         topSku: 'Coca Cola 500ml - 180 units/wk', 
         lowPerformer: 'Lemonade - 15 units/wk', 
@@ -1102,7 +1102,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone4', 
       name: 'Tobacco Cabinet', 
       engagement: 'medium', 
-      gridClass: 'col-span-2 row-span-2', 
+      gridClass: 'col-start-1 col-span-4 row-start-2 row-span-1', 
       insights: { 
         topSku: 'Marlboro Gold - 120 units/wk', 
         lowPerformer: 'Pipe Tobacco - 3 units/wk', 
@@ -1114,7 +1114,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone5', 
       name: 'Health & Beauty', 
       engagement: 'medium', 
-      gridClass: 'col-span-3 row-span-2', 
+      gridClass: 'col-start-5 col-span-4 row-start-2 row-span-1', 
       insights: { 
         topSku: 'Paracetamol - 45 units/wk', 
         lowPerformer: 'Vitamins - 8 units/wk', 
@@ -1126,7 +1126,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone6', 
       name: 'Electronics & Accessories', 
       engagement: 'low', 
-      gridClass: 'col-span-3 row-span-2', 
+      gridClass: 'col-start-9 col-span-4 row-start-2 row-span-1', 
       insights: { 
         topSku: 'AA Batteries - 35 units/wk', 
         lowPerformer: 'Earbuds - 5 units/wk', 
@@ -1138,7 +1138,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone7', 
       name: 'Cards & Gifts', 
       engagement: 'low', 
-      gridClass: 'col-span-2 row-span-2', 
+      gridClass: 'col-start-1 col-span-4 row-start-3 row-span-1', 
       insights: { 
         topSku: 'Birthday Cards - 25 units/wk', 
         lowPerformer: 'Wedding Cards - 3 units/wk', 
@@ -1150,7 +1150,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone8', 
       name: 'Stationery & Office', 
       engagement: 'medium', 
-      gridClass: 'col-span-3 row-span-2', 
+      gridClass: 'col-start-5 col-span-4 row-start-3 row-span-1', 
       insights: { 
         topSku: 'Biro Pens - 60 units/wk', 
         lowPerformer: 'Folders - 4 units/wk', 
@@ -1162,7 +1162,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone9', 
       name: 'Food Items', 
       engagement: 'medium', 
-      gridClass: 'col-span-3 row-span-2', 
+      gridClass: 'col-start-9 col-span-4 row-start-3 row-span-1', 
       insights: { 
         topSku: 'Fresh Sandwiches - 40 units/wk', 
         lowPerformer: 'Soup Cans - 6 units/wk', 
@@ -1174,7 +1174,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone10', 
       name: 'Publications', 
       engagement: 'low', 
-      gridClass: 'col-span-2 row-span-2', 
+      gridClass: 'col-start-1 col-span-4 row-start-4 row-span-1', 
       insights: { 
         topSku: 'The Sun - 30 units/wk', 
         lowPerformer: 'Trade Magazines - 2 units/wk', 
@@ -1186,7 +1186,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone11', 
       name: 'Travel & Transport', 
       engagement: 'high', 
-      gridClass: 'col-span-2 row-span-1', 
+      gridClass: 'col-start-5 col-span-4 row-start-4 row-span-1', 
       insights: { 
         topSku: 'Oyster Top-ups - 200 units/wk', 
         lowPerformer: 'Travel Insurance - 1 unit/wk', 
@@ -1198,7 +1198,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone12', 
       name: 'Automotive', 
       engagement: 'low', 
-      gridClass: 'col-span-2 row-span-1', 
+      gridClass: 'col-start-9 col-span-4 row-start-4 row-span-1', 
       insights: { 
         topSku: 'Air Freshener - 12 units/wk', 
         lowPerformer: 'Engine Oil - 1 unit/wk', 
@@ -1210,7 +1210,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone13', 
       name: 'CHECKOUT', 
       engagement: 'high', 
-      gridClass: 'col-span-4 row-span-1 font-bold', 
+      gridClass: 'col-start-1 col-span-4 row-start-5 row-span-1 font-bold', 
       insights: { 
         topSku: 'Impulse Items', 
         lowPerformer: 'N/A', 
@@ -1222,7 +1222,7 @@ export const MOCK_STORE_LAYOUT_DATA: HeatmapZoneData[] = [
       id: 'zone14', 
       name: 'ENTRANCE', 
       engagement: 'medium', 
-      gridClass: 'col-span-4 row-span-1 font-bold', 
+      gridClass: 'col-start-9 col-span-4 row-start-5 row-span-1 font-bold', 
       insights: { 
         topSku: 'N/A', 
         lowPerformer: 'N/A', 
