@@ -282,6 +282,9 @@ export default function AssetDetailsPage() {
         "Your issue has been escalated successfully! Our team will contact you shortly.",
       );
       setShowEscalation(false);
+      
+      // Clear chat history after successful submission
+      setMessages([]);
     } catch (error) {
       console.error("Failed to submit escalation:", error);
       alert("Failed to submit escalation. Please try again.");
@@ -409,7 +412,7 @@ export default function AssetDetailsPage() {
       {/* Header */}
       <header className={styles.header}>
         <Link href="/assets">
-          <Button variant="ghost">← Back to Assets</Button>
+          <Button variant="ghost">←</Button>
         </Link>
         <img src="/logo.png" alt="BP" className={styles.logo} />
         <h1>Asset Details</h1>

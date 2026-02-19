@@ -102,7 +102,7 @@ export default function AssetsPage() {
         <div className={styles.headerLeft}>
           <Link href="/">
             <Button variant="ghost">
-              ← Back
+              ←
             </Button>
           </Link>
           <img src="/logo.png" alt="BP" className={styles.logo} />
