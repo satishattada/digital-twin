@@ -820,9 +820,9 @@ export default function AssetDetailsPage() {
         <EscalationForm
           assetId={asset.id}
           assetName={asset.name}
-          contactName={asset.contactName ?? undefined}
-          contactEmail={asset.contactEmail ?? undefined}
-          contactPhone={asset.contactPhone ?? undefined}
+          contactName={asset.contactName}
+          contactEmail={asset.contactEmail}
+          contactPhone={asset.contactPhone}
           initialDescription={chatSummary}
           isLoadingDescription={isLoadingSummary}
           onClose={() => setShowEscalation(false)}

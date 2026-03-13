@@ -153,7 +153,7 @@ For issues or questions, refer to:
 - [AWS Lambda Docs](https://docs.aws.amazon.com/lambda/)
 
 
-AWS Access Key ID [None]: <your-access-key-id>
-AWS Secret Access Key [None]: <your-secret-access-key>
+AWS Access Key ID [None]: YOUR_AWS_ACCESS_KEY_ID
+AWS Secret Access Key [None]: YOUR_AWS_SECRET_ACCESS_KEY
 Default region name [None]: us-east-1
 Default output format [None]: json
