@@ -68,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({
   const timePeriods = timePeriodsMap[activePersona];
   
   return (
-    <header className="relative bg-green-990 text-white shadow-2xl border-b border-bp-blue-500/20">
+    <header className="relative bg-green-990 text-white shadow-2xl border-b border-bp-blue-500/20 print:hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
       

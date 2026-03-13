@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { api } from '@/services/api';
 import { Sidebar } from '@/components/sidebar';
 import { ChatMessage, TypingIndicator, ChatInput, ChatSuggestions } from '@/components/chat';
@@ -143,9 +144,18 @@ export default function Home() {
         {/* Header */}
         <header className={styles.header}>
           <div className={styles.headerLeft}>
-            <h1>🔧 Retail Asset Helpdesk</h1>
+            <img src="/logo.png" alt="BP" className={styles.logo} />
+            <h1>Retail Asset Helpdesk</h1>
           </div>
           <div className={styles.headerRight}>
+            <Link href="/assets">
+              <Button 
+                variant="ghost" 
+                size="sm"
+              >
+                🏪 View All Assets
+              </Button>
+            </Link>
             {messages.length > 0 && (
               <Button variant="ghost" size="sm" onClick={clearChat}>
                 🗑️ Clear Chat
@@ -184,7 +194,7 @@ export default function Home() {
           onClearAsset={() => setSelectedDocument('')}
           placeholder={
             selectedDocument
-              ? `Ask about ${selectedDocument}...`
+              ? `Report ${selectedDocument}...`
               : 'Describe your equipment issue or ask a question...'
           }
         />

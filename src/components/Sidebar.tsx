@@ -67,6 +67,7 @@ export const PersonaDropdown: React.FC<{
             <option value="Site Manager">🏗️ Site Manager</option>
             <option value="Digital Engineer">🔧 Digital Engineer</option>
             <option value="Asset Strategy">💼 Asset Strategy</option>
+            <option value="Asset Strategy Control Tower">🎯 Asset Strategy Control Tower</option>
             <option value="Supplier Performance">🤝 Supplier Performance</option>
         </select>
     </div>
@@ -114,6 +115,12 @@ const AnimatedAvatar: React.FC<{ persona: Persona; isActive: boolean }> = ({
                     gradient: "from-amber-400 via-orange-500 to-red-600",
                     image: "/images/asset-strategy.jpg",
                     alt: "Asset Strategy",
+                };
+            case "Asset Strategy Control Tower":
+                return {
+                    gradient: "from-green-400 via-emerald-500 to-teal-600",
+                    image: "/images/asset-strategy.jpg",
+                    alt: "Asset Strategy Control Tower",
                 };
             default:
                 return {
@@ -236,6 +243,14 @@ const RoleBadge: React.FC<{ persona: Persona }> = ({ persona }) => {
                     emoji: "💼",
                     abbr: "AS",
                 };
+            case "Asset Strategy Control Tower":
+                return {
+                    bg: "bg-green-100",
+                    text: "text-green-800",
+                    border: "border-green-200",
+                    emoji: "🎯",
+                    abbr: "CT",
+                };
             case "Supplier Performance":
                 return {
                     bg: "bg-indigo-100",
@@ -351,6 +366,7 @@ const timePeriodsMap: Record<Persona, string[]> = {
     "Site Manager": ["Last 24 Hours", "Last 7 Days", "Last 30 Days", "Last Quarter"],
     "Digital Engineer": ["Last 24 Hours", "Last 7 Days", "Last 30 Days", "Last Quarter"],
     "Asset Strategy": ["Last 30 Days", "Last Quarter", "Year to Date", "Last 3 Years"],
+    "Asset Strategy Control Tower": ["Last 30 Days", "Last Quarter", "Year to Date", "Last 3 Years"],
     "Supplier Performance": ["Last 30 Days", "Last Quarter", "Year to Date", "Last Fiscal Year"],
 };
 
@@ -438,7 +454,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div
                 className={`${
                     sidebarOpen ? "w-64" : "w-16"
-                } bg-green-990 text-white transition-all duration-300 flex flex-col`}
+                } bg-green-990 text-white transition-all duration-300 flex flex-col print:hidden`}
             >
                 {/* Sidebar Header with Toggle */}
                 <div className="border-b p-4 border-green-700 flex items-center justify-between">

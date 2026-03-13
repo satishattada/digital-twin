@@ -1,7 +1,7 @@
 .sidebar {
     width: 60px;
-    background: rgba(0, 0, 0, 0.3);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    background: #ffffff;
+    border-right: 2px solid #e5e5e5;
     display: flex;
     flex-direction: column;
     transition: width 0.3s ease;
@@ -17,20 +17,20 @@
     align-items: center;
     justify-content: space-between;
     padding: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid #e5e5e5;
   }
   
   .sidebarHeader h2 {
     font-size: 1.1rem;
     margin: 0;
     white-space: nowrap;
-    color: #e2e8f0;
+    color: #333333;
   }
   
   .toggleButton {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: #e2e8f0;
+    background: #f5f5f5;
+    border: 2px solid #e5e5e5;
+    color: #333333;
     width: 32px;
     height: 32px;
     border-radius: 6px;
@@ -42,7 +42,9 @@
   }
   
   .toggleButton:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: #025a38;
+    color: #ffffff;
+    border-color: #025a38;
   }
   
   .ingestButton {
@@ -59,28 +61,30 @@
   
   .statItem {
     flex: 1;
-    background: rgba(255, 255, 255, 0.05);
+    background: #f9f9f9;
     padding: 12px;
     border-radius: 8px;
     text-align: center;
+    border: 2px solid #e5e5e5;
   }
   
   .statValue {
     display: block;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #4299e1;
+    color: #025a38;
   }
   
   .statLabel {
     font-size: 0.75rem;
-    color: #a0aec0;
+    color: #666666;
     text-transform: uppercase;
+    font-weight: 600;
   }
   
   .clearSection {
     padding: 16px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 2px solid #e5e5e5;
     margin-top: auto;
   }
   

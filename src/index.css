@@ -499,3 +499,28 @@
     height: 246px;
   object-fit: contain;
 }
+
+/* Print Styles - Hide Layout Components */
+@media print {
+  /* Hide sidebar and header during print */
+  nav, header, aside, .sidebar {
+    display: none !important;
+  }
+  
+  /* Hide Layout wrapper padding */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* Ensure full width for print content */
+  .ml-64, .ml-0 {
+    margin-left: 0 !important;
+  }
+  
+  /* Remove any Layout-imposed constraints */
+  body > div {
+    max-width: none !important;
+    width: 100% !important;
+  }
+}

@@ -36,6 +36,7 @@ const personaRouteMap: Record<Persona, string> = {
   "Site Manager": "/site-manager",
   "Digital Engineer": "/digital-engineer",
   "Asset Strategy": "/asset-strategy",
+  "Asset Strategy Control Tower": "/asset-strategy-control-tower",
   "Supplier Performance": "/supplier-performance",
 };
 
@@ -46,6 +47,7 @@ const routePersonaMap: Record<string, Persona> = {
   "/site-manager": "Site Manager",
   "/digital-engineer": "Digital Engineer",
   "/asset-strategy": "Asset Strategy",
+  "/asset-strategy-control-tower": "Asset Strategy Control Tower",
   "/supplier-performance": "Supplier Performance",
 };
 
@@ -83,8 +85,8 @@ export const Layout: React.FC<LayoutProps> = ({
 
   return (
     <>
-      <main className="bg-slate-200 min-h-screen w-full flex flex-col items-center font-sans">
-        <div className="w-full max-w-[1600px] aspect-[16/9] bg-[#F3F4F6] shadow-2xl flex flex-col overflow-hidden h-[100vh]">
+      <main className="bg-slate-200 min-h-screen w-full flex flex-col items-center font-sans print:bg-white print:p-0">
+        <div className="w-full max-w-[1600px] aspect-[16/9] bg-[#F3F4F6] shadow-2xl flex flex-col overflow-hidden h-[100vh] print:max-w-none print:aspect-auto print:h-auto print:shadow-none print:bg-white">
           <Header
             activePersona={activePersona}
             setActivePersona={handleSetActivePersona}
@@ -97,7 +99,7 @@ export const Layout: React.FC<LayoutProps> = ({
             onDigestToggle={() => setDigestOpen(true)}
             onShelfieToggle={() => setShelfieOpen(true)}
           />
-          <div className="flex flex-grow overflow-hidden">
+          <div className="flex flex-grow overflow-hidden print:block print:overflow-visible">
             <Sidebar
               sidebarOpen={sidebarOpen}
               setSidebarOpen={setSidebarOpen}
@@ -117,7 +119,7 @@ export const Layout: React.FC<LayoutProps> = ({
             />
 
             {/* Main Content */}
-            <div className="flex-grow overflow-y-auto p-4 md:p-6 bg-grey-100">
+            <div className="flex-grow overflow-y-auto p-4 md:p-6 bg-grey-100 print:p-0 print:overflow-visible print:bg-white">
               {children}
             </div>
           </div>

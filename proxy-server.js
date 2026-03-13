@@ -6,13 +6,7 @@ const app = express();
 const PORT = 3001;
 
 // BP API Configuration
-const BP_CONFIG = {
-  authUrl: 'https://auth-dsp.bp.com/oauth2/token',
-  apiUrl: 'https://api-dsp.bp.com',
-  clientId: '1iscd5u2j69mcv1mu8o81ek0lu',
-  clientSecret: 'm4hsr17drj9r9sq81ivvjld2f4bpq0s2el1ml0lrs97hsrg3pa8',
-  scope: 'stock-api/stock.read'
-};
+
 
 // In-memory token cache
 let tokenCache = {
@@ -52,29 +46,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Cortix Insights Proxy - Strips X-Frame-Options and CSP headers
-app.use('/cortix-proxy', createProxyMiddleware({
-  target: 'https://insights.cortix.ai/insights/home',
-  changeOrigin: true,
-  pathRewrite: {
-    '^/cortix-proxy': '', // Remove /cortix-proxy prefix
-  },
-  onProxyRes: (proxyRes, req, res) => {
-    // Remove headers that prevent iframe embedding
-    delete proxyRes.headers['x-frame-options'];
-    delete proxyRes.headers['content-security-policy'];
-    delete proxyRes.headers['x-content-security-policy'];
-    
-    // Add CORS headers
-    proxyRes.headers['access-control-allow-origin'] = '*';
-    proxyRes.headers['access-control-allow-credentials'] = 'true';
-  },
-  onError: (err, req, res) => {
-    console.error('Cortix Proxy Error:', err);
-    res.status(500).json({ error: 'Proxy error', message: err.message });
-  },
-  logLevel: 'debug'
-}));
+
 
 // Function to get BP OAuth token
 async function getBPAccessToken() {

@@ -11,6 +11,7 @@ from app.schemas.rag import (
     StatsResponse,
     FileStatus
 )
+from app.schemas.chat import SummarizeRequest, SummarizeResponse
 from app.services.document_processor import DocumentProcessor
 from app.services.qdrant_service import QdrantRAGService
 from app.utils.helpers import extract_category_from_filename
@@ -32,15 +33,20 @@ async def ingest_documents():
     total_chunks = 0
     
     for doc_path in documents:
+        # Use filename+hash to allow same content with different filenames
         file_hash = doc_processor.get_file_hash(doc_path)
+        file_key = f"{doc_path.name}:{file_hash}"
         
-        if rag_service.is_file_ingested(file_hash):
+        if rag_service.is_file_ingested(file_key):
             skipped_files.append(doc_path.name)
             continue
         
         chunks = doc_processor.process_document(doc_path)
         
         if chunks:
+            # Update chunks to use the file_key
+            for chunk in chunks:
+                chunk['file_hash'] = file_key
             ingested = rag_service.ingest_chunks(chunks)
             total_chunks += ingested
             new_files.append(doc_path.name)
@@ -65,11 +71,12 @@ async def get_ingest_status():
     files_status = []
     for doc_path in documents:
         file_hash = doc_processor.get_file_hash(doc_path)
+        file_key = f"{doc_path.name}:{file_hash}"
         asset_category = extract_category_from_filename(doc_path.name)
         
         files_status.append(FileStatus(
             filename=doc_path.name,
-            ingested=file_hash in ingested_hashes,
+            ingested=file_key in ingested_hashes,
             asset_category=asset_category
         ))
     
@@ -132,3 +139,15 @@ async def delete_collection():
         return {"message": "Collection deleted and recreated"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/summarize", response_model=SummarizeResponse)
+async def summarize_chat(request: SummarizeRequest):
+    """Summarize a chat conversation."""
+    if not request.messages:
+        raise HTTPException(status_code=400, detail="No messages provided")
+    
+    messages = [{"role": m.role, "content": m.content} for m in request.messages]
+    summary = rag_service.summarize_chat(messages)
+    
+    return SummarizeResponse(summary=summary)

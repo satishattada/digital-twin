@@ -6,47 +6,118 @@ type SupplierPerformancePageProps = {
   selectedCategory: string;
 };
 
-// Mock data for Supplier Performance Dashboard
+// SUPPLIER PERFORMANCE CONTROL TOWER DATA
+
+// Real-time KPI Layer
+const REALTIME_KPIS = {
+  slaUptime: [
+    { metric: 'WO Response Time', value: '2.3 hrs', target: '4 hrs', status: 'excellent', percentage: 92 },
+    { metric: 'Resolution Time', value: '8.5 hrs', target: '12 hrs', status: 'good', percentage: 88 },
+    { metric: 'System Uptime', value: '99.2%', target: '98%', status: 'excellent', percentage: 99 },
+    { metric: 'First-Time Fix Rate', value: '87%', target: '85%', status: 'good', percentage: 87 },
+    { metric: 'Callback Rate', value: '5%', target: '8%', status: 'excellent', percentage: 95 }
+  ],
+  quality: [
+    { metric: 'Repeat Failures', value: '8%', target: '10%', status: 'good', percentage: 92 },
+    { metric: 'Punch-list Age (Avg)', value: '3.2 days', target: '5 days', status: 'excellent', percentage: 94 },
+    { metric: 'Installation Defects', value: '4%', target: '6%', status: 'good', percentage: 90 },
+    { metric: 'Commissioning Accept Rate', value: '94%', target: '90%', status: 'excellent', percentage: 94 }
+  ],
+  cost: [
+    { metric: 'Parts Usage Variance', value: '3%', target: '5%', status: 'excellent', percentage: 96 },
+    { metric: 'Hourly Rate Leakage', value: '2.1%', target: '3%', status: 'good', percentage: 93 },
+    { metric: 'Contract Compliance', value: '96%', target: '95%', status: 'excellent', percentage: 96 }
+  ],
+  safety: [
+    { metric: 'HSSE Violations', value: '2', target: '< 5', status: 'excellent', percentage: 95 },
+    { metric: 'Training Compliance', value: '98%', target: '95%', status: 'excellent', percentage: 98 },
+    { metric: 'Unsafe Acts Reported', value: '3', target: '< 10', status: 'excellent', percentage: 97 }
+  ],
+  compliance: [
+    { metric: 'Permit Delays', value: '1.2 days', target: '< 2 days', status: 'excellent', percentage: 94 },
+    { metric: 'Documentation Complete', value: '92%', target: '90%', status: 'good', percentage: 92 },
+    { metric: 'Evidence Availability', value: '95%', target: '93%', status: 'excellent', percentage: 95 }
+  ]
+};
+
+// Supplier 360° View
 const VENDOR_SCORECARDS = [
   { 
     name: 'HVAC Solutions Ltd', 
     category: 'HVAC Maintenance',
+    region: 'UK North',
     score: 94, 
     contracts: 12,
     slaCompliance: 96,
+    uptime: 99.2,
+    repeatFailures: 5,
+    costVariance: 2.1,
+    hsseScore: 98,
+    workload: 145,
+    capacity: 200,
+    technicianScore: 4.7,
     trend: 'Excellent',
-    status: 'Active'
+    status: 'Active',
+    riskScore: 12
   },
   { 
     name: 'Refrigeration Services UK', 
     category: 'Refrigeration',
+    region: 'UK South',
     score: 87, 
     contracts: 8,
     slaCompliance: 89,
+    uptime: 97.8,
+    repeatFailures: 12,
+    costVariance: 5.3,
+    hsseScore: 94,
+    workload: 98,
+    capacity: 150,
+    technicianScore: 4.3,
     trend: 'Good',
-    status: 'Active'
+    status: 'Active',
+    riskScore: 28
   },
   { 
     name: 'Building Contractors Pro', 
     category: 'Construction',
+    region: 'UK Central',
     score: 72, 
     contracts: 5,
     slaCompliance: 78,
+    uptime: 94.2,
+    repeatFailures: 27,
+    costVariance: 12.4,
+    hsseScore: 88,
+    workload: 156,
+    capacity: 120,
+    technicianScore: 3.8,
     trend: 'Declining',
-    status: 'Warning'
+    status: 'Warning',
+    riskScore: 67
   },
   { 
     name: 'Electrical Systems Inc', 
     category: 'Electrical',
+    region: 'Scotland',
     score: 91, 
     contracts: 15,
     slaCompliance: 93,
+    uptime: 98.5,
+    repeatFailures: 8,
+    costVariance: 3.2,
+    hsseScore: 96,
+    workload: 187,
+    capacity: 250,
+    technicianScore: 4.6,
     trend: 'Improving',
-    status: 'Active'
+    status: 'Active',
+    riskScore: 18
   },
   { 
     name: 'Cleaning Services Plus', 
     category: 'Facility Management',
+    region: 'Wales',
     score: 68, 
     contracts: 20,
     slaCompliance: 71,
