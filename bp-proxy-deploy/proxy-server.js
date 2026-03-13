@@ -6,13 +6,7 @@ const app = express();
 const PORT = 3001;
 
 // BP API Configuration
-const BP_CONFIG = {
-  authUrl: 'https://auth-dsp.bp.com/oauth2/token',
-  apiUrl: 'https://api-dsp.bp.com',
-  clientId: '1iscd5u2j69mcv1mu8o81ek0lu',
-  clientSecret: 'm4hsr17drj9r9sq81ivvjld2f4bpq0s2el1ml0lrs97hsrg3pa8',
-  scope: 'stock-api/stock.read'
-};
+
 
 // In-memory token cache
 let tokenCache = {
